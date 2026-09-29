@@ -9,6 +9,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from contextos.contracts import PreservationContract, RetentionPolicy
 from contextos.errors import DuplicateContextItemError
 
 
@@ -100,6 +101,7 @@ class ContextItem(BaseModel):
     mandatory: bool = False
     compressible: bool = True
     evictable: bool = True
+    contract: PreservationContract | None = None
 
     lifecycle_tier: LifecycleTier = LifecycleTier.HOT
 
@@ -107,6 +109,25 @@ class ContextItem(BaseModel):
     semantic_hash: str | None = None
 
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="before")
+    @classmethod
+    def apply_required_contract(cls, data: object) -> object:
+        """Map explicit required retention onto the compatible legacy flags."""
+        if not isinstance(data, Mapping) or data.get("contract") is None:
+            return data
+        values = dict(data)
+        contract = PreservationContract.model_validate(values["contract"])
+        values["contract"] = contract
+        if contract.retention is not RetentionPolicy.REQUIRED:
+            return values
+        if "mandatory" in values and values["mandatory"] is not True:
+            raise ValueError("required contract conflicts with mandatory=False")
+        if "evictable" in values and values["evictable"] is not False:
+            raise ValueError("required contract conflicts with evictable=True")
+        values.setdefault("mandatory", True)
+        values.setdefault("evictable", False)
+        return values
 
     @model_validator(mode="before")
     @classmethod
@@ -151,14 +172,37 @@ class ContextItem(BaseModel):
         """Enforce relationships between model fields."""
         if self.mandatory and self.evictable:
             raise ValueError("mandatory context cannot be evictable")
+        if (
+            self.contract is not None
+            and self.contract.retention is RetentionPolicy.REQUIRED
+            and (not self.mandatory or self.evictable)
+        ):
+            raise ValueError("required contract must be mandatory and non-evictable")
         return self
 
     def __setattr__(self, name: str, value: object) -> None:
         """Preserve invariants and invalidate derived fields before mutation."""
         if name == "mandatory" and value is True and self.__dict__.get("evictable") is True:
             raise ValueError("mandatory context cannot be evictable")
+        if (
+            name == "mandatory"
+            and value is False
+            and (contract := self.__dict__.get("contract")) is not None
+            and contract.retention is RetentionPolicy.REQUIRED
+        ):
+            raise ValueError("required contract must remain mandatory")
         if name == "evictable" and value is True and self.__dict__.get("mandatory") is True:
             raise ValueError("mandatory context cannot be evictable")
+        if name == "contract" and value is not None:
+            contract = PreservationContract.model_validate(value)
+            if contract.retention is RetentionPolicy.REQUIRED and (
+                self.__dict__.get("mandatory") is not True
+                or self.__dict__.get("evictable") is not False
+            ):
+                raise ValueError(
+                    "set mandatory=True and evictable=False before assigning a required contract"
+                )
+            value = contract
 
         content_changed = name == "content" and "content" in self.__dict__
         if content_changed:

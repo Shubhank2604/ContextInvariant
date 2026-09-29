@@ -9,6 +9,7 @@ from contextos.baselines import (
 )
 from contextos.budget import AllocationPlan
 from contextos.config import OptimizationPolicy
+from contextos.contracts import PreservationContract, RetentionPolicy
 from contextos.models import (
     ContextEdge,
     ContextItem,
@@ -33,7 +34,9 @@ __all__ = [
     "OptimizationPolicy",
     "OptimizationTrace",
     "OptimizedContext",
+    "PreservationContract",
     "RelevanceOnlyBaseline",
+    "RetentionPolicy",
     "SlidingWindowBaseline",
 ]
 

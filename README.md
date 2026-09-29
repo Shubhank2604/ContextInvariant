@@ -26,7 +26,14 @@ contextos --help
 ## Python SDK
 
 ```python
-from contextos import ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
+from contextos import (
+    ContextItem,
+    ContextOptimizer,
+    ContextType,
+    OptimizationPolicy,
+    PreservationContract,
+    RetentionPolicy,
+)
 
 optimizer = ContextOptimizer()
 result = optimizer.optimize(
@@ -37,6 +44,8 @@ result = optimizer.optimize(
 ```
 
 `ContextOptimizer.optimize(task, items, policy)` is the sole authority for the final input budget. Inputs are copied; caller-owned items are not mutated.
+
+Items may declare an explicit `PreservationContract`. Required retention is enforced through the backwards-compatible mandatory-item path; feature validation and relation-dependent retention are introduced in later Phase 5 stages. See [`docs/preservation-contracts.md`](docs/preservation-contracts.md).
 
 ## CLI
 
