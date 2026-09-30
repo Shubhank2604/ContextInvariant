@@ -47,6 +47,8 @@ result = optimizer.optimize(
 
 Items may declare an explicit `PreservationContract`. Required retention is enforced through the backwards-compatible mandatory-item path; feature validation and relation-dependent retention are introduced in later Phase 5 stages. See [`docs/preservation-contracts.md`](docs/preservation-contracts.md).
 
+Directed hard-relation resolution is available separately through `ContextConstraintGraph`; it does not change the frozen v0.4 soft dependency scorer. See [`docs/hard-constraints.md`](docs/hard-constraints.md).
+
 ## CLI
 
 ```bash

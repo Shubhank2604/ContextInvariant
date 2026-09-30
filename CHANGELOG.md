@@ -8,6 +8,8 @@ The project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Phase 5D directed hard-relation resolution with requirement closure, cycle groups, supersession filtering, explicit contradiction policy, validated representations, and typed unsatisfiable, overflow, and unresolved-conflict failures.
+
 - Phase 5C preservation contracts for explicit retention, numeric, date, identifier, citation, negation, and structured-key requirements while retaining legacy item compatibility.
 
 - Phase 5B ContextOS-Bench Constraints with 90 deterministic cases across nine preservation categories, unchanged v0.4 baselines, seven constraint-specific metrics, frozen baseline provenance, CLI execution, and immutable artifacts.

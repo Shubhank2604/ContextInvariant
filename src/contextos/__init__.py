@@ -9,6 +9,12 @@ from contextos.baselines import (
 )
 from contextos.budget import AllocationPlan
 from contextos.config import OptimizationPolicy
+from contextos.constraints import (
+    ConflictPolicy,
+    ConstraintResolution,
+    ContextConstraintGraph,
+    ValidatedRepresentation,
+)
 from contextos.contracts import PreservationContract, RetentionPolicy
 from contextos.models import (
     ContextEdge,
@@ -22,6 +28,9 @@ from contextos.trace import OptimizationTrace, OptimizedContext
 
 __all__ = [
     "AllocationPlan",
+    "ConflictPolicy",
+    "ConstraintResolution",
+    "ContextConstraintGraph",
     "ContextEdge",
     "ContextItem",
     "ContextOptimizer",
@@ -38,6 +47,7 @@ __all__ = [
     "RelevanceOnlyBaseline",
     "RetentionPolicy",
     "SlidingWindowBaseline",
+    "ValidatedRepresentation",
 ]
 
 __version__ = "0.3.0"

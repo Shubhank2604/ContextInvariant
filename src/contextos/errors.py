@@ -96,3 +96,39 @@ class ContextBudgetOverflow(ContextOSError):
             f"{strategy} requires {required_tokens} input tokens but the effective budget is "
             f"{effective_budget}"
         )
+
+
+class ConstraintUnsatisfiable(ContextOSError):
+    """Raised when no model-visible selection can satisfy declared hard relations."""
+
+    def __init__(self, *, violations: tuple[str, ...]) -> None:
+        self.violations = violations
+        super().__init__("context constraints are unsatisfiable: " + "; ".join(violations))
+
+
+class RequiredContextOverflow(ContextOSError):
+    """Raised when a legal directed closure exceeds the effective token budget."""
+
+    def __init__(
+        self,
+        *,
+        required_item_ids: tuple[str, ...],
+        required_tokens: int,
+        effective_budget: int,
+    ) -> None:
+        self.required_item_ids = required_item_ids
+        self.required_tokens = required_tokens
+        self.effective_budget = effective_budget
+        super().__init__(
+            f"constraint closure requires {required_tokens} tokens but the effective budget is "
+            f"{effective_budget}: {', '.join(required_item_ids)}"
+        )
+
+
+class UnresolvedConflict(ContextOSError):
+    """Raised when contradictory items lack a deterministic or caller-supplied winner."""
+
+    def __init__(self, *, conflicts: tuple[tuple[str, str], ...]) -> None:
+        self.conflicts = conflicts
+        formatted = ", ".join(f"{left}<->{right}" for left, right in conflicts)
+        super().__init__(f"unresolved context conflict: {formatted}")
