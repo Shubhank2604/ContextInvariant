@@ -9,19 +9,10 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from contextos.budget import AllocationPlan
 from contextos.compression.base import CompressionResult, Compressor
-from contextos.compression.extractive import ExtractiveCompressor
-from contextos.compression.none import NoneCompressor
-from contextos.compression.tool_output import ToolOutputCompressor
+from contextos.compression.type_aware import TypeAwareCompressor
 from contextos.config import OptimizationPolicy
 from contextos.models import ContextItem, ContextType
 from contextos.tokenization import Tokenizer
-
-_TOOL_TYPES = {ContextType.TOOL_OUTPUT, ContextType.ERROR}
-_PROTECTED_TYPES = {
-    ContextType.SYSTEM_INSTRUCTION,
-    ContextType.TOOL_DEFINITION,
-    ContextType.CODE,
-}
 
 
 class CompressionAttempt(BaseModel):
@@ -57,10 +48,20 @@ class CompressionExecutor:
         extractive: Compressor | None = None,
         tool_output: Compressor | None = None,
         none: Compressor | None = None,
+        code: Compressor | None = None,
+        structured: Compressor | None = None,
+        evidence: Compressor | None = None,
+        type_aware: Compressor | None = None,
     ) -> None:
-        self._extractive = extractive or ExtractiveCompressor(tokenizer)
-        self._tool_output = tool_output or ToolOutputCompressor(tokenizer)
-        self._none = none or NoneCompressor(tokenizer)
+        self._type_aware = type_aware or TypeAwareCompressor(
+            tokenizer,
+            extractive=extractive,
+            tool_output=tool_output,
+            none=none,
+            code=code,
+            structured=structured,
+            evidence=evidence,
+        )
 
     def execute(
         self,
@@ -149,11 +150,7 @@ class CompressionExecutor:
         )
 
     def _compressor_for(self, item: ContextItem) -> Compressor:
-        if item.mandatory or not item.compressible or item.type in _PROTECTED_TYPES:
-            return self._none
-        if item.type in _TOOL_TYPES:
-            return self._tool_output
-        return self._extractive
+        return self._type_aware
 
     @staticmethod
     def _validate_result(

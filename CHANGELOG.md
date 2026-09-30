@@ -8,6 +8,8 @@ The project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Phase 5E type-aware transformation routing with deterministic structured-data pruning, conservative code extraction, evidence-specific extraction, lossless system handling, and guarded contract-bearing content.
+
 - Phase 5D directed hard-relation resolution with requirement closure, cycle groups, supersession filtering, explicit contradiction policy, validated representations, and typed unsatisfiable, overflow, and unresolved-conflict failures.
 
 - Phase 5C preservation contracts for explicit retention, numeric, date, identifier, citation, negation, and structured-key requirements while retaining legacy item compatibility.

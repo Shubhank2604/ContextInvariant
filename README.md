@@ -49,6 +49,8 @@ Items may declare an explicit `PreservationContract`. Required retention is enfo
 
 Directed hard-relation resolution is available separately through `ContextConstraintGraph`; it does not change the frozen v0.4 soft dependency scorer. See [`docs/hard-constraints.md`](docs/hard-constraints.md).
 
+Compression now routes by context type, including structured JSON pruning, conservative code extraction, evidence extraction, and lossless protected types. See [`docs/type-aware-transformations.md`](docs/type-aware-transformations.md).
+
 ## CLI
 
 ```bash
