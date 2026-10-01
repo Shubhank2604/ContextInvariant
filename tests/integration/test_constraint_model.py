@@ -117,7 +117,7 @@ def test_model_constraint_bundle_captures_phase5_and_provider_provenance(
     assert {entry.name for entry in artifact.iterdir()} == REQUIRED_BUNDLE_FILES
     config = json.loads((artifact / "config.json").read_text(encoding="utf-8"))
     metrics = json.loads((artifact / "metrics.json").read_text(encoding="utf-8"))
-    assert config["generator_version"] == "1.3.0"
+    assert config["generator_version"] == "1.4.0"
     assert config["prompt_version"] == "phase5j-constraint-prompt-v1"
     assert config["phase5_components"]["constraint_resolver_version"] == "phase5d-v1"
     assert config["execution"]["temperature"] == 0.0

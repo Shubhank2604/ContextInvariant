@@ -20,7 +20,7 @@ from contextos.benchmarks.models import (
 from contextos.config import OptimizationPolicy
 from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
 
-CONSTRAINT_GENERATOR_VERSION = "1.3.0"
+CONSTRAINT_GENERATOR_VERSION = "1.4.0"
 CONSTRAINT_GENERATION_SEED = 505
 PHASE5_BASELINE_SHA = "4fdd88391300c56ad17af5458897ccdd08d6f7bf"
 _START = datetime(2025, 1, 1, tzinfo=UTC)
@@ -131,7 +131,7 @@ def _case(
             _item(
                 case_id,
                 "task",
-                f"Call /payments/{key} with its valid authentication.",
+                f"Return both endpoint /payments/{key} and its valid authentication token.",
                 ContextType.USER_MESSAGE,
                 600,
                 importance=0.8,
@@ -150,6 +150,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[f"/payments/{key}", token],
+            required_output_values=[f"/payments/{key}", token],
             forbidden_output_values=[f"auth_{key}OLD"],
             stale_item_ids=[f"{case_id}-old-auth"],
         )
@@ -193,6 +194,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[current],
+            required_output_values=[current],
             forbidden_output_values=[old],
             forbidden_item_combinations=[(f"{case_id}-old-state", f"{case_id}-current-state")],
             expected_current_state={"deployment_region": current},
@@ -224,7 +226,7 @@ def _case(
             _item(
                 case_id,
                 "task",
-                "Apply the canonical maximum refund.",
+                "Return the canonical maximum refund amount.",
                 ContextType.USER_MESSAGE,
                 600,
                 importance=0.8,
@@ -239,6 +241,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_exact_values=[amount],
+            required_output_values=[amount],
             forbidden_output_values=[old_amount],
             forbidden_item_combinations=[(f"{case_id}-noncanonical", f"{case_id}-canonical")],
             expected_current_state={"maximum_refund": amount},
@@ -290,6 +293,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_exact_values=[amount, rate, date],
+            required_output_values=[amount, rate, date],
         )
     elif category is ConstraintCategory.IDENTIFIER:
         user, instruction, symbol = (
@@ -341,6 +345,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[user, instruction, symbol],
+            required_output_values=[user, instruction, symbol],
         )
     elif category is ConstraintCategory.NEGATION_POLICY:
         policy = f"Do NOT execute transfer TX-{key} without approval APR-{key}."
@@ -367,7 +372,7 @@ def _case(
             _item(
                 case_id,
                 "task",
-                f"State the approval rule for TX-{key}.",
+                f"State the exact approval rule for TX-{key}, including its approval identifier.",
                 ContextType.USER_MESSAGE,
                 600,
                 importance=0.8,
@@ -386,6 +391,7 @@ def _case(
             relations=relations,
             required_exact_values=["Do NOT"],
             required_identifiers=[f"TX-{key}", f"APR-{key}"],
+            required_output_values=["Do NOT", f"APR-{key}"],
             forbidden_output_values=["immediately"],
             forbidden_item_combinations=[(f"{case_id}-unsafe", f"{case_id}-policy")],
         )
@@ -413,7 +419,7 @@ def _case(
             _item(
                 case_id,
                 "task",
-                f"Report the current state of {reservation}.",
+                f"Return reservation ID {reservation} and its current status.",
                 ContextType.USER_MESSAGE,
                 600,
                 importance=0.8,
@@ -430,6 +436,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[reservation],
+            required_output_values=[reservation, "cancelled"],
             forbidden_output_values=["confirmed"],
             forbidden_item_combinations=[
                 (f"{case_id}-old-tool-state", f"{case_id}-current-tool-state")
@@ -478,6 +485,7 @@ def _case(
             relations=relations,
             required_identifiers=[evidence],
             required_citations=[source],
+            required_output_values=[source, evidence],
         )
     else:
         a, b, c = f"root-{key}", f"middle-{key}", f"leaf-{key}"
@@ -511,7 +519,7 @@ def _case(
             _item(
                 case_id,
                 "task",
-                f"Execute operation {c} with its complete dependency chain.",
+                f"Return the root, intermediate, and leaf identifiers for operation {c}.",
                 ContextType.USER_MESSAGE,
                 600,
                 importance=0.8,
@@ -530,6 +538,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[a, b, c],
+            required_output_values=[a, b, c],
         )
 
     return ConstraintBenchmarkCase(

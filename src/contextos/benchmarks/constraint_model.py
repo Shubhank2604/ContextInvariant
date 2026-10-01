@@ -83,22 +83,14 @@ def _normalized(value: str) -> str:
 
 
 def _required_values(case: ConstraintBenchmarkCase) -> tuple[str, ...]:
-    values = [fact.value for fact in case.answer_key.required_facts]
-    values.extend(case.constraints.expected_current_state.values())
+    values = case.constraints.required_output_values or [
+        fact.value for fact in case.answer_key.required_facts
+    ]
     return tuple(dict.fromkeys(values))
 
 
 def _exact_values(case: ConstraintBenchmarkCase) -> tuple[str, ...]:
-    truth = case.constraints
-    return tuple(
-        dict.fromkeys(
-            [
-                *truth.required_exact_values,
-                *truth.required_identifiers,
-                *truth.required_citations,
-            ]
-        )
-    )
+    return _required_values(case)
 
 
 def _presence_rate(values: Sequence[str], output: str, *, exact: bool) -> float | None:

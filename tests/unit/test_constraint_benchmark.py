@@ -36,6 +36,10 @@ def test_constraint_dataset_has_ten_cases_per_required_category() -> None:
     }
     assert all(case.constraints.critical_item_ids for case in dataset.cases)
     assert all(case.answer_key.required_facts for case in dataset.cases)
+    for case in dataset.cases:
+        assert case.constraints.required_output_values == [
+            fact.value for fact in case.answer_key.required_facts
+        ]
 
 
 def test_constraint_annotations_reject_unknown_item_references() -> None:

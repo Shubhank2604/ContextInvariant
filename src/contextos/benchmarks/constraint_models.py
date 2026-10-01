@@ -41,6 +41,7 @@ class ConstraintGroundTruth(BaseModel):
     required_exact_values: list[str] = Field(default_factory=list)
     required_identifiers: list[str] = Field(default_factory=list)
     required_citations: list[str] = Field(default_factory=list)
+    required_output_values: list[str] = Field(default_factory=list)
     forbidden_output_values: list[str] = Field(default_factory=list)
     forbidden_item_combinations: list[tuple[str, ...]] = Field(default_factory=list)
     expected_current_state: dict[str, str] = Field(default_factory=dict)
@@ -52,6 +53,8 @@ class ConstraintGroundTruth(BaseModel):
             raise ValueError("constraint cases require critical item IDs")
         if any(len(group) < 2 for group in self.forbidden_item_combinations):
             raise ValueError("forbidden item combinations require at least two items")
+        if any(not value.strip() for value in self.required_output_values):
+            raise ValueError("required output values must not be blank")
         if any(not value.strip() for value in self.forbidden_output_values):
             raise ValueError("forbidden output values must not be blank")
         return self
