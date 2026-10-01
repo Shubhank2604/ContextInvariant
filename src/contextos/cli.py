@@ -27,6 +27,11 @@ from contextos.benchmarks.constraint_benchmark import (
     write_constraint_artifact,
 )
 from contextos.benchmarks.constraint_dataset import generate_constraint_dataset
+from contextos.benchmarks.constraint_model import (
+    run_model_constraint_benchmark,
+    write_model_constraint_artifact,
+)
+from contextos.benchmarks.constraint_models import ModelPricing
 from contextos.benchmarks.longbench import (
     HuggingFaceLongBenchSource,
     load_longbench_config,
@@ -38,7 +43,10 @@ from contextos.benchmarks.longbench import (
     write_prepared_subset,
 )
 from contextos.benchmarks.longbench_models import LongBenchProfile
-from contextos.benchmarks.longbench_runner import run_longbench_comparison
+from contextos.benchmarks.longbench_runner import (
+    phase5_longbench_strategies,
+    run_longbench_comparison,
+)
 from contextos.benchmarks.models import BenchmarkAggregate, BenchmarkRun
 from contextos.benchmarks.phase5_ablation import (
     run_phase5_ablation,
@@ -399,6 +407,110 @@ def benchmark_phase5_ablation_command(
     )
 
 
+@benchmark_app.command("constraints-model")
+def benchmark_constraints_model_command(
+    model: Annotated[str, typer.Option("--model")],
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    budget_ratio: Annotated[
+        float,
+        typer.Option("--budget-ratio", min=0.01, max=1.0),
+    ] = 1.0,
+    max_output_tokens: Annotated[
+        int,
+        typer.Option("--max-output-tokens", min=1),
+    ] = 96,
+    case_limit: Annotated[int | None, typer.Option("--case-limit", min=1)] = None,
+    input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--input-usd-per-million", min=0.0),
+    ] = None,
+    output_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--output-usd-per-million", min=0.0),
+    ] = None,
+    cached_input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--cached-input-usd-per-million", min=0.0),
+    ] = None,
+) -> None:
+    """Run frozen v0.4 and Full Phase 5 through one explicit OpenAI model."""
+    try:
+        if not model.strip():
+            raise ValueError("--model must not be blank")
+        price_values = (
+            input_usd_per_million,
+            output_usd_per_million,
+            cached_input_usd_per_million,
+        )
+        if any(value is not None for value in price_values) and not all(
+            value is not None for value in price_values
+        ):
+            raise ValueError("all three pricing options must be supplied together")
+        pricing = None
+        if all(value is not None for value in price_values):
+            assert input_usd_per_million is not None
+            assert output_usd_per_million is not None
+            assert cached_input_usd_per_million is not None
+            pricing = ModelPricing(
+                input_usd_per_million=input_usd_per_million,
+                output_usd_per_million=output_usd_per_million,
+                cached_input_usd_per_million=cached_input_usd_per_million,
+            )
+        source = generate_constraint_dataset()
+        dataset, run = run_model_constraint_benchmark(
+            source,
+            provider=OpenAIProvider(model=model, temperature=0.0),
+            provider_name="openai",
+            provider_model=model,
+            tokenizer=TiktokenTokenizer(),
+            budget_ratio=budget_ratio,
+            max_output_tokens=max_output_tokens,
+            temperature=0.0,
+            pricing=pricing,
+            case_limit=case_limit,
+        )
+        if not any(prediction.status == "ok" for prediction in run.predictions):
+            first_warning = next(
+                (prediction.warnings[-1] for prediction in run.predictions if prediction.warnings),
+                "no model-backed constraint case completed",
+            )
+            raise ValueError(f"all model-backed constraint comparisons failed: {first_warning}")
+        artifact = write_model_constraint_artifact(
+            output_directory,
+            dataset=dataset,
+            run=run,
+            profile="full" if case_limit is None else f"limited-{case_limit}",
+        )
+    except (ContextOSError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Model-backed constraint benchmark failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact),
+                "case_count": len(dataset.cases),
+                "prediction_count": len(run.predictions),
+                "provider": run.provider,
+                "model": run.model,
+                "budget_ratio": run.budget_ratio,
+                "status_counts": {
+                    status: sum(value.status == status for value in run.predictions)
+                    for status in sorted({value.status for value in run.predictions})
+                },
+                "total_estimated_cost_usd": sum(
+                    value.estimated_cost_usd or 0.0 for value in run.predictions
+                )
+                if run.pricing is not None
+                else None,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
 @benchmark_app.command("positional")
 def benchmark_positional_command(
     input_path: Annotated[
@@ -626,6 +738,88 @@ def benchmark_longbench_run_command(
                 "provider": "openai",
                 "model": model,
                 "strategies": sorted({prediction.strategy for prediction in predictions}),
+                "status_counts": {
+                    status: sum(prediction.status == status for prediction in predictions)
+                    for status in sorted({prediction.status for prediction in predictions})
+                },
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@longbench_app.command("phase5-run")
+def benchmark_longbench_phase5_run_command(
+    prepared_path: Annotated[
+        Path,
+        typer.Option("--prepared", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ],
+    output_path: Annotated[Path, typer.Option("--output")],
+    model: Annotated[str, typer.Option("--model")],
+    context_budget_tokens: Annotated[
+        int,
+        typer.Option("--context-budget-tokens", min=1),
+    ],
+    max_context_tokens: Annotated[
+        int,
+        typer.Option("--max-context-tokens", min=2),
+    ],
+    max_chunk_tokens: Annotated[
+        int,
+        typer.Option("--max-chunk-tokens", min=1),
+    ] = 256,
+) -> None:
+    """Compare Full Context, frozen v0.4, and Full Phase 5 on LongBench."""
+    try:
+        if not model.strip():
+            raise ValueError("--model must not be blank")
+        subset = load_prepared_subset(prepared_path)
+        predictions = run_longbench_comparison(
+            subset,
+            provider=OpenAIProvider(model=model, temperature=0.0),
+            provider_name="openai",
+            provider_model=model,
+            tokenizer=TiktokenTokenizer(),
+            context_budget_tokens=context_budget_tokens,
+            max_context_tokens=max_context_tokens,
+            max_chunk_tokens=max_chunk_tokens,
+            strategies=phase5_longbench_strategies(),
+        )
+        if not any(prediction.status == "ok" for prediction in predictions):
+            first_warning = next(
+                (prediction.warnings[0] for prediction in predictions if prediction.warnings),
+                "no strategy completed",
+            )
+            raise ValueError(f"all Phase 5 LongBench comparisons failed: {first_warning}")
+        score_report = score_longbench_predictions(subset, predictions)
+        artifact = write_longbench_bundle(
+            subset,
+            predictions,
+            score_report,
+            output_path,
+            execution_config={
+                "origin": "contextos_benchmark_longbench_phase5_run",
+                "temperature": 0.0,
+                "context_budget_tokens": context_budget_tokens,
+                "max_context_tokens": max_context_tokens,
+                "max_chunk_tokens": max_chunk_tokens,
+                "baseline_v040_sha": ("4fdd88391300c56ad17af5458897ccdd08d6f7bf"),
+                "phase5_protocol": "full_context_vs_frozen_v040_vs_full_phase5",
+            },
+        )
+    except (ContextOSError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Phase 5 LongBench comparison failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact),
+                "case_count": len(subset.cases),
+                "prediction_count": len(predictions),
+                "provider": "openai",
+                "model": model,
+                "strategies": [strategy.name for strategy in phase5_longbench_strategies()],
                 "status_counts": {
                     status: sum(prediction.status == status for prediction in predictions)
                     for status in sorted({prediction.status for prediction in predictions})

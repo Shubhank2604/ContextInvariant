@@ -523,3 +523,118 @@ def test_cli_longbench_run_scores_and_bundles_provider_results(
     config = json.loads((artifact / "config.json").read_text(encoding="utf-8"))
     assert config["execution"]["context_budget_tokens"] == 16
     assert len((artifact / "predictions.jsonl").read_text(encoding="utf-8").splitlines()) == 6
+
+
+def test_cli_longbench_phase5_run_preserves_existing_command_and_uses_three_strategies(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    case = LongBenchCase(
+        dataset="hotpotqa",
+        source_id="source-phase5",
+        input="What is the answer?",
+        context="The answer is ContextOS.",
+        answers=["ContextOS"],
+        source_length=4,
+        language="en",
+        metric=LongBenchMetric.QA_F1,
+        prompt_template="Context: {context}\nQuestion: {input}\nAnswer:",
+        max_output_tokens=8,
+    )
+    subset = PreparedLongBenchSubset(
+        profile=LongBenchProfile.QUICK,
+        source_repository="fixture",
+        source_revision="fixture-revision",
+        source_split="test",
+        sampling_seed=1,
+        cases=[case],
+    )
+    prepared_path = tmp_path / "phase5-prepared.json"
+    prepared_path.write_text(subset.model_dump_json(indent=2), encoding="utf-8")
+
+    class FixtureProvider:
+        def __init__(self, *, model: str, temperature: float) -> None:
+            assert model == "fixture-v1"
+            assert temperature == 0.0
+
+        def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
+            return ProviderResponse(text="ContextOS", input_tokens=8, output_tokens=1)
+
+    monkeypatch.setattr("contextos.cli.OpenAIProvider", FixtureProvider)
+    result = runner.invoke(
+        app,
+        [
+            "benchmark",
+            "longbench",
+            "phase5-run",
+            "--prepared",
+            str(prepared_path),
+            "--output",
+            str(tmp_path / "phase5-results"),
+            "--model",
+            "fixture-v1",
+            "--context-budget-tokens",
+            "16",
+            "--max-context-tokens",
+            "128",
+        ],
+    )
+
+    assert result.exit_code == 0
+    report = json.loads(result.stdout)
+    assert report["strategies"] == ["full_context", "phase5_v040", "phase5_full"]
+    assert report["prediction_count"] == 3
+    artifact = Path(report["artifact"])
+    config = json.loads((artifact / "config.json").read_text(encoding="utf-8"))
+    assert config["execution"]["phase5_protocol"] == ("full_context_vs_frozen_v040_vs_full_phase5")
+
+
+def test_cli_model_backed_constraints_writes_provider_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FixtureProvider:
+        def __init__(self, *, model: str, temperature: float) -> None:
+            assert model == "fixture-v1"
+            assert temperature == 0.0
+
+        def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
+            return ProviderResponse(
+                text="/payments/001 auth_001X",
+                input_tokens=len(prompt.split()),
+                output_tokens=2,
+                cached_tokens=1,
+                ttft_ms=0.25,
+            )
+
+    monkeypatch.setattr("contextos.cli.OpenAIProvider", FixtureProvider)
+    result = runner.invoke(
+        app,
+        [
+            "benchmark",
+            "constraints-model",
+            "--model",
+            "fixture-v1",
+            "--output-directory",
+            str(tmp_path),
+            "--case-limit",
+            "1",
+            "--input-usd-per-million",
+            "1.0",
+            "--output-usd-per-million",
+            "2.0",
+            "--cached-input-usd-per-million",
+            "0.5",
+        ],
+    )
+
+    assert result.exit_code == 0
+    report = json.loads(result.stdout)
+    assert report["prediction_count"] == 3
+    assert report["status_counts"] == {"ok": 3}
+    assert report["total_estimated_cost_usd"] > 0
+    artifact = Path(report["artifact"])
+    assert {entry.name for entry in artifact.iterdir()} == REQUIRED_BUNDLE_FILES
+    config = json.loads((artifact / "config.json").read_text(encoding="utf-8"))
+    assert config["model"] == "fixture-v1"
+    assert config["pricing"]["input_usd_per_million"] == 1.0

@@ -463,13 +463,18 @@ def phase5_ablation_strategies() -> list[BenchmarkStrategy]:
     return baselines + [Phase5BenchmarkStrategy(variant) for variant in Phase5Variant]
 
 
-def _dataset_at_budget(
+def constraint_dataset_at_budget(
     dataset: ConstraintBenchmarkDataset,
     tokenizer: Tokenizer,
     ratio: float,
     *,
     case_limit: int | None,
 ) -> ConstraintBenchmarkDataset:
+    """Copy constraint cases with an effective budget at the requested source ratio."""
+    if not 0.0 < ratio <= 1.0:
+        raise ValueError("budget ratio must be between zero and one")
+    if case_limit is not None and case_limit <= 0:
+        raise ValueError("case limit must be positive")
     cases = dataset.cases[:case_limit] if case_limit is not None else dataset.cases
     adjusted: list[ConstraintBenchmarkCase] = []
     for case in cases:
@@ -570,7 +575,7 @@ def run_phase5_ablation(
     candidates = tuple(name for name in names if name != Phase5Variant.V040.value)
     results: list[Phase5BudgetResult] = []
     for ratio_index, ratio in enumerate(ratios):
-        adjusted = _dataset_at_budget(dataset, tokenizer, ratio, case_limit=case_limit)
+        adjusted = constraint_dataset_at_budget(dataset, tokenizer, ratio, case_limit=case_limit)
         compatible = ContextOSBenchDataset(
             name=adjusted.name,
             generator_version=adjusted.generator_version,
@@ -764,6 +769,7 @@ __all__ = [
     "FrozenV040CompressionExecutor",
     "Phase5BenchmarkStrategy",
     "Phase5Variant",
+    "constraint_dataset_at_budget",
     "constraint_paired_comparisons",
     "phase5_ablation_strategies",
     "run_phase5_ablation",

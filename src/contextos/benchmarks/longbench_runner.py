@@ -21,6 +21,7 @@ from contextos.benchmarks.longbench_models import (
     PreparedLongBenchSubset,
 )
 from contextos.benchmarks.performance import measure_performance
+from contextos.benchmarks.phase5_ablation import FrozenV040CompressionExecutor
 from contextos.config import OptimizationPolicy
 from contextos.errors import ContextOSError
 from contextos.models import ContextItem, ContextType
@@ -46,6 +47,41 @@ class _ContextOSStrategy:
         return ContextOptimizer(tokenizer=tokenizer).optimize(task, items, policy)
 
 
+class _FrozenV040Strategy:
+    name = "phase5_v040"
+
+    def optimize(
+        self,
+        *,
+        task: str,
+        items: Sequence[ContextItem],
+        policy: OptimizationPolicy,
+        tokenizer: Tokenizer,
+    ) -> OptimizedContext:
+        return ContextOptimizer(
+            tokenizer=tokenizer,
+            compression_executor=FrozenV040CompressionExecutor(tokenizer),
+        ).optimize(task, items, policy.model_copy(update={"risk_aware_allocation": False}))
+
+
+class _FullPhase5Strategy:
+    name = "phase5_full"
+
+    def optimize(
+        self,
+        *,
+        task: str,
+        items: Sequence[ContextItem],
+        policy: OptimizationPolicy,
+        tokenizer: Tokenizer,
+    ) -> OptimizedContext:
+        return ContextOptimizer(tokenizer=tokenizer).optimize(
+            task,
+            items,
+            policy.model_copy(update={"risk_aware_allocation": True}),
+        )
+
+
 def default_longbench_strategies() -> list[BaselineStrategy]:
     """Return every required comparison strategy in stable report order."""
     return [
@@ -55,6 +91,15 @@ def default_longbench_strategies() -> list[BaselineStrategy]:
         RelevanceOnlyBaseline(),
         NaiveExtractiveBaseline(),
         _ContextOSStrategy(),
+    ]
+
+
+def phase5_longbench_strategies() -> list[BaselineStrategy]:
+    """Return the cost-controlled critical Phase 5 external comparison."""
+    return [
+        FullContextBaseline(),
+        _FrozenV040Strategy(),
+        _FullPhase5Strategy(),
     ]
 
 

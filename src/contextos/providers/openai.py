@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import os
+from time import perf_counter
 from typing import Any
 
 from contextos.errors import LLMProviderError
@@ -44,14 +45,33 @@ class OpenAIProvider:
             }
             if self.temperature is not None:
                 request["temperature"] = self.temperature
-            response = client.responses.create(**request)
+            request["stream"] = True
+            started = perf_counter()
+            stream = client.responses.create(**request)
+            text_parts: list[str] = []
+            ttft_ms: float | None = None
+            response: Any | None = None
+            for event in stream:
+                event_type = getattr(event, "type", None)
+                if event_type == "response.output_text.delta":
+                    if ttft_ms is None:
+                        ttft_ms = (perf_counter() - started) * 1_000
+                    text_parts.append(str(getattr(event, "delta", "")))
+                elif event_type == "response.completed":
+                    response = getattr(event, "response", None)
+                elif event_type == "error":
+                    message = getattr(event, "message", "unknown error")
+                    raise LLMProviderError(f"OpenAI streaming response failed: {message}")
+            if response is None:
+                raise LLMProviderError("OpenAI streaming response ended without completion")
             usage = getattr(response, "usage", None)
             input_details = getattr(usage, "input_tokens_details", None)
             return ProviderResponse(
-                text=str(response.output_text),
+                text="".join(text_parts) or str(getattr(response, "output_text", "")),
                 input_tokens=getattr(usage, "input_tokens", None),
                 output_tokens=getattr(usage, "output_tokens", None),
                 cached_tokens=getattr(input_details, "cached_tokens", None),
+                ttft_ms=ttft_ms,
                 model=self.model,
             )
         except LLMProviderError:

@@ -20,7 +20,7 @@ from contextos.benchmarks.models import (
 from contextos.config import OptimizationPolicy
 from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
 
-CONSTRAINT_GENERATOR_VERSION = "1.2.0"
+CONSTRAINT_GENERATOR_VERSION = "1.3.0"
 CONSTRAINT_GENERATION_SEED = 505
 PHASE5_BASELINE_SHA = "4fdd88391300c56ad17af5458897ccdd08d6f7bf"
 _START = datetime(2025, 1, 1, tzinfo=UTC)
@@ -150,6 +150,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[f"/payments/{key}", token],
+            forbidden_output_values=[f"auth_{key}OLD"],
             stale_item_ids=[f"{case_id}-old-auth"],
         )
     elif category is ConstraintCategory.SUPERSESSION:
@@ -192,6 +193,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[current],
+            forbidden_output_values=[old],
             forbidden_item_combinations=[(f"{case_id}-old-state", f"{case_id}-current-state")],
             expected_current_state={"deployment_region": current},
             stale_item_ids=[f"{case_id}-old-state"],
@@ -237,6 +239,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_exact_values=[amount],
+            forbidden_output_values=[old_amount],
             forbidden_item_combinations=[(f"{case_id}-noncanonical", f"{case_id}-canonical")],
             expected_current_state={"maximum_refund": amount},
             stale_item_ids=[f"{case_id}-noncanonical"],
@@ -383,6 +386,7 @@ def _case(
             relations=relations,
             required_exact_values=["Do NOT"],
             required_identifiers=[f"TX-{key}", f"APR-{key}"],
+            forbidden_output_values=["immediately"],
             forbidden_item_combinations=[(f"{case_id}-unsafe", f"{case_id}-policy")],
         )
     elif category is ConstraintCategory.TOOL_STATE:
@@ -426,6 +430,7 @@ def _case(
             critical_item_ids=critical,
             relations=relations,
             required_identifiers=[reservation],
+            forbidden_output_values=["confirmed"],
             forbidden_item_combinations=[
                 (f"{case_id}-old-tool-state", f"{case_id}-current-tool-state")
             ],

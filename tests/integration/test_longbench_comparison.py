@@ -17,6 +17,7 @@ from contextos.benchmarks.longbench_models import (
 )
 from contextos.benchmarks.longbench_runner import (
     chunk_longbench_context,
+    phase5_longbench_strategies,
     run_longbench_comparison,
 )
 from contextos.providers.base import ProviderResponse
@@ -150,6 +151,38 @@ def test_six_strategies_share_provider_model_cases_and_evaluator() -> None:
     assert all(aggregate.total_output_tokens == 2 for aggregate in report.dataset_aggregates)
     assert all(aggregate.total_cached_tokens == 1 for aggregate in report.dataset_aggregates)
     assert report.peak_process_memory_bytes is not None and report.peak_process_memory_bytes > 0
+
+
+def test_phase5_longbench_uses_cost_controlled_critical_comparison() -> None:
+    subset = _subset()
+    provider = FixedAnswerProvider("thirty seconds")
+    predictions = run_longbench_comparison(
+        subset,
+        provider=provider,
+        provider_name="fixture",
+        provider_model="fixture-v1",
+        tokenizer=WordTokenizer(),
+        context_budget_tokens=8,
+        max_context_tokens=100,
+        max_chunk_tokens=4,
+        strategies=phase5_longbench_strategies(),
+    )
+    report = score_longbench_predictions(subset, predictions)
+
+    assert provider.calls == 3
+    assert [value.strategy for value in predictions] == [
+        "full_context",
+        "phase5_v040",
+        "phase5_full",
+    ]
+    assert all(value.status == "ok" for value in predictions)
+    assert len(report.dataset_aggregates) == 3
+    assert {
+        (value.reference_strategy, value.candidate_strategy) for value in report.paired_comparisons
+    } == {
+        ("full_context", "phase5_full"),
+        ("full_context", "phase5_v040"),
+    }
 
 
 def test_longbench_comparison_writes_complete_execution_bundle(tmp_path: Path) -> None:
