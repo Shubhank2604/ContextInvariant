@@ -577,6 +577,12 @@ def test_cli_longbench_phase5_run_preserves_existing_command_and_uses_three_stra
             "16",
             "--max-context-tokens",
             "128",
+            "--input-usd-per-million",
+            "1.0",
+            "--output-usd-per-million",
+            "2.0",
+            "--cached-input-usd-per-million",
+            "0.5",
         ],
     )
 
@@ -584,9 +590,11 @@ def test_cli_longbench_phase5_run_preserves_existing_command_and_uses_three_stra
     report = json.loads(result.stdout)
     assert report["strategies"] == ["full_context", "phase5_v040", "phase5_full"]
     assert report["prediction_count"] == 3
+    assert report["total_estimated_cost_usd"] > 0
     artifact = Path(report["artifact"])
     config = json.loads((artifact / "config.json").read_text(encoding="utf-8"))
     assert config["execution"]["phase5_protocol"] == ("full_context_vs_frozen_v040_vs_full_phase5")
+    assert config["execution"]["pricing"]["input_usd_per_million"] == 1.0
 
 
 def test_cli_model_backed_constraints_writes_provider_evidence(

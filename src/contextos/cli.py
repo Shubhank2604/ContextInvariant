@@ -769,11 +769,42 @@ def benchmark_longbench_phase5_run_command(
         int,
         typer.Option("--max-chunk-tokens", min=1),
     ] = 256,
+    input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--input-usd-per-million", min=0.0),
+    ] = None,
+    output_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--output-usd-per-million", min=0.0),
+    ] = None,
+    cached_input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--cached-input-usd-per-million", min=0.0),
+    ] = None,
 ) -> None:
     """Compare Full Context, frozen v0.4, and Full Phase 5 on LongBench."""
     try:
         if not model.strip():
             raise ValueError("--model must not be blank")
+        price_values = (
+            input_usd_per_million,
+            output_usd_per_million,
+            cached_input_usd_per_million,
+        )
+        if any(value is not None for value in price_values) and not all(
+            value is not None for value in price_values
+        ):
+            raise ValueError("all three pricing options must be supplied together")
+        pricing = None
+        if all(value is not None for value in price_values):
+            assert input_usd_per_million is not None
+            assert output_usd_per_million is not None
+            assert cached_input_usd_per_million is not None
+            pricing = ModelPricing(
+                input_usd_per_million=input_usd_per_million,
+                output_usd_per_million=output_usd_per_million,
+                cached_input_usd_per_million=cached_input_usd_per_million,
+            )
         subset = load_prepared_subset(prepared_path)
         predictions = run_longbench_comparison(
             subset,
@@ -785,6 +816,7 @@ def benchmark_longbench_phase5_run_command(
             max_context_tokens=max_context_tokens,
             max_chunk_tokens=max_chunk_tokens,
             strategies=phase5_longbench_strategies(),
+            pricing=pricing,
         )
         if not any(prediction.status == "ok" for prediction in predictions):
             first_warning = next(
@@ -806,6 +838,7 @@ def benchmark_longbench_phase5_run_command(
                 "max_chunk_tokens": max_chunk_tokens,
                 "baseline_v040_sha": ("4fdd88391300c56ad17af5458897ccdd08d6f7bf"),
                 "phase5_protocol": "full_context_vs_frozen_v040_vs_full_phase5",
+                "pricing": pricing.model_dump(mode="json") if pricing is not None else None,
             },
         )
     except (ContextOSError, OSError, ValueError, ValidationError) as exc:
@@ -824,6 +857,11 @@ def benchmark_longbench_phase5_run_command(
                     status: sum(prediction.status == status for prediction in predictions)
                     for status in sorted({prediction.status for prediction in predictions})
                 },
+                "total_estimated_cost_usd": sum(
+                    prediction.estimated_cost_usd or 0.0 for prediction in predictions
+                )
+                if pricing is not None
+                else None,
             },
             indent=2,
             sort_keys=True,

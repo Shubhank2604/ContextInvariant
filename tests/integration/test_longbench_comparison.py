@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from contextos.benchmarks.constraint_models import ModelPricing
 from contextos.benchmarks.longbench import (
     score_longbench_predictions,
     write_longbench_bundle,
@@ -166,6 +167,11 @@ def test_phase5_longbench_uses_cost_controlled_critical_comparison() -> None:
         max_context_tokens=100,
         max_chunk_tokens=4,
         strategies=phase5_longbench_strategies(),
+        pricing=ModelPricing(
+            input_usd_per_million=1.0,
+            output_usd_per_million=2.0,
+            cached_input_usd_per_million=0.5,
+        ),
     )
     report = score_longbench_predictions(subset, predictions)
 
@@ -176,7 +182,9 @@ def test_phase5_longbench_uses_cost_controlled_critical_comparison() -> None:
         "phase5_full",
     ]
     assert all(value.status == "ok" for value in predictions)
+    assert all(value.estimated_cost_usd is not None for value in predictions)
     assert len(report.dataset_aggregates) == 3
+    assert all(value.total_estimated_cost_usd is not None for value in report.dataset_aggregates)
     assert {
         (value.reference_strategy, value.candidate_strategy) for value in report.paired_comparisons
     } == {

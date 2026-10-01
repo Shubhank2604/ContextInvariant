@@ -14,6 +14,7 @@ from contextos.baselines import (
     RelevanceOnlyBaseline,
     SlidingWindowBaseline,
 )
+from contextos.benchmarks.constraint_models import ModelPricing
 from contextos.benchmarks.longbench import render_longbench_prompt
 from contextos.benchmarks.longbench_models import (
     LongBenchCase,
@@ -26,11 +27,27 @@ from contextos.config import OptimizationPolicy
 from contextos.errors import ContextOSError
 from contextos.models import ContextItem, ContextType
 from contextos.optimizer import ContextOptimizer
-from contextos.providers import LLMProvider
+from contextos.providers import LLMProvider, ProviderResponse
 from contextos.tokenization import Tokenizer
 from contextos.trace import OptimizedContext
 
 _START = datetime(2025, 1, 1, tzinfo=UTC)
+
+
+def _estimated_cost(response: ProviderResponse, pricing: ModelPricing | None) -> float | None:
+    if pricing is None:
+        return None
+    input_tokens = response.input_tokens
+    output_tokens = response.output_tokens
+    if input_tokens is None or output_tokens is None:
+        return None
+    cached = min(response.cached_tokens or 0, input_tokens)
+    uncached = input_tokens - cached
+    return (
+        uncached * pricing.input_usd_per_million
+        + cached * pricing.cached_input_usd_per_million
+        + output_tokens * pricing.output_usd_per_million
+    ) / 1_000_000
 
 
 class _ContextOSStrategy:
@@ -223,6 +240,7 @@ def _run_strategy(
     tokenizer: Tokenizer,
     context_budget_tokens: int,
     max_context_tokens: int,
+    pricing: ModelPricing | None,
 ) -> LongBenchPrediction:
     original_tokens = tokenizer.count_tokens(case.context)
     max_prompt_tokens = max_context_tokens - case.max_output_tokens
@@ -340,6 +358,7 @@ def _run_strategy(
         compression_time_ms=compression_time_ms,
         provider_latency_ms=provider_latency_ms,
         model_ttft_ms=response.ttft_ms,
+        estimated_cost_usd=_estimated_cost(response, pricing),
         peak_process_memory_bytes=probe.peak_process_memory_bytes,
         stage_timings_ms=timings,
         selected_item_ids=[item.id for item in result.selected_items],
@@ -358,6 +377,7 @@ def run_longbench_comparison(
     max_context_tokens: int,
     max_chunk_tokens: int = 256,
     strategies: Sequence[BaselineStrategy] | None = None,
+    pricing: ModelPricing | None = None,
 ) -> list[LongBenchPrediction]:
     """Run every selected case and strategy through one fixed provider/model configuration."""
     if context_budget_tokens <= 0 or max_context_tokens <= 0 or max_chunk_tokens <= 0:
@@ -384,6 +404,7 @@ def run_longbench_comparison(
                 tokenizer=tokenizer,
                 context_budget_tokens=context_budget_tokens,
                 max_context_tokens=max_context_tokens,
+                pricing=pricing,
             )
             for strategy in selected_strategies
         )

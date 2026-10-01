@@ -138,6 +138,7 @@ class LongBenchPrediction(BaseModel):
     compression_time_ms: float | None = Field(default=None, ge=0.0)
     provider_latency_ms: float | None = Field(default=None, ge=0.0)
     model_ttft_ms: float | None = Field(default=None, ge=0.0)
+    estimated_cost_usd: float | None = Field(default=None, ge=0.0)
     peak_process_memory_bytes: int | None = Field(default=None, ge=0)
     stage_timings_ms: dict[str, float] = Field(default_factory=dict)
     selected_item_ids: list[str] = Field(default_factory=list)
@@ -200,6 +201,7 @@ class LongBenchDatasetAggregate(BaseModel):
     mean_model_ttft_ms: float | None = Field(default=None, ge=0.0)
     total_output_tokens: int | None = Field(default=None, ge=0)
     total_cached_tokens: int | None = Field(default=None, ge=0)
+    total_estimated_cost_usd: float | None = Field(default=None, ge=0.0)
 
 
 class LongBenchPairedComparison(BaseModel):
@@ -221,7 +223,7 @@ class LongBenchScoreReport(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
-    schema_version: str = "1.2"
+    schema_version: str = "1.3"
     prepared_sha256: str
     prediction_count: int = Field(gt=0)
     provider: str

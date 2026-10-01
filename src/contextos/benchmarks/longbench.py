@@ -372,6 +372,9 @@ def score_longbench_predictions(
             for prediction in predictions
             if prediction.dataset == dataset and prediction.strategy == strategy
         ]
+        successful_predictions = [
+            prediction for prediction in aggregate_predictions if prediction.status == "ok"
+        ]
         input_tokens = [
             prediction.input_context_tokens
             for prediction in aggregate_predictions
@@ -412,6 +415,11 @@ def score_longbench_predictions(
             for prediction in aggregate_predictions
             if prediction.cached_tokens is not None
         ]
+        costs = [
+            prediction.estimated_cost_usd
+            for prediction in successful_predictions
+            if prediction.estimated_cost_usd is not None
+        ]
         seed_material = f"{prepared_sha}|{dataset}|{strategy}|{aggregate_scores[0].metric}".encode()
         aggregate_seed = int.from_bytes(hashlib.sha256(seed_material).digest()[:4], "big")
         aggregates.append(
@@ -449,6 +457,11 @@ def score_longbench_predictions(
                 mean_model_ttft_ms=mean(model_ttfts) if model_ttfts else None,
                 total_output_tokens=sum(output_tokens) if output_tokens else None,
                 total_cached_tokens=sum(cached_tokens) if cached_tokens else None,
+                total_estimated_cost_usd=(
+                    sum(costs)
+                    if successful_predictions and len(costs) == len(successful_predictions)
+                    else None
+                ),
             )
         )
     paired_comparisons: list[LongBenchPairedComparison] = []
@@ -616,8 +629,9 @@ def write_longbench_bundle(
             "It is process-wide and must not be attributed to an individual strategy.",
             "",
             "| Dataset | Strategy | Mean input | Optimizer total ms | p50 ms | p95 ms | "
-            "Embedding ms | Compression ms | Provider total ms | Output tokens | Cached tokens |",
-            "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+            "Embedding ms | Compression ms | Provider total ms | Output tokens | Cached tokens | "
+            "Estimated cost USD |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     report_lines.extend(
@@ -631,7 +645,8 @@ def write_longbench_bundle(
         f"{_display_optional(value.mean_compression_time_ms)} | "
         f"{_display_optional(value.total_provider_latency_ms)} | "
         f"{_display_optional(value.total_output_tokens)} | "
-        f"{_display_optional(value.total_cached_tokens)} |"
+        f"{_display_optional(value.total_cached_tokens)} | "
+        f"{_display_optional(value.total_estimated_cost_usd)} |"
         for value in report.dataset_aggregates
     )
     if report.paired_comparisons:
