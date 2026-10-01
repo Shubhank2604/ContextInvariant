@@ -477,6 +477,8 @@ def score_longbench_predictions(
             (baseline, "contextos")
             for baseline in sorted(available_strategies - {"full_context", "contextos"})
         )
+        if {"phase5_v040", "phase5_full"} <= available_strategies:
+            comparison_pairs.append(("phase5_v040", "phase5_full"))
         for reference_strategy, candidate in comparison_pairs:
             reference: dict[str, float] = {
                 score.source_id: score.score

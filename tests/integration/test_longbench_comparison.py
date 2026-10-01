@@ -196,6 +196,7 @@ def test_phase5_longbench_uses_cost_controlled_critical_comparison() -> None:
     } == {
         ("full_context", "phase5_full"),
         ("full_context", "phase5_v040"),
+        ("phase5_v040", "phase5_full"),
     }
 
 
