@@ -1,0 +1,172 @@
+{
+  "artifact": "benchmarks/results/20261001T180015.015202Z-phase5-ablation-full",
+  "baseline_v040_sha": "4fdd88391300c56ad17af5458897ccdd08d6f7bf",
+  "budget_ratios": [0.25, 0.35, 0.5, 0.65, 0.8, 1.0],
+  "case_count": 90,
+  "current_research_sha": "3f42c96b35c49cf2ab4221fef731fc38b31eae6a",
+  "full_risk_selection_mismatches": 0,
+  "full_risk_case_budget_pairs": 540,
+  "generator_version": "1.2.0",
+  "prediction_count": 5940,
+  "schema_version": "phase5i-summary-v1",
+  "budget_results": [
+    {
+      "budget_ratio": 0.25,
+      "v040": {
+        "successful_cases": 0,
+        "task_score": 0.0,
+        "critical_information_recall": 0.0,
+        "context_reduction": 0.0,
+        "constraint_violation_rate": 1.0,
+        "p95_optimizer_latency_ms": 0.0
+      },
+      "full_phase5": {
+        "successful_cases": 0,
+        "task_score": 0.0,
+        "critical_information_recall": 0.0,
+        "context_reduction": 0.0,
+        "constraint_violation_rate": 1.0,
+        "p95_optimizer_latency_ms": 0.0
+      }
+    },
+    {
+      "budget_ratio": 0.35,
+      "v040": {
+        "successful_cases": 10,
+        "task_score": 0.0,
+        "critical_information_recall": 0.0,
+        "context_reduction": 0.6447368421052632,
+        "constraint_violation_rate": 1.0,
+        "p95_optimizer_latency_ms": 1.9365650194231416
+      },
+      "full_phase5": {
+        "successful_cases": 0,
+        "task_score": 0.0,
+        "critical_information_recall": 0.0,
+        "context_reduction": 0.0,
+        "constraint_violation_rate": 1.0,
+        "p95_optimizer_latency_ms": 0.0
+      }
+    },
+    {
+      "budget_ratio": 0.5,
+      "v040": {
+        "successful_cases": 90,
+        "task_score": 0.18518518518518517,
+        "critical_information_recall": 0.12962962962962962,
+        "context_reduction": 0.5775933814705658,
+        "constraint_violation_rate": 1.0,
+        "p95_optimizer_latency_ms": 6.6789049946237355
+      },
+      "full_phase5": {
+        "successful_cases": 0,
+        "task_score": 0.0,
+        "critical_information_recall": 0.0,
+        "context_reduction": 0.0,
+        "constraint_violation_rate": 1.0,
+        "p95_optimizer_latency_ms": 0.0
+      }
+    },
+    {
+      "budget_ratio": 0.65,
+      "v040": {
+        "successful_cases": 90,
+        "task_score": 0.5592592592592592,
+        "critical_information_recall": 0.5555555555555556,
+        "context_reduction": 0.4033505472714196,
+        "constraint_violation_rate": 0.6666666666666666,
+        "p95_optimizer_latency_ms": 9.165930021845266
+      },
+      "full_phase5": {
+        "successful_cases": 50,
+        "task_score": 1.0,
+        "critical_information_recall": 1.0,
+        "context_reduction": 0.37529108869272804,
+        "constraint_violation_rate": 0.4444444444444444,
+        "p95_optimizer_latency_ms": 7.362920005107298
+      }
+    },
+    {
+      "budget_ratio": 0.8,
+      "v040": {
+        "successful_cases": 90,
+        "task_score": 0.7814814814814814,
+        "critical_information_recall": 0.7777777777777778,
+        "context_reduction": 0.27895914905882324,
+        "constraint_violation_rate": 0.7777777777777778,
+        "p95_optimizer_latency_ms": 8.788675004325338
+      },
+      "full_phase5": {
+        "successful_cases": 80,
+        "task_score": 1.0,
+        "critical_information_recall": 1.0,
+        "context_reduction": 0.331242530208503,
+        "constraint_violation_rate": 0.1111111111111111,
+        "p95_optimizer_latency_ms": 13.532964991463807
+      }
+    },
+    {
+      "budget_ratio": 1.0,
+      "v040": {
+        "successful_cases": 90,
+        "task_score": 1.0,
+        "critical_information_recall": 1.0,
+        "context_reduction": 0.0,
+        "constraint_violation_rate": 0.5555555555555556,
+        "p95_optimizer_latency_ms": 7.40655998670263
+      },
+      "full_phase5": {
+        "successful_cases": 90,
+        "task_score": 1.0,
+        "critical_information_recall": 1.0,
+        "context_reduction": 0.08418548385114391,
+        "constraint_violation_rate": 0.0,
+        "dependency_closure_rate": 1.0,
+        "state_consistency_rate": 1.0,
+        "contradiction_leakage_rate": 0.0,
+        "exact_value_preservation_rate": 1.0,
+        "identifier_preservation_rate": 1.0,
+        "citation_preservation_rate": 1.0,
+        "p95_optimizer_latency_ms": 7.905179981025867
+      }
+    }
+  ],
+  "paired_full_vs_v040": [
+    {
+      "budget_ratio": 0.65,
+      "shared_successful_cases": 50,
+      "task_score_delta": 0.4,
+      "task_score_delta_ci95": [0.28, 0.54],
+      "critical_information_recall_delta": 0.4,
+      "critical_information_recall_delta_ci95": [0.26, 0.52],
+      "input_token_delta": 1.6,
+      "input_token_delta_ci95": [0.96, 2.2809999999999993],
+      "constraint_violation_rate_delta": -0.2222222222222222,
+      "constraint_violation_rate_delta_ci95": [-0.3, -0.14444444444444443]
+    },
+    {
+      "budget_ratio": 0.8,
+      "shared_successful_cases": 80,
+      "task_score_delta": 0.24583333333333335,
+      "task_score_delta_ci95": [0.15, 0.3376041666666666],
+      "critical_information_recall_delta": 0.25,
+      "critical_information_recall_delta_ci95": [0.1625, 0.35],
+      "input_token_delta": -3.25,
+      "input_token_delta_ci95": [-3.9878124999999995, -2.5871875],
+      "constraint_violation_rate_delta": -0.6666666666666666,
+      "constraint_violation_rate_delta_ci95": [-0.7666666666666667, -0.5555555555555556]
+    },
+    {
+      "budget_ratio": 1.0,
+      "shared_successful_cases": 90,
+      "task_score_delta": 0.0,
+      "task_score_delta_ci95": [0.0, 0.0],
+      "critical_information_recall_delta": 0.0,
+      "critical_information_recall_delta_ci95": [0.0, 0.0],
+      "input_token_delta": -4.777777777777778,
+      "input_token_delta_ci95": [-5.655833333333334, -3.8444444444444446],
+      "constraint_violation_rate_delta": -0.5555555555555556,
+      "constraint_violation_rate_delta_ci95": [-0.6555555555555556, -0.45527777777777806]
+    }
+  ]
+}
