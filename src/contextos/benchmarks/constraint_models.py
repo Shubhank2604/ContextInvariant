@@ -8,7 +8,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from contextos.benchmarks.models import (
     BenchmarkMeasurement,
+    BenchmarkRun,
     ContextOSBenchCase,
+    PairedMetricComparison,
 )
 from contextos.models import ContextEdge
 
@@ -125,3 +127,36 @@ class ConstraintAggregate(BaseModel):
     exact_value_preservation_rate: float | None = Field(default=None, ge=0.0, le=1.0)
     identifier_preservation_rate: float | None = Field(default=None, ge=0.0, le=1.0)
     citation_preservation_rate: float | None = Field(default=None, ge=0.0, le=1.0)
+
+
+class Phase5SweepMeasurement(BaseModel):
+    """One constraint measurement at one declared budget frontier point."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    budget_ratio: float = Field(gt=0.0, le=1.0)
+    measurement: ConstraintMeasurement
+
+
+class Phase5BudgetResult(BaseModel):
+    """All raw and aggregate outputs for one budget ratio."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    budget_ratio: float = Field(gt=0.0, le=1.0)
+    run: BenchmarkRun
+    constraint_measurements: list[ConstraintMeasurement]
+    constraint_aggregates: list[ConstraintAggregate]
+    constraint_paired_comparisons: list[PairedMetricComparison]
+
+
+class Phase5AblationResult(BaseModel):
+    """Complete cumulative Phase 5 ablation and budget-sweep result."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    schema_version: str = "phase5i-v1"
+    baseline_v040_sha: str
+    budget_ratios: tuple[float, ...]
+    strategies: tuple[str, ...]
+    budget_results: list[Phase5BudgetResult]

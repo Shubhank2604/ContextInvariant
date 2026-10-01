@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
 from time import perf_counter
-from typing import TypeVar
+from typing import Protocol, TypeVar
 
 from contextos.budget import AllocationPlan, TokenBudgetAllocator, validate_contextual_budget
 from contextos.compression import CompressionExecution, CompressionExecutor
@@ -43,6 +43,21 @@ from contextos.trace import (
 T = TypeVar("T")
 
 
+class CompressionExecutionEngine(Protocol):
+    """Structural boundary used by research runs to freeze compression behavior."""
+
+    def execute(
+        self,
+        plan: AllocationPlan,
+        items: Sequence[ContextItem],
+        *,
+        task: str,
+        policy: OptimizationPolicy,
+    ) -> CompressionExecution:
+        """Execute a previously constructed allocation plan."""
+        ...
+
+
 class ContextOptimizer:
     """Construct final model context as the sole token-budget authority."""
 
@@ -54,12 +69,14 @@ class ContextOptimizer:
         edges: Sequence[ContextEdge] = (),
         layout: LayoutStrategy | None = None,
         store: ContextStore | None = None,
+        compression_executor: CompressionExecutionEngine | None = None,
     ) -> None:
         self._tokenizer = tokenizer or TiktokenTokenizer()
         self._provider = embedding_provider or DeterministicEmbeddingProvider()
         self._edges = tuple(edges)
         self._layout = layout
         self._store = store
+        self._compression_executor = compression_executor or CompressionExecutor(self._tokenizer)
 
     def optimize(
         self,
@@ -207,7 +224,7 @@ class ContextOptimizer:
         )
         compression = stage(
             "compression",
-            lambda: CompressionExecutor(self._tokenizer).execute(
+            lambda: self._compression_executor.execute(
                 plan,
                 survivors,
                 task=task,

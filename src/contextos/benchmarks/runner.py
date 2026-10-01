@@ -31,7 +31,14 @@ from contextos.benchmarks.models import (
     ContextOSBenchDataset,
 )
 from contextos.benchmarks.performance import measure_performance
-from contextos.errors import ContextBudgetOverflow
+from contextos.errors import (
+    ConstraintUnsatisfiable,
+    ContextBudgetOverflow,
+    ContextualBudgetInfeasible,
+    MandatoryContextOverflow,
+    RequiredContextOverflow,
+    UnresolvedConflict,
+)
 from contextos.optimizer import ContextOptimizer
 from contextos.tokenization import Tokenizer
 from contextos.trace import OptimizedContext
@@ -187,11 +194,32 @@ def _run_case(
     try:
         with measure_performance() as probe:
             result = strategy.optimize(case, tokenizer)
-    except ContextBudgetOverflow as exc:
+    except (
+        ContextBudgetOverflow,
+        ContextualBudgetInfeasible,
+        MandatoryContextOverflow,
+        RequiredContextOverflow,
+        ConstraintUnsatisfiable,
+        UnresolvedConflict,
+    ) as exc:
+        if isinstance(
+            exc,
+            (
+                ContextBudgetOverflow,
+                ContextualBudgetInfeasible,
+                MandatoryContextOverflow,
+                RequiredContextOverflow,
+            ),
+        ):
+            status = "overflow"
+        elif isinstance(exc, UnresolvedConflict):
+            status = "unresolved_conflict"
+        else:
+            status = "constraint_unsatisfiable"
         failure = failed_measurement(
             case,
             strategy=strategy.name,
-            status="overflow",
+            status=status,
             optimizer_wall_time_ms=probe.wall_time_ms,
             warning=str(exc),
         )

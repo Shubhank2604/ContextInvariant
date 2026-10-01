@@ -20,7 +20,7 @@ from contextos.benchmarks.models import (
 from contextos.config import OptimizationPolicy
 from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
 
-CONSTRAINT_GENERATOR_VERSION = "1.0.0"
+CONSTRAINT_GENERATOR_VERSION = "1.1.0"
 CONSTRAINT_GENERATION_SEED = 505
 PHASE5_BASELINE_SHA = "4fdd88391300c56ad17af5458897ccdd08d6f7bf"
 _START = datetime(2025, 1, 1, tzinfo=UTC)
@@ -35,6 +35,7 @@ def _item(
     *,
     importance: float = 0.5,
     mandatory: bool = False,
+    canonical: bool = False,
 ) -> ContextItem:
     timestamp = _START + timedelta(days=offset)
     return ContextItem(
@@ -47,7 +48,7 @@ def _item(
         importance=importance,
         mandatory=mandatory,
         evictable=not mandatory,
-        metadata={"fixture_role": suffix},
+        metadata={"fixture_role": suffix, "canonical": canonical},
     )
 
 
@@ -214,6 +215,7 @@ def _case(
                 ContextType.DECISION,
                 3,
                 importance=1.0,
+                canonical=True,
             ),
             noise,
             _item(
@@ -340,7 +342,15 @@ def _case(
         policy = f"Do NOT execute transfer TX-{key} without approval APR-{key}."
         items = [
             system,
-            _item(case_id, "policy", policy, ContextType.DECISION, 2, importance=1.0),
+            _item(
+                case_id,
+                "policy",
+                policy,
+                ContextType.DECISION,
+                2,
+                importance=1.0,
+                canonical=True,
+            ),
             _item(
                 case_id,
                 "unsafe",

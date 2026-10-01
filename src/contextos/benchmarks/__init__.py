@@ -25,6 +25,9 @@ from contextos.benchmarks.constraint_models import (
     ConstraintCategory,
     ConstraintGroundTruth,
     ConstraintMeasurement,
+    Phase5AblationResult,
+    Phase5BudgetResult,
+    Phase5SweepMeasurement,
 )
 from contextos.benchmarks.models import (
     BenchmarkAggregate,
@@ -41,6 +44,15 @@ from contextos.benchmarks.models import (
     RequiredFact,
     TaskMetric,
 )
+from contextos.benchmarks.phase5_ablation import (
+    BUDGET_RATIOS,
+    Phase5BenchmarkStrategy,
+    Phase5Variant,
+    constraint_paired_comparisons,
+    phase5_ablation_strategies,
+    run_phase5_ablation,
+    write_phase5_ablation_artifact,
+)
 from contextos.benchmarks.runner import (
     ablation_effects,
     default_ablation_strategies,
@@ -48,6 +60,7 @@ from contextos.benchmarks.runner import (
 )
 
 __all__ = [
+    "BUDGET_RATIOS",
     "PHASE5_BASELINE_SHA",
     "REQUIRED_BUNDLE_FILES",
     "BenchmarkAggregate",
@@ -69,17 +82,26 @@ __all__ = [
     "ContextOSBenchDataset",
     "LoadedBenchmarkBundle",
     "PairedMetricComparison",
+    "Phase5AblationResult",
+    "Phase5BenchmarkStrategy",
+    "Phase5BudgetResult",
+    "Phase5SweepMeasurement",
+    "Phase5Variant",
     "RequiredFact",
     "TaskMetric",
     "ablation_effects",
     "aggregate_constraints",
     "capture_environment",
+    "constraint_paired_comparisons",
     "default_ablation_strategies",
     "evaluate_constraints",
     "generate_constraint_dataset",
     "load_benchmark_bundle",
+    "phase5_ablation_strategies",
     "run_constraint_benchmark",
     "run_contextos_bench",
+    "run_phase5_ablation",
     "write_benchmark_bundle",
     "write_constraint_artifact",
+    "write_phase5_ablation_artifact",
 ]

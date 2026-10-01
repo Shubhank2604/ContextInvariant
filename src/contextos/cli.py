@@ -40,6 +40,10 @@ from contextos.benchmarks.longbench import (
 from contextos.benchmarks.longbench_models import LongBenchProfile
 from contextos.benchmarks.longbench_runner import run_longbench_comparison
 from contextos.benchmarks.models import BenchmarkAggregate, BenchmarkRun
+from contextos.benchmarks.phase5_ablation import (
+    run_phase5_ablation,
+    write_phase5_ablation_artifact,
+)
 from contextos.benchmarks.positional import (
     load_positional_dataset,
     positional_summary,
@@ -350,6 +354,44 @@ def benchmark_ablation_command(
                 "case_count": run.metadata["case_count"],
                 "aggregates": [aggregate.model_dump(mode="json") for aggregate in run.aggregates],
                 "effects_vs_contextos_full": ablation_effects(run),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@benchmark_app.command("phase5-ablation")
+def benchmark_phase5_ablation_command(
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    case_limit: Annotated[int | None, typer.Option("--case-limit", min=1)] = None,
+) -> None:
+    """Run the Phase 5 cumulative ablation across the fixed budget frontier."""
+    try:
+        dataset = generate_constraint_dataset()
+        result = run_phase5_ablation(
+            dataset,
+            tokenizer=TiktokenTokenizer(),
+            case_limit=case_limit,
+        )
+        artifact_path = write_phase5_ablation_artifact(
+            output_directory,
+            dataset=dataset,
+            result=result,
+            profile="full" if case_limit is None else f"limited-{case_limit}",
+        )
+    except (ContextOSError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Phase 5 ablation failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact_path),
+                "case_count": result.budget_results[0].run.metadata["case_count"],
+                "budget_ratios": result.budget_ratios,
+                "strategies": result.strategies,
             },
             indent=2,
             sort_keys=True,
