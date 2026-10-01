@@ -6,7 +6,7 @@ from collections.abc import Callable, Mapping, Sequence
 from time import perf_counter
 from typing import TypeVar
 
-from contextos.budget import TokenBudgetAllocator, validate_contextual_budget
+from contextos.budget import AllocationPlan, TokenBudgetAllocator, validate_contextual_budget
 from contextos.compression import CompressionExecution, CompressionExecutor
 from contextos.config import OptimizationPolicy
 from contextos.dedup import exact_deduplicate, semantic_deduplicate
@@ -32,10 +32,12 @@ from contextos.store import ContextStore
 from contextos.tokenization import TiktokenTokenizer, Tokenizer
 from contextos.trace import (
     BudgetAllocation,
+    ConstraintTraceIndex,
     ItemTrace,
     OptimizationDecision,
     OptimizationTrace,
     OptimizedContext,
+    summarize_transformation_trace,
 )
 
 T = TypeVar("T")
@@ -268,10 +270,12 @@ class ContextOptimizer:
                 tokenized,
                 laid_out,
                 scores,
-                plan.rejection_reasons,
+                plan,
                 compression,
                 exact_matches,
                 semantic_matches,
+                policy,
+                self._edges,
             ),
         )
 
@@ -326,14 +330,23 @@ class ContextOptimizer:
         original: Sequence[ContextItem],
         selected: Sequence[ContextItem],
         scores: Mapping[str, ScoreBreakdown],
-        rejection_reasons: Mapping[str, str],
+        plan: AllocationPlan,
         compression: CompressionExecution,
         exact_matches: Mapping[str, DuplicateMatch],
         semantic_matches: Mapping[str, DuplicateMatch],
+        policy: OptimizationPolicy,
+        edges: Sequence[ContextEdge],
     ) -> list[ItemTrace]:
         selected_by_id = {item.id: item for item in selected}
         positions = {item.id: index for index, item in enumerate(selected)}
         attempts = {attempt.item_id: attempt for attempt in compression.attempts}
+        direct_allocations = {value.item_id: value for value in plan.direct_selected}
+        compression_allocations = {value.item_id: value for value in plan.compression_requests}
+        constraint_evidence = ConstraintTraceIndex(
+            original,
+            edges,
+            selected_item_ids=tuple(selected_by_id),
+        )
         traces: list[ItemTrace] = []
         for item in original:
             exact = exact_matches.get(item.id)
@@ -342,6 +355,14 @@ class ContextOptimizer:
             final = selected_by_id.get(item.id)
             result = compression.successful_results.get(item.id)
             attempt = attempts.get(item.id)
+            allocation = direct_allocations.get(item.id) or compression_allocations.get(item.id)
+            constraint = constraint_evidence.for_item(item.id)
+            transformation_attempts = list(attempt.transformation_attempts) if attempt else []
+            transformation = summarize_transformation_trace(
+                item.contract,
+                transformation_attempts,
+                attempt.fallback_path if attempt else (),
+            )
             if exact is not None:
                 decision = OptimizationDecision.REMOVED
                 reason = exact.reason
@@ -367,8 +388,22 @@ class ContextOptimizer:
                 reason = (
                     attempt.reason
                     if attempt is not None and attempt.reason is not None
-                    else rejection_reasons.get(item.id, "not_selected")
+                    else plan.rejection_reasons.get(item.id, "not_selected")
                 )
+            selection_value = (
+                allocation.selection_value
+                if allocation is not None and allocation.selection_value is not None
+                else score.selection_value
+                if score is not None
+                else None
+            )
+            value_density = (
+                allocation.value_density
+                if allocation is not None
+                else selection_value / max(item.token_count or 0, 1)
+                if selection_value is not None
+                else None
+            )
             traces.append(
                 ItemTrace(
                     item_id=item.id,
@@ -383,8 +418,28 @@ class ContextOptimizer:
                     dependency_score=score.dependency if score else None,
                     type_priority=score.type_priority if score else None,
                     composite_utility=score.composite_utility if score else None,
-                    value_density=(
-                        score.composite_utility / max(item.token_count or 0, 1) if score else None
+                    omission_risk=(
+                        score.omission_risk if score and policy.risk_aware_allocation else None
+                    ),
+                    transformation_risk=(
+                        score.transformation_risk
+                        if score and policy.risk_aware_allocation
+                        else None
+                    ),
+                    selection_value=selection_value,
+                    transformed_selection_value=(
+                        score.transformed_selection_value if score else None
+                    ),
+                    value_density=value_density,
+                    preservation_contract=item.contract,
+                    hard_constraints_triggered=list(constraint.hard_constraints_triggered),
+                    required_by=list(constraint.required_by),
+                    dependency_closure=list(constraint.dependency_closure),
+                    superseded_items=list(constraint.superseded_items),
+                    conflict_status=constraint.conflict_status,
+                    constraint_resolution_applied=constraint.constraint_resolution_applied,
+                    would_have_been_removed_without_constraints=(
+                        constraint.would_have_been_removed_without_constraints
                     ),
                     decision=decision,
                     decision_reason=reason,
@@ -392,12 +447,21 @@ class ContextOptimizer:
                     final_position=positions.get(item.id),
                     compression_strategy=result.strategy if result else None,
                     provenance=list(result.provenance) if result else [],
-                    transformation_attempts=(
-                        list(attempt.transformation_attempts) if attempt else []
-                    ),
+                    transformation_attempted=transformation.transformation_attempted,
+                    transformation_attempts=transformation_attempts,
+                    validators_executed=list(transformation.validators_executed),
+                    validator_results=list(transformation.validator_results),
                     fallback_path=list(attempt.fallback_path) if attempt else [],
+                    fallback_used=transformation.fallback_used,
                     final_representation_type=(
-                        attempt.final_representation_type if attempt else None
+                        attempt.final_representation_type
+                        if attempt and attempt.final_representation_type is not None
+                        else "original"
+                        if final is not None
+                        else None
+                    ),
+                    would_have_been_compressed_without_contract=(
+                        transformation.would_have_been_compressed_without_contract
                     ),
                 )
             )

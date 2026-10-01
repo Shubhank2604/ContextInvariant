@@ -8,6 +8,8 @@ The project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Phase 5H versioned constraint-aware traces with preservation contracts, activated hard-relation evidence, directed closure, supersession and conflict state, risk-adjusted allocation values, flattened validator/fallback outcomes, and conservative counterfactuals.
+
 - Phase 5G opt-in omission-risk-aware allocation with deterministic feature groups, transformation-risk penalties, auditable action values, two bounded policy coefficients, and an explicit ablation switch.
 
 - Phase 5F deterministic contract validators, validated transformation fallbacks, explicit required-context overflow, dependency-reference checks, and per-attempt validator outcomes in optimization traces.

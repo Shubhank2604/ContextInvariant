@@ -25,13 +25,24 @@ from contextos.models import (
 )
 from contextos.optimizer import ContextOptimizer
 from contextos.scoring import RiskAssessment, assess_context_risk
-from contextos.trace import OptimizationTrace, OptimizedContext
+from contextos.trace import (
+    ConflictTraceStatus,
+    ConstraintTraceEvidence,
+    ConstraintTraceIndex,
+    OptimizationTrace,
+    OptimizedContext,
+    TransformationTraceEvidence,
+    summarize_transformation_trace,
+)
 from contextos.validation import ContractValidationEngine, ValidationResult
 
 __all__ = [
     "AllocationPlan",
     "ConflictPolicy",
+    "ConflictTraceStatus",
     "ConstraintResolution",
+    "ConstraintTraceEvidence",
+    "ConstraintTraceIndex",
     "ContextConstraintGraph",
     "ContextEdge",
     "ContextItem",
@@ -51,9 +62,11 @@ __all__ = [
     "RetentionPolicy",
     "RiskAssessment",
     "SlidingWindowBaseline",
+    "TransformationTraceEvidence",
     "ValidatedRepresentation",
     "ValidationResult",
     "assess_context_risk",
+    "summarize_transformation_trace",
 ]
 
 __version__ = "0.3.0"

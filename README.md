@@ -55,6 +55,8 @@ Lossy candidates are checked by deterministic preservation validators before acc
 
 Optional allocation can explicitly enable deterministic omission- and transformation-risk adjustment while hard requirements remain outside numeric ranking. Existing policy semantics remain the default for compatibility. See [`docs/risk-aware-allocation.md`](docs/risk-aware-allocation.md).
 
+Optimization traces use a versioned Phase 5 schema with preservation contracts, activated constraint evidence, directed dependency closure, conflict state, risk values, validator outcomes, fallbacks, final representations, and conservative counterfactuals. See [`docs/constraint-aware-tracing.md`](docs/constraint-aware-tracing.md).
+
 ## CLI
 
 ```bash
