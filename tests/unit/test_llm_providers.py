@@ -1,9 +1,11 @@
 """Offline-safe optional language-model provider tests."""
 
+import importlib
 from types import SimpleNamespace
 
 import pytest
 
+import contextos.providers.openai as openai_provider_module
 from contextos.errors import LLMProviderError
 from contextos.providers import MockLLMProvider, OpenAIProvider
 
@@ -63,7 +65,8 @@ def test_openai_provider_streams_text_usage_and_ttft(
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setattr(
-        "contextos.providers.openai.importlib.import_module",
+        importlib,
+        "import_module",
         lambda name: SimpleNamespace(OpenAI=FakeOpenAI),
     )
 
@@ -112,11 +115,12 @@ def test_openai_provider_paces_repeated_requests(
     sleeps: list[float] = []
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setattr(
-        "contextos.providers.openai.importlib.import_module",
+        importlib,
+        "import_module",
         lambda name: SimpleNamespace(OpenAI=FakeOpenAI),
     )
-    monkeypatch.setattr("contextos.providers.openai.perf_counter", lambda: next(ticks))
-    monkeypatch.setattr("contextos.providers.openai.sleep", sleeps.append)
+    monkeypatch.setattr(openai_provider_module, "perf_counter", lambda: next(ticks))
+    monkeypatch.setattr(openai_provider_module, "sleep", sleeps.append)
     provider = OpenAIProvider(
         model="configured-benchmark-model",
         minimum_request_interval_seconds=2.0,
@@ -157,7 +161,8 @@ def test_openai_provider_retains_output_truncated_at_declared_bound(
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setattr(
-        "contextos.providers.openai.importlib.import_module",
+        importlib,
+        "import_module",
         lambda name: SimpleNamespace(OpenAI=FakeOpenAI),
     )
 
@@ -188,7 +193,8 @@ def test_openai_provider_rejects_other_incomplete_reasons(
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setattr(
-        "contextos.providers.openai.importlib.import_module",
+        importlib,
+        "import_module",
         lambda name: SimpleNamespace(OpenAI=FakeOpenAI),
     )
 
@@ -209,7 +215,8 @@ def test_openai_provider_rejects_incomplete_stream(
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setattr(
-        "contextos.providers.openai.importlib.import_module",
+        importlib,
+        "import_module",
         lambda name: SimpleNamespace(OpenAI=FakeOpenAI),
     )
 
