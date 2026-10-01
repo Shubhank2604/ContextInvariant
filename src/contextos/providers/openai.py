@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import importlib
 import os
-from time import perf_counter
+from time import perf_counter, sleep
 from typing import Any
 
 from contextos.errors import LLMProviderError
@@ -14,13 +14,37 @@ from contextos.providers.base import ProviderResponse
 class OpenAIProvider:
     """Call OpenAI only when ``complete`` is explicitly invoked."""
 
-    def __init__(self, *, model: str, temperature: float | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        model: str,
+        temperature: float | None = None,
+        minimum_request_interval_seconds: float = 0.0,
+        max_retries: int = 6,
+    ) -> None:
         if not model.strip():
             raise ValueError("OpenAI provider model must not be empty")
         if temperature is not None and not 0.0 <= temperature <= 2.0:
             raise ValueError("OpenAI provider temperature must be between zero and two")
+        if minimum_request_interval_seconds < 0.0:
+            raise ValueError("minimum request interval must not be negative")
+        if max_retries < 0:
+            raise ValueError("OpenAI provider retries must not be negative")
         self.model = model
         self.temperature = temperature
+        self.minimum_request_interval_seconds = minimum_request_interval_seconds
+        self.max_retries = max_retries
+        self._last_request_started: float | None = None
+
+    def _pace_request(self) -> None:
+        if self.minimum_request_interval_seconds == 0.0:
+            return
+        now = perf_counter()
+        if self._last_request_started is not None:
+            remaining = self.minimum_request_interval_seconds - (now - self._last_request_started)
+            if remaining > 0.0:
+                sleep(remaining)
+        self._last_request_started = perf_counter()
 
     def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
         """Generate one bounded response using an environment-provided API key."""
@@ -37,7 +61,7 @@ class OpenAIProvider:
             ) from exc
         try:
             client_type: Any = module.OpenAI
-            client = client_type(api_key=api_key)
+            client = client_type(api_key=api_key, max_retries=self.max_retries)
             request: dict[str, Any] = {
                 "model": self.model,
                 "input": prompt,
@@ -46,6 +70,7 @@ class OpenAIProvider:
             if self.temperature is not None:
                 request["temperature"] = self.temperature
             request["stream"] = True
+            self._pace_request()
             started = perf_counter()
             stream = client.responses.create(**request)
             text_parts: list[str] = []

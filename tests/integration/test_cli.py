@@ -551,13 +551,24 @@ def test_cli_longbench_phase5_run_preserves_existing_command_and_uses_three_stra
     )
     prepared_path = tmp_path / "phase5-prepared.json"
     prepared_path.write_text(subset.model_dump_json(indent=2), encoding="utf-8")
+    provider_calls: list[str] = []
 
     class FixtureProvider:
-        def __init__(self, *, model: str, temperature: float) -> None:
+        def __init__(
+            self,
+            *,
+            model: str,
+            temperature: float,
+            minimum_request_interval_seconds: float,
+            max_retries: int,
+        ) -> None:
             assert model == "fixture-v1"
             assert temperature == 0.0
+            assert minimum_request_interval_seconds == 0.0
+            assert max_retries == 6
 
         def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
+            provider_calls.append(prompt)
             return ProviderResponse(text="ContextOS", input_tokens=8, output_tokens=1)
 
     monkeypatch.setattr("contextos.cli.OpenAIProvider", FixtureProvider)
@@ -595,6 +606,56 @@ def test_cli_longbench_phase5_run_preserves_existing_command_and_uses_three_stra
     config = json.loads((artifact / "config.json").read_text(encoding="utf-8"))
     assert config["execution"]["phase5_protocol"] == ("full_context_vs_frozen_v040_vs_full_phase5")
     assert config["execution"]["pricing"]["input_usd_per_million"] == 1.0
+    assert len(provider_calls) == 3
+
+    prediction_path = artifact / "predictions.jsonl"
+    source_predictions = [
+        LongBenchPrediction.model_validate_json(line)
+        for line in prediction_path.read_text(encoding="utf-8").splitlines()
+    ]
+    source_predictions[1] = source_predictions[1].model_copy(
+        update={"status": "provider_error", "prediction": ""}
+    )
+    prediction_path.write_text(
+        "".join(value.model_dump_json() + "\n" for value in source_predictions),
+        encoding="utf-8",
+    )
+    resumed = runner.invoke(
+        app,
+        [
+            "benchmark",
+            "longbench",
+            "phase5-run",
+            "--prepared",
+            str(prepared_path),
+            "--output",
+            str(tmp_path / "phase5-resumed-results"),
+            "--model",
+            "fixture-v1",
+            "--context-budget-tokens",
+            "16",
+            "--max-context-tokens",
+            "128",
+            "--input-usd-per-million",
+            "1.0",
+            "--output-usd-per-million",
+            "2.0",
+            "--cached-input-usd-per-million",
+            "0.5",
+            "--resume-from",
+            str(artifact),
+        ],
+    )
+
+    assert resumed.exit_code == 0
+    resumed_report = json.loads(resumed.stdout)
+    assert resumed_report["retried_prediction_count"] == 1
+    assert resumed_report["status_counts"] == {"ok": 3}
+    assert len(provider_calls) == 4
+    resumed_config = json.loads(
+        (Path(resumed_report["artifact"]) / "config.json").read_text(encoding="utf-8")
+    )
+    assert resumed_config["execution"]["resume"]["retried_prediction_count"] == 1
 
 
 def test_cli_model_backed_constraints_writes_provider_evidence(

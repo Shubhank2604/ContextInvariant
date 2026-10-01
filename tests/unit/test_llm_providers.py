@@ -22,6 +22,13 @@ def test_openai_provider_requires_explicit_model_and_key(
         OpenAIProvider(model=" ")
     with pytest.raises(ValueError, match="temperature"):
         OpenAIProvider(model="configured-benchmark-model", temperature=2.1)
+    with pytest.raises(ValueError, match="interval"):
+        OpenAIProvider(
+            model="configured-benchmark-model",
+            minimum_request_interval_seconds=-0.1,
+        )
+    with pytest.raises(ValueError, match="retries"):
+        OpenAIProvider(model="configured-benchmark-model", max_retries=-1)
     with pytest.raises(LLMProviderError, match="OPENAI_API_KEY"):
         OpenAIProvider(model="configured-benchmark-model").complete("prompt", max_output_tokens=8)
 
@@ -49,8 +56,9 @@ def test_openai_provider_streams_text_usage_and_ttft(
             return events
 
     class FakeOpenAI:
-        def __init__(self, *, api_key: str) -> None:
+        def __init__(self, *, api_key: str, max_retries: int) -> None:
             assert api_key == "test-key"
+            assert max_retries == 6
             self.responses = FakeResponses()
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
@@ -82,6 +90,44 @@ def test_openai_provider_streams_text_usage_and_ttft(
     assert result.finish_reason == "completed"
 
 
+def test_openai_provider_paces_repeated_requests(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    usage = SimpleNamespace(
+        input_tokens=1,
+        output_tokens=1,
+        input_tokens_details=SimpleNamespace(cached_tokens=0),
+    )
+    completed = SimpleNamespace(output_text="answer", usage=usage)
+
+    class FakeResponses:
+        def create(self, **request: object) -> list[SimpleNamespace]:
+            return [SimpleNamespace(type="response.completed", response=completed)]
+
+    class FakeOpenAI:
+        def __init__(self, *, api_key: str, max_retries: int) -> None:
+            self.responses = FakeResponses()
+
+    ticks = iter((0.0, 0.0, 0.0, 0.5, 2.0, 2.0))
+    sleeps: list[float] = []
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setattr(
+        "contextos.providers.openai.importlib.import_module",
+        lambda name: SimpleNamespace(OpenAI=FakeOpenAI),
+    )
+    monkeypatch.setattr("contextos.providers.openai.perf_counter", lambda: next(ticks))
+    monkeypatch.setattr("contextos.providers.openai.sleep", sleeps.append)
+    provider = OpenAIProvider(
+        model="configured-benchmark-model",
+        minimum_request_interval_seconds=2.0,
+    )
+
+    provider.complete("first", max_output_tokens=8)
+    provider.complete("second", max_output_tokens=8)
+
+    assert sleeps == [1.5]
+
+
 def test_openai_provider_retains_output_truncated_at_declared_bound(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -106,7 +152,7 @@ def test_openai_provider_retains_output_truncated_at_declared_bound(
             return events
 
     class FakeOpenAI:
-        def __init__(self, *, api_key: str) -> None:
+        def __init__(self, *, api_key: str, max_retries: int) -> None:
             self.responses = FakeResponses()
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
@@ -137,7 +183,7 @@ def test_openai_provider_rejects_other_incomplete_reasons(
             return [SimpleNamespace(type="response.incomplete", response=incomplete)]
 
     class FakeOpenAI:
-        def __init__(self, *, api_key: str) -> None:
+        def __init__(self, *, api_key: str, max_retries: int) -> None:
             self.responses = FakeResponses()
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
@@ -158,7 +204,7 @@ def test_openai_provider_rejects_incomplete_stream(
             return [SimpleNamespace(type="response.created")]
 
     class FakeOpenAI:
-        def __init__(self, *, api_key: str) -> None:
+        def __init__(self, *, api_key: str, max_retries: int) -> None:
             self.responses = FakeResponses()
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")

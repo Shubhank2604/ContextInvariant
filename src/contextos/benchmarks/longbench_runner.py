@@ -412,3 +412,83 @@ def run_longbench_comparison(
             for strategy in selected_strategies
         )
     return predictions
+
+
+def resume_longbench_comparison(
+    subset: PreparedLongBenchSubset,
+    existing_predictions: Sequence[LongBenchPrediction],
+    *,
+    provider: LLMProvider,
+    provider_name: str,
+    provider_model: str,
+    tokenizer: Tokenizer,
+    context_budget_tokens: int,
+    max_context_tokens: int,
+    max_chunk_tokens: int = 256,
+    strategies: Sequence[BaselineStrategy] | None = None,
+    pricing: ModelPricing | None = None,
+) -> tuple[list[LongBenchPrediction], int]:
+    """Retry provider failures from a complete comparison while preserving all other evidence."""
+    selected_strategies = list(strategies or default_longbench_strategies())
+    strategy_names = [strategy.name for strategy in selected_strategies]
+    if not selected_strategies or len(strategy_names) != len(set(strategy_names)):
+        raise ValueError("LongBench strategies must be non-empty and unique")
+    expected_identities = {
+        (case.dataset, case.source_id, strategy_name)
+        for case in subset.cases
+        for strategy_name in strategy_names
+    }
+    existing_by_identity: dict[tuple[str, str, str], LongBenchPrediction] = {}
+    for prediction in existing_predictions:
+        identity = (prediction.dataset, prediction.source_id, prediction.strategy)
+        if identity in existing_by_identity:
+            raise ValueError(f"duplicate resume prediction identity: {identity}")
+        existing_by_identity[identity] = prediction
+    if set(existing_by_identity) != expected_identities:
+        raise ValueError("resume predictions do not match the prepared cases and strategies")
+    if any(
+        prediction.provider != provider_name or prediction.model != provider_model
+        for prediction in existing_predictions
+    ):
+        raise ValueError("resume predictions do not match the requested provider and model")
+    retry_identities = {
+        identity
+        for identity, prediction in existing_by_identity.items()
+        if prediction.status == "provider_error"
+    }
+    if not retry_identities:
+        raise ValueError("resume artifact contains no provider errors to retry")
+    replacements: dict[tuple[str, str, str], LongBenchPrediction] = {}
+    for strategy in selected_strategies:
+        retry_cases = [
+            case
+            for case in subset.cases
+            if (case.dataset, case.source_id, strategy.name) in retry_identities
+        ]
+        if not retry_cases:
+            continue
+        retry_subset = subset.model_copy(update={"cases": retry_cases})
+        for prediction in run_longbench_comparison(
+            retry_subset,
+            provider=provider,
+            provider_name=provider_name,
+            provider_model=provider_model,
+            tokenizer=tokenizer,
+            context_budget_tokens=context_budget_tokens,
+            max_context_tokens=max_context_tokens,
+            max_chunk_tokens=max_chunk_tokens,
+            strategies=[strategy],
+            pricing=pricing,
+        ):
+            identity = (prediction.dataset, prediction.source_id, prediction.strategy)
+            replacements[identity] = prediction
+    if set(replacements) != retry_identities:
+        raise ValueError("resume execution did not replace every provider failure")
+    merged = [
+        replacements.get(
+            (prediction.dataset, prediction.source_id, prediction.strategy),
+            prediction,
+        )
+        for prediction in existing_predictions
+    ]
+    return merged, len(replacements)

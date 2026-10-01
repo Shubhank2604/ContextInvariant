@@ -19,6 +19,7 @@ from contextos.benchmarks.longbench_models import (
 from contextos.benchmarks.longbench_runner import (
     chunk_longbench_context,
     phase5_longbench_strategies,
+    resume_longbench_comparison,
     run_longbench_comparison,
 )
 from contextos.providers.base import ProviderResponse
@@ -196,6 +197,47 @@ def test_phase5_longbench_uses_cost_controlled_critical_comparison() -> None:
         ("full_context", "phase5_full"),
         ("full_context", "phase5_v040"),
     }
+
+
+def test_longbench_resume_retries_only_provider_failures() -> None:
+    subset = _subset()
+    initial = run_longbench_comparison(
+        subset,
+        provider=FixedAnswerProvider("thirty seconds"),
+        provider_name="fixture",
+        provider_model="fixture-v1",
+        tokenizer=WordTokenizer(),
+        context_budget_tokens=8,
+        max_context_tokens=100,
+        max_chunk_tokens=4,
+        strategies=phase5_longbench_strategies(),
+    )
+    failed = [
+        value.model_copy(update={"status": "provider_error", "prediction": ""})
+        if value.strategy == "phase5_v040"
+        else value
+        for value in initial
+    ]
+    retry_provider = FixedAnswerProvider("thirty seconds")
+
+    resumed, retried_count = resume_longbench_comparison(
+        subset,
+        failed,
+        provider=retry_provider,
+        provider_name="fixture",
+        provider_model="fixture-v1",
+        tokenizer=WordTokenizer(),
+        context_budget_tokens=8,
+        max_context_tokens=100,
+        max_chunk_tokens=4,
+        strategies=phase5_longbench_strategies(),
+    )
+
+    assert retried_count == 1
+    assert retry_provider.calls == 1
+    assert all(value.status == "ok" for value in resumed)
+    assert resumed[0] is failed[0]
+    assert resumed[2] is failed[2]
 
 
 def test_longbench_comparison_writes_complete_execution_bundle(tmp_path: Path) -> None:

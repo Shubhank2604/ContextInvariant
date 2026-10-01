@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from enum import StrEnum
 from pathlib import Path
@@ -42,9 +43,10 @@ from contextos.benchmarks.longbench import (
     write_longbench_bundle,
     write_prepared_subset,
 )
-from contextos.benchmarks.longbench_models import LongBenchProfile
+from contextos.benchmarks.longbench_models import LongBenchPrediction, LongBenchProfile
 from contextos.benchmarks.longbench_runner import (
     phase5_longbench_strategies,
+    resume_longbench_comparison,
     run_longbench_comparison,
 )
 from contextos.benchmarks.models import BenchmarkAggregate, BenchmarkRun
@@ -781,6 +783,24 @@ def benchmark_longbench_phase5_run_command(
         float | None,
         typer.Option("--cached-input-usd-per-million", min=0.0),
     ] = None,
+    minimum_request_interval_seconds: Annotated[
+        float,
+        typer.Option("--minimum-request-interval-seconds", min=0.0),
+    ] = 0.0,
+    provider_max_retries: Annotated[
+        int,
+        typer.Option("--provider-max-retries", min=0),
+    ] = 6,
+    resume_from: Annotated[
+        Path | None,
+        typer.Option(
+            "--resume-from",
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            readable=True,
+        ),
+    ] = None,
 ) -> None:
     """Compare Full Context, frozen v0.4, and Full Phase 5 on LongBench."""
     try:
@@ -806,18 +826,85 @@ def benchmark_longbench_phase5_run_command(
                 cached_input_usd_per_million=cached_input_usd_per_million,
             )
         subset = load_prepared_subset(prepared_path)
-        predictions = run_longbench_comparison(
-            subset,
-            provider=OpenAIProvider(model=model, temperature=0.0),
-            provider_name="openai",
-            provider_model=model,
-            tokenizer=TiktokenTokenizer(),
-            context_budget_tokens=context_budget_tokens,
-            max_context_tokens=max_context_tokens,
-            max_chunk_tokens=max_chunk_tokens,
-            strategies=phase5_longbench_strategies(),
-            pricing=pricing,
+        tokenizer = TiktokenTokenizer()
+        provider = OpenAIProvider(
+            model=model,
+            temperature=0.0,
+            minimum_request_interval_seconds=minimum_request_interval_seconds,
+            max_retries=provider_max_retries,
         )
+        strategies = phase5_longbench_strategies()
+        resumed_prediction_count = 0
+        resume_metadata = None
+        if resume_from is None:
+            predictions = run_longbench_comparison(
+                subset,
+                provider=provider,
+                provider_name="openai",
+                provider_model=model,
+                tokenizer=tokenizer,
+                context_budget_tokens=context_budget_tokens,
+                max_context_tokens=max_context_tokens,
+                max_chunk_tokens=max_chunk_tokens,
+                strategies=strategies,
+                pricing=pricing,
+            )
+        else:
+            source_bundle = load_benchmark_bundle(resume_from)
+            source_config = source_bundle.config
+            prepared_sha = hashlib.sha256(subset.model_dump_json().encode()).hexdigest()
+            source_execution = source_config.get("execution")
+            if not isinstance(source_execution, dict):
+                raise ValueError("resume artifact has no LongBench execution configuration")
+            expected_execution = {
+                "temperature": 0.0,
+                "context_budget_tokens": context_budget_tokens,
+                "max_context_tokens": max_context_tokens,
+                "max_chunk_tokens": max_chunk_tokens,
+                "baseline_v040_sha": "4fdd88391300c56ad17af5458897ccdd08d6f7bf",
+                "phase5_protocol": "full_context_vs_frozen_v040_vs_full_phase5",
+                "pricing": pricing.model_dump(mode="json") if pricing is not None else None,
+            }
+            mismatches = [
+                key
+                for key, expected in expected_execution.items()
+                if source_execution.get(key) != expected
+            ]
+            if (
+                source_config.get("prepared_sha256") != prepared_sha
+                or source_config.get("provider") != "openai"
+                or source_config.get("model") != model
+                or set(source_config.get("strategies", []))
+                != {strategy.name for strategy in strategies}
+                or mismatches
+            ):
+                raise ValueError(
+                    "resume artifact does not match the requested Phase 5 LongBench configuration"
+                )
+            existing_predictions = [
+                LongBenchPrediction.model_validate(value) for value in source_bundle.predictions
+            ]
+            predictions, resumed_prediction_count = resume_longbench_comparison(
+                subset,
+                existing_predictions,
+                provider=provider,
+                provider_name="openai",
+                provider_model=model,
+                tokenizer=tokenizer,
+                context_budget_tokens=context_budget_tokens,
+                max_context_tokens=max_context_tokens,
+                max_chunk_tokens=max_chunk_tokens,
+                strategies=strategies,
+                pricing=pricing,
+            )
+            resume_metadata = {
+                "source_artifact": str(resume_from),
+                "source_git_sha": source_bundle.environment.git_sha,
+                "source_predictions_sha256": hashlib.sha256(
+                    (resume_from / "predictions.jsonl").read_bytes()
+                ).hexdigest(),
+                "retried_prediction_count": resumed_prediction_count,
+            }
         if not any(prediction.status == "ok" for prediction in predictions):
             first_warning = next(
                 (prediction.warnings[0] for prediction in predictions if prediction.warnings),
@@ -839,6 +926,9 @@ def benchmark_longbench_phase5_run_command(
                 "baseline_v040_sha": ("4fdd88391300c56ad17af5458897ccdd08d6f7bf"),
                 "phase5_protocol": "full_context_vs_frozen_v040_vs_full_phase5",
                 "pricing": pricing.model_dump(mode="json") if pricing is not None else None,
+                "minimum_request_interval_seconds": minimum_request_interval_seconds,
+                "provider_max_retries": provider_max_retries,
+                "resume": resume_metadata,
             },
         )
     except (ContextOSError, OSError, ValueError, ValidationError) as exc:
@@ -852,7 +942,8 @@ def benchmark_longbench_phase5_run_command(
                 "prediction_count": len(predictions),
                 "provider": "openai",
                 "model": model,
-                "strategies": [strategy.name for strategy in phase5_longbench_strategies()],
+                "strategies": [strategy.name for strategy in strategies],
+                "retried_prediction_count": resumed_prediction_count,
                 "status_counts": {
                     status: sum(prediction.status == status for prediction in predictions)
                     for status in sorted({prediction.status for prediction in predictions})
