@@ -428,7 +428,7 @@ def resume_longbench_comparison(
     strategies: Sequence[BaselineStrategy] | None = None,
     pricing: ModelPricing | None = None,
 ) -> tuple[list[LongBenchPrediction], int]:
-    """Retry provider failures from a complete comparison while preserving all other evidence."""
+    """Retry provider failures, or return a validated complete comparison unchanged."""
     selected_strategies = list(strategies or default_longbench_strategies())
     strategy_names = [strategy.name for strategy in selected_strategies]
     if not selected_strategies or len(strategy_names) != len(set(strategy_names)):
@@ -457,7 +457,7 @@ def resume_longbench_comparison(
         if prediction.status == "provider_error"
     }
     if not retry_identities:
-        raise ValueError("resume artifact contains no provider errors to retry")
+        return list(existing_predictions), 0
     replacements: dict[tuple[str, str, str], LongBenchPrediction] = {}
     for strategy in selected_strategies:
         retry_cases = [

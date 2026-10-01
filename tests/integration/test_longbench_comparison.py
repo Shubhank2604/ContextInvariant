@@ -241,6 +241,40 @@ def test_longbench_resume_retries_only_provider_failures() -> None:
     assert resumed[2] is failed[2]
 
 
+def test_longbench_resume_is_idempotent_for_complete_predictions() -> None:
+    subset = _subset()
+    provider = FixedAnswerProvider("thirty seconds")
+    initial = run_longbench_comparison(
+        subset,
+        provider=provider,
+        provider_name="fixture",
+        provider_model="fixture-v1",
+        tokenizer=WordTokenizer(),
+        context_budget_tokens=8,
+        max_context_tokens=100,
+        max_chunk_tokens=4,
+        strategies=phase5_longbench_strategies(),
+    )
+    calls_before_resume = provider.calls
+
+    resumed, retried_count = resume_longbench_comparison(
+        subset,
+        initial,
+        provider=provider,
+        provider_name="fixture",
+        provider_model="fixture-v1",
+        tokenizer=WordTokenizer(),
+        context_budget_tokens=8,
+        max_context_tokens=100,
+        max_chunk_tokens=4,
+        strategies=phase5_longbench_strategies(),
+    )
+
+    assert retried_count == 0
+    assert provider.calls == calls_before_resume
+    assert resumed == initial
+
+
 def test_longbench_comparison_writes_complete_execution_bundle(tmp_path: Path) -> None:
     subset = _subset()
     predictions = run_longbench_comparison(
