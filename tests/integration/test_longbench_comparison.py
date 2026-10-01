@@ -30,8 +30,9 @@ class WordTokenizer:
 
 
 class FixedAnswerProvider:
-    def __init__(self, answer: str) -> None:
+    def __init__(self, answer: str, *, finish_reason: str | None = None) -> None:
         self.answer = answer
+        self.finish_reason = finish_reason
         self.calls = 0
 
     def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
@@ -43,6 +44,7 @@ class FixedAnswerProvider:
             cached_tokens=1,
             ttft_ms=0.25,
             model="fixture-v1",
+            finish_reason=self.finish_reason,
         )
 
 
@@ -156,7 +158,7 @@ def test_six_strategies_share_provider_model_cases_and_evaluator() -> None:
 
 def test_phase5_longbench_uses_cost_controlled_critical_comparison() -> None:
     subset = _subset()
-    provider = FixedAnswerProvider("thirty seconds")
+    provider = FixedAnswerProvider("thirty seconds", finish_reason="max_output_tokens")
     predictions = run_longbench_comparison(
         subset,
         provider=provider,
@@ -182,6 +184,9 @@ def test_phase5_longbench_uses_cost_controlled_critical_comparison() -> None:
         "phase5_full",
     ]
     assert all(value.status == "ok" for value in predictions)
+    assert all(
+        any("may be truncated" in warning for warning in value.warnings) for value in predictions
+    )
     assert all(value.estimated_cost_usd is not None for value in predictions)
     assert len(report.dataset_aggregates) == 3
     assert all(value.total_estimated_cost_usd is not None for value in report.dataset_aggregates)

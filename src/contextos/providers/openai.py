@@ -51,19 +51,27 @@ class OpenAIProvider:
             text_parts: list[str] = []
             ttft_ms: float | None = None
             response: Any | None = None
+            terminal_event_type: str | None = None
             for event in stream:
                 event_type = getattr(event, "type", None)
                 if event_type == "response.output_text.delta":
                     if ttft_ms is None:
                         ttft_ms = (perf_counter() - started) * 1_000
                     text_parts.append(str(getattr(event, "delta", "")))
-                elif event_type == "response.completed":
+                elif event_type in {"response.completed", "response.incomplete"}:
                     response = getattr(event, "response", None)
+                    terminal_event_type = event_type
                 elif event_type == "error":
                     message = getattr(event, "message", "unknown error")
                     raise LLMProviderError(f"OpenAI streaming response failed: {message}")
             if response is None:
                 raise LLMProviderError("OpenAI streaming response ended without completion")
+            finish_reason = "completed"
+            if terminal_event_type == "response.incomplete":
+                incomplete_details = getattr(response, "incomplete_details", None)
+                finish_reason = str(getattr(incomplete_details, "reason", "unknown"))
+                if finish_reason != "max_output_tokens":
+                    raise LLMProviderError(f"OpenAI streaming response incomplete: {finish_reason}")
             usage = getattr(response, "usage", None)
             input_details = getattr(usage, "input_tokens_details", None)
             return ProviderResponse(
@@ -73,6 +81,7 @@ class OpenAIProvider:
                 cached_tokens=getattr(input_details, "cached_tokens", None),
                 ttft_ms=ttft_ms,
                 model=self.model,
+                finish_reason=finish_reason,
             )
         except LLMProviderError:
             raise

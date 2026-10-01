@@ -16,6 +16,7 @@ class ProviderResponse(BaseModel):
     cached_tokens: int | None = Field(default=None, ge=0)
     ttft_ms: float | None = Field(default=None, ge=0.0)
     model: str | None = None
+    finish_reason: str | None = None
 
 
 class LLMProvider(Protocol):

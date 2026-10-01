@@ -338,6 +338,9 @@ def _run_strategy(
         )
     provider_latency_ms = (perf_counter() - provider_started) * 1_000
     reduction = 0.0 if original_tokens == 0 else 1 - input_context_tokens / original_tokens
+    warnings = list(result.trace.warnings)
+    if response.finish_reason == "max_output_tokens":
+        warnings.append("provider output reached max_output_tokens and may be truncated")
     return LongBenchPrediction(
         dataset=case.dataset,
         source_id=case.source_id,
@@ -362,7 +365,7 @@ def _run_strategy(
         peak_process_memory_bytes=probe.peak_process_memory_bytes,
         stage_timings_ms=timings,
         selected_item_ids=[item.id for item in result.selected_items],
-        warnings=result.trace.warnings,
+        warnings=warnings,
     )
 
 

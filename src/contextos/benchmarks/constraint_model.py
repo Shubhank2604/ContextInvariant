@@ -168,6 +168,9 @@ def _prediction_from_response(
     forbidden = tuple(case.constraints.forbidden_output_values)
     leaked = tuple(value for value in forbidden if _normalized(value) in normalized_output)
     selected_context = "\n".join(item.content for item in benchmark.selected_items)
+    warnings = list(benchmark.warnings)
+    if response.finish_reason == "max_output_tokens":
+        warnings.append("provider output reached max_output_tokens and may be truncated")
     return ConstraintModelPrediction(
         case_id=case.id,
         category=case.constraints.category,
@@ -201,7 +204,7 @@ def _prediction_from_response(
         prompt_sha256=hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
         selected_context_sha256=hashlib.sha256(selected_context.encode("utf-8")).hexdigest(),
         selected_item_ids=tuple(benchmark.selected_item_ids),
-        warnings=tuple(benchmark.warnings),
+        warnings=tuple(warnings),
         selection=selection,
     )
 

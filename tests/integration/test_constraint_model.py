@@ -21,7 +21,8 @@ from contextos.tokenization import TiktokenTokenizer
 class ConflictSensitiveProvider:
     """Expose whether stale state survived into the model-visible prompt."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, finish_reason: str | None = None) -> None:
+        self.finish_reason = finish_reason
         self.calls: list[tuple[str, int]] = []
 
     def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
@@ -36,6 +37,7 @@ class ConflictSensitiveProvider:
             cached_tokens=2,
             ttft_ms=0.5,
             model="fixture-v1",
+            finish_reason=self.finish_reason,
         )
 
 
@@ -50,7 +52,7 @@ def _supersession_dataset() -> ConstraintBenchmarkDataset:
 
 
 def test_same_model_comparison_translates_context_legality_to_answer_legality() -> None:
-    provider = ConflictSensitiveProvider()
+    provider = ConflictSensitiveProvider(finish_reason="max_output_tokens")
     pricing = ModelPricing(
         input_usd_per_million=1.0,
         output_usd_per_million=2.0,
@@ -78,6 +80,10 @@ def test_same_model_comparison_translates_context_legality_to_answer_legality() 
     assert all(value.prompt_input_tokens is not None for value in run.predictions)
     assert all(value.provider_latency_ms is not None for value in run.predictions)
     assert all(value.model_ttft_ms == 0.5 for value in run.predictions)
+    assert all(
+        any("may be truncated" in warning for warning in value.warnings)
+        for value in run.predictions
+    )
     assert len(run.aggregates) == 6
     assert len(run.paired_comparisons) == 8
 
