@@ -79,6 +79,41 @@ def test_full_variant_adds_tracing_without_changing_omission_risk_selection() ->
     assert full.status == "ok"
 
 
+def test_contracts_add_retention_beyond_hard_relations() -> None:
+    dataset = generate_constraint_dataset()
+    supersession = dataset.model_copy(update={"cases": [dataset.cases[10]]})
+    result = run_phase5_ablation(
+        supersession,
+        tokenizer=TiktokenTokenizer(),
+        budget_ratios=(0.5,),
+    )
+    measurements = {value.strategy: value for value in result.budget_results[0].run.measurements}
+
+    hard = measurements[Phase5Variant.HARD_RELATIONS.value]
+    contracts = measurements[Phase5Variant.PRESERVATION_CONTRACTS.value]
+    assert hard.status == "ok"
+    assert hard.critical_information_recall == 0.0
+    assert contracts.status == "overflow"
+    assert "mandatory context requires" in contracts.warnings[0]
+
+
+def test_full_variant_has_no_constraint_violations_at_full_budget() -> None:
+    dataset = generate_constraint_dataset()
+    result = run_phase5_ablation(
+        dataset,
+        tokenizer=TiktokenTokenizer(),
+        budget_ratios=(1.0,),
+    )
+    aggregate = next(
+        value
+        for value in result.budget_results[0].constraint_aggregates
+        if value.strategy == Phase5Variant.FULL.value
+    )
+
+    assert aggregate.case_count == 90
+    assert aggregate.constraint_violation_rate == 0.0
+
+
 def test_phase5_artifact_is_immutable_seven_file_evidence_bundle(tmp_path: Path) -> None:
     dataset = generate_constraint_dataset()
     result = run_phase5_ablation(

@@ -20,7 +20,7 @@ from contextos.benchmarks.models import (
 from contextos.config import OptimizationPolicy
 from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
 
-CONSTRAINT_GENERATOR_VERSION = "1.1.0"
+CONSTRAINT_GENERATOR_VERSION = "1.2.0"
 CONSTRAINT_GENERATION_SEED = 505
 PHASE5_BASELINE_SHA = "4fdd88391300c56ad17af5458897ccdd08d6f7bf"
 _START = datetime(2025, 1, 1, tzinfo=UTC)
@@ -141,6 +141,7 @@ def _case(
         relations = [
             _edge(case_id, "task", "endpoint", DependencyRelation.REQUIRES),
             _edge(case_id, "endpoint", "auth", DependencyRelation.REQUIRES),
+            _edge(case_id, "auth", "old-auth", DependencyRelation.SUPERSEDES),
         ]
         critical = [f"{case_id}-endpoint", f"{case_id}-auth"]
         facts = [(critical[0], f"/payments/{key}", "endpoint"), (critical[1], token, "auth_token")]

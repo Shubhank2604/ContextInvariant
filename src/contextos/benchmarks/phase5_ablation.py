@@ -61,7 +61,7 @@ from contextos.config import OptimizationPolicy
 from contextos.constraints import ConstraintResolution, ContextConstraintGraph
 from contextos.contracts import PreservationContract, RetentionPolicy
 from contextos.embeddings import DeterministicEmbeddingProvider
-from contextos.models import ContextItem, ContextType
+from contextos.models import ContextItem, ContextType, DependencyRelation
 from contextos.optimizer import ContextOptimizer
 from contextos.tokenization import Tokenizer
 from contextos.trace import ConstraintTraceIndex, OptimizedContext
@@ -211,6 +211,9 @@ def _contract_for(case: ConstraintBenchmarkCase, item: ContextItem) -> Preservat
     truth = case.constraints
     if item.id not in truth.critical_item_ids:
         return None
+    required_targets = {
+        edge.target_id for edge in truth.relations if edge.relation is DependencyRelation.REQUIRES
+    }
     exact_values = [value for value in truth.required_exact_values if value in item.content]
     identifiers = [value for value in truth.required_identifiers if value in item.content]
     citations = [value for value in truth.required_citations if value in item.content]
@@ -223,7 +226,11 @@ def _contract_for(case: ConstraintBenchmarkCase, item: ContextItem) -> Preservat
         if isinstance(payload, dict):
             required_keys = tuple(sorted(str(key) for key in payload))
     return PreservationContract(
-        retention=RetentionPolicy.REQUIRED_IF_REFERENCED,
+        retention=(
+            RetentionPolicy.REQUIRED_IF_REFERENCED
+            if item.id in required_targets
+            else RetentionPolicy.REQUIRED
+        ),
         preserve_numbers=bool(exact_values),
         preserve_dates=any(
             len(value) == 10 and value[4:5] == "-" and value[7:8] == "-" for value in exact_values
@@ -242,6 +249,9 @@ def _with_contracts(case: ConstraintBenchmarkCase) -> list[ContextItem]:
         copied = item.model_copy(deep=True)
         contract = _contract_for(case, copied)
         if contract is not None:
+            if contract.retention is RetentionPolicy.REQUIRED:
+                copied.evictable = False
+                copied.mandatory = True
             copied.contract = contract
         items.append(copied)
     return items
