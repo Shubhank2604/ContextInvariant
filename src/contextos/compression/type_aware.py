@@ -52,8 +52,6 @@ class TypeAwareCompressor:
         """Expose the selected family for deterministic tests and traces."""
         if item.mandatory or not item.compressible or item.type in _LOSSLESS_TYPES:
             return self._none
-        if self._has_unvalidated_feature_contract(item):
-            return self._none
         if item.type is ContextType.CODE:
             return self._code
         if item.type in _STRUCTURED_TYPES:
@@ -65,19 +63,3 @@ class TypeAwareCompressor:
         if item.type is ContextType.RETRIEVED_DOCUMENT:
             return self._evidence
         return self._extractive
-
-    @staticmethod
-    def _has_unvalidated_feature_contract(item: ContextItem) -> bool:
-        contract = item.contract
-        if contract is None:
-            return False
-        non_structural = (
-            contract.preserve_numbers
-            or contract.preserve_dates
-            or contract.preserve_identifiers
-            or contract.preserve_citations
-            or contract.preserve_negation
-        )
-        if non_structural:
-            return True
-        return contract.preserve_structure and item.type not in _STRUCTURED_TYPES | _TOOL_TYPES

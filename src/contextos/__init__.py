@@ -25,6 +25,7 @@ from contextos.models import (
 )
 from contextos.optimizer import ContextOptimizer
 from contextos.trace import OptimizationTrace, OptimizedContext
+from contextos.validation import ContractValidationEngine, ValidationResult
 
 __all__ = [
     "AllocationPlan",
@@ -35,6 +36,7 @@ __all__ = [
     "ContextItem",
     "ContextOptimizer",
     "ContextType",
+    "ContractValidationEngine",
     "DependencyRelation",
     "FullContextBaseline",
     "LastNTokensBaseline",
@@ -48,6 +50,7 @@ __all__ = [
     "RetentionPolicy",
     "SlidingWindowBaseline",
     "ValidatedRepresentation",
+    "ValidationResult",
 ]
 
 __version__ = "0.3.0"

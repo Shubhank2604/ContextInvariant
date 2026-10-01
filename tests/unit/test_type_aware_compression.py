@@ -168,7 +168,7 @@ def test_tool_logs_keep_existing_line_aware_policy() -> None:
     assert "ERROR status=503" in (router.compress(source, 4, "failed").content or "")
 
 
-def test_feature_contracts_stay_lossless_until_validators_exist() -> None:
+def test_feature_contracts_route_to_transformer_for_phase5f_validation() -> None:
     source = _item(
         ContextType.MEMORY,
         "Account identifier usr_72B91 must remain exact.",
@@ -176,8 +176,7 @@ def test_feature_contracts_stay_lossless_until_validators_exist() -> None:
     )
     router = TypeAwareCompressor(WordTokenizer())
 
-    assert isinstance(router.compressor_for(source), NoneCompressor)
-    assert router.compress(source, 3, "account").failure_reason == "content_exceeds_target"
+    assert isinstance(router.compressor_for(source), ExtractiveCompressor)
 
 
 def test_executor_routes_code_through_structural_transformation() -> None:

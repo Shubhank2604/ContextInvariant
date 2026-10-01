@@ -289,7 +289,9 @@ class ContextOptimizer:
             stage_timings_ms=timings,
             selected_count=len(laid_out),
             removed_count=len(removed),
-            compressed_count=len(compression.successful_results),
+            compressed_count=sum(
+                result.lossy for result in compression.successful_results.values()
+            ),
             warnings=sorted(set(warnings)),
             items=traces,
         )
@@ -327,6 +329,7 @@ class ContextOptimizer:
             score = scores.get(item.id)
             final = selected_by_id.get(item.id)
             result = compression.successful_results.get(item.id)
+            attempt = attempts.get(item.id)
             if exact is not None:
                 decision = OptimizationDecision.REMOVED
                 reason = exact.reason
@@ -334,14 +337,21 @@ class ContextOptimizer:
                 decision = OptimizationDecision.REMOVED
                 reason = semantic.reason
             elif result is not None:
-                decision = OptimizationDecision.COMPRESSED
-                reason = "compressed_to_fit_budget"
+                decision = (
+                    OptimizationDecision.COMPRESSED
+                    if result.lossy
+                    else OptimizationDecision.RETAINED
+                )
+                reason = (
+                    "compressed_to_fit_budget"
+                    if result.lossy
+                    else "retained_after_transformation_fallback"
+                )
             elif final is not None:
                 decision = OptimizationDecision.RETAINED
                 reason = "mandatory" if item.mandatory else "allocated_without_compression"
             else:
                 decision = OptimizationDecision.REMOVED
-                attempt = attempts.get(item.id)
                 reason = (
                     attempt.reason
                     if attempt is not None and attempt.reason is not None
@@ -370,6 +380,13 @@ class ContextOptimizer:
                     final_position=positions.get(item.id),
                     compression_strategy=result.strategy if result else None,
                     provenance=list(result.provenance) if result else [],
+                    transformation_attempts=(
+                        list(attempt.transformation_attempts) if attempt else []
+                    ),
+                    fallback_path=list(attempt.fallback_path) if attempt else [],
+                    final_representation_type=(
+                        attempt.final_representation_type if attempt else None
+                    ),
                 )
             )
         return traces

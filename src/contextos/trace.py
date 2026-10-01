@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from contextos.config import OptimizationPolicy
 from contextos.models import ContextItem
+from contextos.validation import TransformationAttemptRecord
 
 
 class OptimizationDecision(StrEnum):
@@ -47,6 +48,9 @@ class ItemTrace(BaseModel):
     final_position: int | None = Field(default=None, ge=0)
     compression_strategy: str | None = None
     provenance: list[str] = Field(default_factory=list)
+    transformation_attempts: list[TransformationAttemptRecord] = Field(default_factory=list)
+    fallback_path: list[str] = Field(default_factory=list)
+    final_representation_type: str | None = None
 
 
 class OptimizationTrace(BaseModel):

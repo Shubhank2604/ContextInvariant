@@ -36,6 +36,6 @@ Retrieved evidence and conversational text remain extractive: selected sentences
 
 The existing optional LLM summarizer remains available as an explicitly injected component, but Phase 5E does not make it a default transformation.
 
-## Contract boundary
+## Contract validation
 
-Before Phase 5F, items requiring numeric, date, identifier, citation, or negation preservation are routed losslessly. Structured-key-only contracts may use structured pruning because required keys and their complete values are checked directly. Phase 5F adds reusable feature validators, fallback sequencing, and detailed validation traces.
+Lossy candidates are provisional. The Phase 5F validation pipeline checks configured numeric, date, identifier, citation, negation, structured-field, and dependency-reference requirements before accepting them. Failed candidates proceed through safe fallback and original-representation paths. See [`contract-validation.md`](contract-validation.md).

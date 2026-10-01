@@ -51,6 +51,8 @@ Directed hard-relation resolution is available separately through `ContextConstr
 
 Compression now routes by context type, including structured JSON pruning, conservative code extraction, evidence extraction, and lossless protected types. See [`docs/type-aware-transformations.md`](docs/type-aware-transformations.md).
 
+Lossy candidates are checked by deterministic preservation validators before acceptance, with auditable fallback paths and explicit required-context overflow. See [`docs/contract-validation.md`](docs/contract-validation.md).
+
 ## CLI
 
 ```bash
