@@ -11,7 +11,7 @@ from contextos.benchmarks.constraint_model import (
     run_model_constraint_benchmark,
     write_model_constraint_artifact,
 )
-from contextos.benchmarks.constraint_models import ModelPricing
+from contextos.benchmarks.constraint_models import ConstraintBenchmarkDataset, ModelPricing
 from contextos.benchmarks.phase5_ablation import Phase5Variant
 from contextos.errors import LLMProviderError
 from contextos.providers.base import ProviderResponse
@@ -44,7 +44,7 @@ class FailingProvider:
         raise LLMProviderError("fixture provider unavailable")
 
 
-def _supersession_dataset():
+def _supersession_dataset() -> ConstraintBenchmarkDataset:
     dataset = generate_constraint_dataset()
     return dataset.model_copy(update={"cases": [dataset.cases[10]]})
 
