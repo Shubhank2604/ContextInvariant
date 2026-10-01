@@ -24,6 +24,7 @@ from contextos.models import (
     LifecycleTier,
 )
 from contextos.optimizer import ContextOptimizer
+from contextos.scoring import RiskAssessment, assess_context_risk
 from contextos.trace import OptimizationTrace, OptimizedContext
 from contextos.validation import ContractValidationEngine, ValidationResult
 
@@ -48,9 +49,11 @@ __all__ = [
     "PreservationContract",
     "RelevanceOnlyBaseline",
     "RetentionPolicy",
+    "RiskAssessment",
     "SlidingWindowBaseline",
     "ValidatedRepresentation",
     "ValidationResult",
+    "assess_context_risk",
 ]
 
 __version__ = "0.3.0"

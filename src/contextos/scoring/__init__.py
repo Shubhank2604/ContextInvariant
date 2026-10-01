@@ -6,10 +6,13 @@ from contextos.scoring.novelty import novelty_scores
 from contextos.scoring.pipeline import score_context_items
 from contextos.scoring.recency import recency_scores
 from contextos.scoring.relevance import relevance_scores
+from contextos.scoring.risk import RiskAssessment, assess_context_risk
 from contextos.scoring.type_priority import type_priority_scores
 
 __all__ = [
+    "RiskAssessment",
     "ScoreBreakdown",
+    "assess_context_risk",
     "composite_scores",
     "importance_scores",
     "novelty_scores",

@@ -23,6 +23,10 @@ class ScoreBreakdown(BaseModel):
     dependency: float = Field(ge=0.0, le=1.0)
     type_priority: float = Field(ge=0.0, le=1.0)
     composite_utility: float = Field(ge=0.0, le=1.0)
+    omission_risk: float = Field(default=0.0, ge=0.0, le=1.0)
+    transformation_risk: float = Field(default=0.0, ge=0.0, le=1.0)
+    selection_value: float | None = Field(default=None, ge=0.0, le=1.0)
+    transformed_selection_value: float | None = Field(default=None, ge=0.0, le=1.0)
 
 
 def _score_for(component: str, item_id: str, scores: Mapping[str, float]) -> float:
@@ -45,8 +49,12 @@ def composite_scores(
     novelty: Mapping[str, float],
     dependency: Mapping[str, float],
     type_priority: Mapping[str, float],
+    omission_risk: Mapping[str, float] | None = None,
+    transformation_risk: Mapping[str, float] | None = None,
 ) -> dict[str, ScoreBreakdown]:
     """Combine every component using statically validated normalized weights."""
+    if policy.risk_aware_allocation and (omission_risk is None or transformation_risk is None):
+        raise InvalidScore("risk-aware allocation requires both risk score mappings")
     weights = policy.normalized_weights
     results: dict[str, ScoreBreakdown] = {}
     for item in items:
@@ -59,5 +67,32 @@ def composite_scores(
             "type_priority": _score_for("type_priority", item.id, type_priority),
         }
         utility = sum(weights[name] * score for name, score in values.items())
-        results[item.id] = ScoreBreakdown(**values, composite_utility=min(max(utility, 0.0), 1.0))
+        utility = min(max(utility, 0.0), 1.0)
+        omission = (
+            _score_for("omission_risk", item.id, omission_risk or {}) if omission_risk else 0.0
+        )
+        transformation = (
+            _score_for("transformation_risk", item.id, transformation_risk or {})
+            if transformation_risk
+            else 0.0
+        )
+        if policy.risk_aware_allocation:
+            selection_value = (utility + policy.omission_risk_weight * omission) / (
+                1.0 + policy.omission_risk_weight
+            )
+            transformed_value = max(
+                0.0,
+                selection_value - policy.transformation_risk_weight * transformation,
+            )
+        else:
+            selection_value = utility
+            transformed_value = utility
+        results[item.id] = ScoreBreakdown(
+            **values,
+            composite_utility=utility,
+            omission_risk=omission,
+            transformation_risk=transformation,
+            selection_value=selection_value,
+            transformed_selection_value=transformed_value,
+        )
     return results

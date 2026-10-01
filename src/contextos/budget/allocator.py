@@ -29,6 +29,10 @@ class _Candidate:
     item: ContextItem
     token_count: int
     utility: float
+    omission_risk: float
+    transformation_risk: float
+    selection_value: float
+    transformed_selection_value: float
     value_density: float
 
 
@@ -77,14 +81,18 @@ def validate_contextual_budget(
 
 
 def _candidate_rank(candidate: _Candidate) -> tuple[float, float, str]:
-    return (-candidate.value_density, -candidate.utility, candidate.item.id)
+    return (-candidate.value_density, -candidate.selection_value, candidate.item.id)
 
 
 def _compression_rank(
     candidate: _Candidate,
     target_tokens: int,
 ) -> tuple[float, float, str]:
-    return (-(candidate.utility / target_tokens), -candidate.utility, candidate.item.id)
+    return (
+        -(candidate.transformed_selection_value / target_tokens),
+        -candidate.transformed_selection_value,
+        candidate.item.id,
+    )
 
 
 def _fits_class_maximum(
@@ -133,16 +141,29 @@ class TokenBudgetAllocator:
         candidates: list[_Candidate] = []
         for item in optional_items:
             try:
-                utility = scores[item.id].composite_utility
+                score = scores[item.id]
             except KeyError as exc:
                 raise InvalidScore(f"composite score missing for optional item {item.id}") from exc
+            utility = score.composite_utility
+            selection_value = (
+                score.selection_value if score.selection_value is not None else utility
+            )
+            transformed_selection_value = (
+                score.transformed_selection_value
+                if score.transformed_selection_value is not None
+                else selection_value
+            )
             token_count = _token_count(item)
             candidates.append(
                 _Candidate(
                     item=item,
                     token_count=token_count,
                     utility=utility,
-                    value_density=utility / max(token_count, 1),
+                    omission_risk=score.omission_risk,
+                    transformation_risk=score.transformation_risk,
+                    selection_value=selection_value,
+                    transformed_selection_value=transformed_selection_value,
+                    value_density=selection_value / max(token_count, 1),
                 )
             )
 
@@ -175,6 +196,9 @@ class TokenBudgetAllocator:
                         item_id=candidate.item.id,
                         allocated_tokens=candidate.token_count,
                         utility=candidate.utility,
+                        selection_value=candidate.selection_value,
+                        omission_risk=candidate.omission_risk,
+                        transformation_risk=candidate.transformation_risk,
                         value_density=candidate.value_density,
                         reason="class_soft_floor",
                     )
@@ -211,6 +235,9 @@ class TokenBudgetAllocator:
                         item_id=candidate.item.id,
                         allocated_tokens=candidate.token_count,
                         utility=candidate.utility,
+                        selection_value=candidate.selection_value,
+                        omission_risk=candidate.omission_risk,
+                        transformation_risk=candidate.transformation_risk,
                         value_density=candidate.value_density,
                         reason="global_value_density",
                     )
@@ -260,7 +287,10 @@ class TokenBudgetAllocator:
                     target_tokens=target,
                     original_tokens=candidate.token_count,
                     utility=candidate.utility,
-                    value_density=candidate.utility / target,
+                    selection_value=candidate.transformed_selection_value,
+                    omission_risk=candidate.omission_risk,
+                    transformation_risk=candidate.transformation_risk,
+                    value_density=candidate.transformed_selection_value / target,
                     reason="raw_item_did_not_fit",
                 )
             )

@@ -15,6 +15,7 @@ from contextos.scoring.importance import importance_scores
 from contextos.scoring.novelty import novelty_scores
 from contextos.scoring.recency import recency_scores
 from contextos.scoring.relevance import relevance_scores
+from contextos.scoring.risk import assess_context_risk
 from contextos.scoring.type_priority import type_priority_scores
 
 
@@ -56,6 +57,7 @@ def score_context_items(
         max_depth=policy.dependency_max_depth,
     )
     type_priority = type_priority_scores(items, priorities=policy.type_priorities)
+    risk = assess_context_risk(items, edges) if policy.risk_aware_allocation else {}
     return composite_scores(
         items,
         policy=policy,
@@ -65,4 +67,6 @@ def score_context_items(
         novelty=novelty,
         dependency=dependency,
         type_priority=type_priority,
+        omission_risk={item_id: value.omission_risk for item_id, value in risk.items()},
+        transformation_risk={item_id: value.transformation_risk for item_id, value in risk.items()},
     )

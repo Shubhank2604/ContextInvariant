@@ -26,6 +26,7 @@ from contextos.scoring.importance import importance_scores
 from contextos.scoring.novelty import novelty_scores
 from contextos.scoring.recency import recency_scores
 from contextos.scoring.relevance import relevance_scores
+from contextos.scoring.risk import RiskAssessment, assess_context_risk
 from contextos.scoring.type_priority import type_priority_scores
 from contextos.store import ContextStore
 from contextos.tokenization import TiktokenTokenizer, Tokenizer
@@ -156,16 +157,17 @@ class ContextOptimizer:
             if item.mandatory:
                 novelty[item.id] = 1.0
 
+        survivor_ids = {item.id for item in survivors}
+        survivor_edges = [
+            edge
+            for edge in self._edges
+            if edge.source_id in survivor_ids and edge.target_id in survivor_ids
+        ]
+
         def dependency_stage() -> dict[str, float]:
             if policy.weight_dependency == 0:
                 return {item.id: 0.0 for item in survivors}
             DependencyGraph([item.id for item in tokenized], self._edges)
-            survivor_ids = {item.id for item in survivors}
-            survivor_edges = [
-                edge
-                for edge in self._edges
-                if edge.source_id in survivor_ids and edge.target_id in survivor_ids
-            ]
             graph = DependencyGraph(list(survivor_ids), survivor_edges)
             return graph.propagate_scores(
                 {item.id: max(relevance[item.id], importance[item.id]) for item in survivors},
@@ -174,6 +176,12 @@ class ContextOptimizer:
 
         dependency = stage("dependencies", dependency_stage)
         type_priority = type_priority_scores(survivors, priorities=policy.type_priorities)
+
+        def risk_stage() -> dict[str, RiskAssessment]:
+            DependencyGraph([item.id for item in tokenized], self._edges)
+            return assess_context_risk(survivors, survivor_edges)
+
+        risk = stage("risk_assessment", risk_stage) if policy.risk_aware_allocation else {}
         scores = stage(
             "composite_utility",
             lambda: composite_scores(
@@ -185,6 +193,10 @@ class ContextOptimizer:
                 novelty=novelty,
                 dependency=dependency,
                 type_priority=type_priority,
+                omission_risk={item_id: value.omission_risk for item_id, value in risk.items()},
+                transformation_risk={
+                    item_id: value.transformation_risk for item_id, value in risk.items()
+                },
             ),
         )
         plan = stage(

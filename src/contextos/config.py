@@ -48,6 +48,10 @@ class OptimizationPolicy(BaseModel):
     weight_dependency: float = 0.15
     weight_type_priority: float = 0.10
 
+    risk_aware_allocation: bool = False
+    omission_risk_weight: float = 0.20
+    transformation_risk_weight: float = 0.15
+
     position_aware_layout: bool = True
     compression_enabled: bool = True
     compression_target_ratio: float = 0.50
@@ -122,6 +126,9 @@ class OptimizationPolicy(BaseModel):
             raise InvalidOptimizationPolicy("optimization weights must be non-negative")
         if sum(weights.values()) <= 0:
             raise InvalidOptimizationPolicy("optimization weights must have a positive total")
+        risk_weights = (self.omission_risk_weight, self.transformation_risk_weight)
+        if any(not math.isfinite(weight) or not 0.0 <= weight <= 1.0 for weight in risk_weights):
+            raise InvalidOptimizationPolicy("risk weights must be between 0 and 1")
         if not math.isfinite(self.recency_half_life_seconds) or self.recency_half_life_seconds <= 0:
             raise InvalidOptimizationPolicy("recency_half_life_seconds must be positive")
         if type(self.dependency_max_depth) is not int or self.dependency_max_depth < 0:

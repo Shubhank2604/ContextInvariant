@@ -53,6 +53,8 @@ Compression now routes by context type, including structured JSON pruning, conse
 
 Lossy candidates are checked by deterministic preservation validators before acceptance, with auditable fallback paths and explicit required-context overflow. See [`docs/contract-validation.md`](docs/contract-validation.md).
 
+Optional allocation can explicitly enable deterministic omission- and transformation-risk adjustment while hard requirements remain outside numeric ranking. Existing policy semantics remain the default for compatibility. See [`docs/risk-aware-allocation.md`](docs/risk-aware-allocation.md).
+
 ## CLI
 
 ```bash

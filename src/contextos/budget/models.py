@@ -15,6 +15,9 @@ class DirectSelection(BaseModel):
     item_id: str
     allocated_tokens: int = Field(ge=0)
     utility: float = Field(ge=0.0, le=1.0)
+    selection_value: float | None = Field(default=None, ge=0.0, le=1.0)
+    omission_risk: float = Field(default=0.0, ge=0.0, le=1.0)
+    transformation_risk: float = Field(default=0.0, ge=0.0, le=1.0)
     value_density: float = Field(ge=0.0)
     reason: str
 
@@ -28,6 +31,9 @@ class CompressionRequest(BaseModel):
     target_tokens: int = Field(gt=0)
     original_tokens: int = Field(gt=0)
     utility: float = Field(ge=0.0, le=1.0)
+    selection_value: float | None = Field(default=None, ge=0.0, le=1.0)
+    omission_risk: float = Field(default=0.0, ge=0.0, le=1.0)
+    transformation_risk: float = Field(default=0.0, ge=0.0, le=1.0)
     value_density: float = Field(ge=0.0)
     reason: str
 
