@@ -1,8 +1,8 @@
 # Benchmarking Methodology
 
-ContextOS is evaluated against deterministic baselines using project-owned required-fact cases. Phase 4B adds controlled positional retrieval, and Phase 4C adds a configured LongBench subset for external validation.
+ContextOS is evaluated against deterministic baselines using project-owned required-fact cases, a constraint-sensitive development benchmark, controlled positional retrieval, and a configured LongBench subset for external validation.
 
-Raw per-case results and environment metadata—not generated plots—will be the source of truth.
+Raw per-case results and environment metadata—not generated plots—are the source of truth.
 
 ## Deduplication fixture
 
@@ -98,7 +98,7 @@ report.md
 
 `environment.json` records the Python and ContextOS versions, Git SHA, operating system, relevant installed dependency versions, embedding provider/model, and LLM provider/model when applicable. `config.json` records track-specific dataset identity, strategies, budgets, thresholds, source revisions, and decoding settings. Existing bundle paths are accepted only when all seven files match byte-for-byte; missing, added, or changed files are rejected as mutation or collision.
 
-Raw cases, predictions, and JSON metrics are the source of truth. CSV and Markdown are deterministic derived views for analysis and review. `contextos benchmark --profile quick` is intentionally excluded because it is an ephemeral CI smoke test rather than a meaningful research run. Generated bundles remain ignored until an explicit evidence review approves them for version control.
+Raw cases, predictions, and JSON metrics are the source of truth. CSV and Markdown are deterministic derived views for analysis and review. `contextos benchmark --profile quick` is intentionally excluded because it is an ephemeral CI smoke test rather than a meaningful research run. Generated bundles remain ignored until an explicit evidence review approves them for version control. The six allowlisted v0.5.0 directories under `benchmarks/results/` are the reviewed public evidence set.
 
 ## Phase 5 constraint-sensitive track
 
@@ -117,3 +117,27 @@ Every case carries machine-readable critical item IDs, directed relations, exact
 - existing task score, input tokens, context reduction, and optimizer latency.
 
 Constraint violation is binary per case: any applicable preservation rate below one, or any forbidden combination present, is a violation. Metrics with no applicable annotation are omitted from that case rather than counted as successes. Immutable artifacts record frozen v0.4 SHA `4fdd88391300c56ad17af5458897ccdd08d6f7bf` and the current research SHA.
+
+## Phase 5 model-backed protocol
+
+`contextos benchmark constraints-model` compares Full Context, frozen v0.4, and Full Phase 5
+through one explicit OpenAI model at a declared budget. It retains failed and infeasible
+executions, counts them as answer violations, and never invents a task score. Required values
+and forbidden leakage are scored deterministically without an LLM judge.
+
+`contextos benchmark phase5-ablation` evaluates the fixed 25%, 35%, 50%, 65%, 80%, and 100%
+budget frontier. All constrained strategies at one frontier point receive the same effective
+budget; Full Context is the explicitly unbounded reference. Zero-success points are preserved
+as legal infeasibility rather than silently relaxing contracts.
+
+`contextos benchmark longbench phase5-run` compares the same three strategies on a prepared
+LongBench subset. The runner supports request pacing, bounded provider retries, and provenance-
+checked resumption of provider errors. A resumed artifact records the source bundle SHA and the
+number of retried predictions.
+
+The measured v0.5.0 interpretation is deliberately split by workload. Constraint-sensitive
+cases support a substantial reliability improvement. LongBench is mixed and contains a
+significant HotpotQA degradation versus Full Context. The real-provider positional run is at
+ceiling for every layout. See the
+[research-readiness report](../benchmarks/reports/v0.5.0-research-readiness.md) rather than
+combining unlike metrics into one headline quality score.

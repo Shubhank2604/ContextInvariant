@@ -1,69 +1,96 @@
 # Resume evidence ledger
 
-This ledger separates implemented capabilities from claims that have reproducible, reviewable measurements. Benchmark bundles under `benchmarks/results/` are local and ignored by Git; therefore the metric claims below are **not yet safe to publish as resume numbers** until the corresponding artifacts are intentionally retained and independently reviewed.
+This ledger maps concise resume language to retained, reviewable artifacts. Raw cases,
+predictions, configurations, environments, and metrics are committed under
+`benchmarks/results/`; the
+[research-readiness report](../benchmarks/reports/v0.5.0-research-readiness.md) records the
+complete interpretation.
 
-## Claim: Context reduction
+## Approved primary claim
 
-Claim: ContextOS reduces average LLM input context while retaining task quality.
-Metric: 54.3% mean reduction (69.84 vs 153.04 tokens); task score 0.68 and critical-information recall 0.52.
-Benchmark: ContextOS-Bench deterministic full profile, 50 cases.
-Result artifact: `benchmarks/results/20260912T053613.813462Z-comparison-full/` (`metrics.json`).
-Configuration: deterministic provider; six strategies; 1,000-resample paired bootstrap intervals.
-Sample size: 50 paired cases per strategy.
-Limitations: Synthetic templated cases; ContextOS trails full, relevance-only, and naive extractive task/CIR scores on this run; no external model quality measurement.
-Safe to use on resume: no.
+**Claim:** Constraint-aware ContextOS materially reduces structural and answer-level failures
+under token pressure versus the frozen v0.4 runtime.
 
-## Claim: Standard model-backed external quality
+**Measured result:** At an 80% budget, selection violations fall from 77.78% to 11.11%, an
+85.7% relative reduction. Answer violations fall from 22.22% to 11.11% on GPT-5.4-mini and
+from 33.33% to 11.11% on GPT-5.4, relative reductions of 50.0% and 66.7%.
 
-Claim: ContextOS preserves or improves quality on a broader LongBench subset.
-Metric: ContextOS mean scores: 0.700 2WikiMQA, 0.602 HotpotQA, 0.800 PassageRetrieval-en, 0.058 RepoBench-P; paired deltas versus Full Context: +0.140, -0.127, -0.200, -0.007.
-Benchmark: LongBench standard profile with OpenAI `gpt-5.4-mini`, temperature zero.
-Result artifact: `benchmarks/results/20260912T073904.437455Z-comparison-standard/` (`metrics.json`).
-Configuration: 100 cases, 600 predictions, 25 cases per dataset; 598 successful predictions and 2 explicit Full Context RepoBench-P context overflows; 1,000-resample intervals where sample support is available.
-Sample size: 25 cases per dataset; Full Context had 23 successful RepoBench-P cases because two inputs exceeded the declared provider context limit.
-Limitations: Results are dataset-specific and mixed; ContextOS is below Full Context on HotpotQA and PassageRetrieval-en; one model/profile only.
-Safe to use on resume: no.
+**Artifacts:**
 
-## Claim: Model-backed external quality
+- `20261002T011212.526789Z-constraint-model-full`
+- `20261002T012723.643351Z-constraint-model-full`
 
-Claim: ContextOS preserves quality against Full Context on a LongBench subset.
-Metric: ContextOS matched Full Context per dataset on the quick run: 0.50 2WikiMQA, 0.90 HotpotQA, 1.00 PassageRetrieval-en, and 0.06 RepoBench-P code similarity.
-Benchmark: LongBench quick profile with OpenAI `gpt-5.4-mini`, temperature zero.
-Result artifact: `benchmarks/results/20260912T070845.650660Z-comparison-quick/` (`metrics.json`).
-Configuration: 8 cases, 6 strategies, 48 successful predictions; pinned LongBench revision `5e628be`.
-Sample size: 2 cases per dataset, 8 total.
-Limitations: Too small for confidence intervals or generalization; model and profile are explicitly part of the claim; RepoBench-P scores are low across all strategies.
-Safe to use on resume: no.
+**Scope:** 90 controlled development cases across nine failure families; three strategies and
+270 predictions per model snapshot; temperature zero; deterministic required-value and
+forbidden-value scoring without an LLM judge.
 
-## Claim: Component ablation
+**Limitations:** The benchmark co-evolved with the implementation. Full Phase 5 explicitly
+rejects ten infeasible multi-hop cases at this budget. The GPT-5.4-mini answer-violation delta
+CI includes zero; the GPT-5.4 interval excludes zero.
 
-Claim: Dependency-aware scoring is measurable on the controlled benchmark.
-Metric: Removing dependency scoring lowers task score by 0.08 (0.68 to 0.60); p95 latency changes by -0.69 ms.
-Benchmark: ContextOS-Bench ablation, 50 cases.
-Result artifact: `benchmarks/results/20260912T055044.020663Z-ablation-full/` (`metrics.json`).
-Configuration: one component disabled at a time; deterministic provider; seeded bootstrap intervals.
-Sample size: 50 cases for each of six variants.
-Limitations: Effect is fixture-specific and CIR was unchanged; it does not establish generalization.
-Safe to use on resume: no.
+**Safe to use on a resume:** Yes, when identified as a 90-case controlled benchmark and not as
+a production or general long-context result.
 
-## Claim: Optimizer overhead
+## Approved efficiency claim
 
-Claim: The deterministic optimizer has low local runtime overhead.
-Metric: p50 2.03 ms; p95 2.88 ms across 50 cases.
-Benchmark: Same ContextOS-Bench full profile.
-Result artifact: `benchmarks/results/20260912T053613.813462Z-comparison-full/` (`metrics.json`).
-Configuration: native wall-clock probe; process-lifetime peak RSS reported separately (not strategy-attributable).
-Sample size: 50 optimizer invocations.
-Limitations: Local deterministic execution; excludes network/model latency and is not a production capacity result.
-Safe to use on resume: no.
+**Claim:** Full Phase 5 increases controlled context reduction while preserving required values
+on feasible executions.
 
-## Claim: Positional robustness
+**Measured result:** At the 80% budget, mean context reduction increases from 27.20% for frozen
+v0.4 to 32.38% for Full Phase 5. All 80 feasible Phase 5 cases preserve their required values;
+ten multi-hop cases report explicit overflow.
 
-Claim: The position-aware layout preserves accuracy across tested evidence positions.
-Metric: 1.0 accuracy and 0.0 max-min positional gap in the quick deterministic fixture.
-Benchmark: Controlled positional retrieval full profile.
-Result artifact: `benchmarks/results/20260912T061650.541411Z-layout-comparison-full/` (`metrics.json`).
-Configuration: deterministic provider; 4K, 8K, 16K, and 32K buckets; five evidence positions; three layouts.
-Sample size: 60 position/layout cells (four context buckets × five positions × three layouts).
-Limitations: Deterministic callback is position-invariant and cannot reproduce model positional degradation; this is plumbing validation, not a Lost-in-the-Middle result.
-Safe to use on resume: no.
+**Artifact:** `20261002T011212.526789Z-constraint-model-full` and its GPT-5.4 replication
+`20261002T012723.643351Z-constraint-model-full`.
+
+**Safe to use on a resume:** Yes, provided the wording does not imply 100% success across all
+90 cases.
+
+## External LongBench claim
+
+**Measured result:** Across 98 matched successful cases, Full Phase 5 uses 687,678 context
+tokens versus 1,005,038 for Full Context, a 31.58% reduction. Dataset quality is mixed:
+2WikiMQA `+0.0760`, HotpotQA `-0.1753`, Passage Retrieval `-0.1200`, and RepoBench-P
+`+0.0026` versus Full Context. Only the recorded HotpotQA degradation has a paired interval
+excluding zero.
+
+**Artifact:** `20261002T021250.312800Z-comparison-standard`.
+
+**Safe to use on a resume:** The existence and scale of the evaluation suite are safe to cite.
+Do not claim universal quality retention, superiority, or a combined LongBench quality score.
+
+## Positional claim
+
+**Measured result:** GPT-5.4-mini achieves 100% exact match and zero positional gap for all
+three layouts at 4K, 8K, 16K, and 32K tokens.
+
+**Artifact:** `20261002T032213.979841Z-layout-comparison-full`.
+
+**Safe to use on a resume:** Only as a controlled positional evaluation with a ceiling-effect
+null result. Do not claim reproduction or mitigation of *Lost in the Middle*.
+
+## Optimizer-overhead claim
+
+**Measured result:** Full Phase 5 p95 optimizer latency is 5.74 ms at the deterministic 80%
+budget frontier and 4.28-4.43 ms in the model-backed constraint runs. On LongBench's larger
+contexts, per-dataset p95 ranges from 187.95 to 325.05 ms.
+
+**Artifacts:** `20261002T032535.450250Z-phase5-ablation-full`, the two 80% model-backed
+constraint artifacts, and `20261002T021250.312800Z-comparison-standard`.
+
+**Safe to use on a resume:** Prefer omitting latency. A universal sub-10-ms claim is not safe.
+
+## Recommended resume section
+
+- Engineered a model-agnostic LLM context runtime with preservation contracts, dependency and
+  state-consistency constraints, omission-risk-aware allocation, validated type-aware
+  transformations, explicit infeasibility, and auditable optimization traces.
+- Reduced context-selection violations from **77.8% to 11.1%** (**85.7% relative**) on a
+  90-case controlled benchmark at an 80% token budget; reduced model-answer violations by
+  **50.0% on GPT-5.4-mini** and **66.7% on GPT-5.4** while reducing context by **32.4%**.
+- Built a reproducible evaluation framework spanning a six-budget constraint frontier, a
+  100-case LongBench subset, and a 4K-32K positional study, with paired bootstrap intervals,
+  immutable raw artifacts, and token/latency telemetry.
+
+The second bullet is the strongest measured result. In an interview, disclose the controlled
+development-set scope, ten explicit overflows, mixed LongBench result, and positional null.
