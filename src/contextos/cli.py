@@ -11,7 +11,7 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
-from contextos import ContextOptimizer, __version__
+from contextos import ConstraintPolicy, ContextOptimizer, __version__
 from contextos.baselines import (
     BaselineStrategy,
     FullContextBaseline,
@@ -144,6 +144,17 @@ def optimize(
     task: Annotated[str, typer.Option("--task")] = "",
     window_seconds: Annotated[int, typer.Option("--window-seconds", min=1)] = 3600,
     trace_json: Annotated[Path | None, typer.Option("--trace-json")] = None,
+    constraint_policy_path: Annotated[
+        Path | None,
+        typer.Option(
+            "--constraint-policy",
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="JSON ConstraintPolicy file; valid only with the contextos strategy.",
+        ),
+    ] = None,
 ) -> None:
     """Construct context with ContextOS or a deterministic baseline."""
     try:
@@ -154,10 +165,21 @@ def optimize(
         )
         tokenizer = TiktokenTokenizer()
         if strategy is BaselineName.CONTEXTOS:
-            result = ContextOptimizer(tokenizer=tokenizer, edges=edges).optimize(
-                task, items, policy
+            constraint_policy = (
+                ConstraintPolicy.model_validate_json(
+                    constraint_policy_path.read_text(encoding="utf-8")
+                )
+                if constraint_policy_path is not None
+                else ConstraintPolicy()
             )
+            result = ContextOptimizer(
+                tokenizer=tokenizer,
+                edges=edges,
+                constraint_policy=constraint_policy,
+            ).optimize(task, items, policy)
         else:
+            if constraint_policy_path is not None:
+                raise ValueError("--constraint-policy is valid only with --strategy contextos")
             baseline: BaselineStrategy
             if strategy is BaselineName.FULL:
                 baseline = FullContextBaseline()

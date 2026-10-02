@@ -92,6 +92,21 @@ def test_requirement_cycle_is_an_atomic_group() -> None:
     assert result.requirement_groups == (("a", "b"),)
 
 
+def test_requirement_cycle_detection_handles_deep_graphs_without_recursion() -> None:
+    item_count = 1_200
+    items = [_item(f"item-{index:04d}") for index in range(item_count)]
+    edges = [
+        _edge(
+            f"item-{index:04d}",
+            f"item-{index - 1:04d}",
+            DependencyRelation.REQUIRES,
+        )
+        for index in range(1, item_count)
+    ]
+
+    assert ContextConstraintGraph(items, edges).requirement_groups() == ()
+
+
 def test_supersession_replaces_obsolete_selected_state() -> None:
     graph = ContextConstraintGraph(
         [_item("old"), _item("current")],
@@ -102,6 +117,19 @@ def test_supersession_replaces_obsolete_selected_state() -> None:
 
     assert result.selected_item_ids == ("current",)
     assert result.removed_superseded_item_ids == ("old",)
+
+
+def test_supersession_cycle_is_explicitly_unsatisfiable() -> None:
+    graph = ContextConstraintGraph(
+        [_item("a"), _item("b")],
+        [
+            _edge("a", "b", DependencyRelation.SUPERSEDES),
+            _edge("b", "a", DependencyRelation.SUPERSEDES),
+        ],
+    )
+
+    with pytest.raises(ConstraintUnsatisfiable, match="supersession_cycle:a->b->a"):
+        graph.resolve(["a", "b"])
 
 
 def test_unresolved_contradiction_fails_explicitly() -> None:
@@ -226,6 +254,20 @@ def test_deterministic_metadata_resolves_contradiction() -> None:
 
     assert result.selected_item_ids == ("canonical",)
     assert result.removed_conflicting_item_ids == ("draft",)
+
+
+def test_non_finite_authority_metadata_is_not_used_as_conflict_evidence() -> None:
+    graph = ContextConstraintGraph(
+        [
+            _item("newer", offset=1, metadata={"authority_rank": float("nan")}),
+            _item("older", offset=0),
+        ],
+        [_edge("newer", "older", DependencyRelation.CONTRADICTS)],
+    )
+
+    result = graph.resolve(["older"])
+
+    assert result.selected_item_ids == ("newer",)
 
 
 def test_caller_can_resolve_otherwise_ambiguous_conflict() -> None:

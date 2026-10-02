@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
-from math import inf
+from math import inf, isfinite
 
 from contextos.constraints.models import (
     ConflictPolicy,
@@ -36,7 +36,8 @@ def _numeric_metadata(item: ContextItem, key: str) -> float:
     value = item.metadata.get(key)
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return -inf
-    return float(value)
+    numeric = float(value)
+    return numeric if isfinite(numeric) else -inf
 
 
 def _authority_rank(item: ContextItem) -> tuple[float, float, float, float, float]:
@@ -85,51 +86,65 @@ class ContextConstraintGraph:
 
     def requirement_groups(self) -> tuple[tuple[str, ...], ...]:
         """Return cyclic REQUIRES components that must behave atomically."""
+        return self._directed_cycles(self._requires)
+
+    def _directed_cycles(
+        self,
+        edges: Sequence[ContextEdge],
+    ) -> tuple[tuple[str, ...], ...]:
+        """Return deterministic strongly connected groups for directed relations."""
         adjacency: dict[str, list[str]] = defaultdict(list)
+        reverse_adjacency: dict[str, list[str]] = defaultdict(list)
         self_loops: set[str] = set()
-        for edge in self._requires:
+        for edge in edges:
             adjacency[edge.source_id].append(edge.target_id)
+            reverse_adjacency[edge.target_id].append(edge.source_id)
             if edge.source_id == edge.target_id:
                 self_loops.add(edge.source_id)
         for values in adjacency.values():
             values.sort()
+        for values in reverse_adjacency.values():
+            values.sort()
 
-        index = 0
-        indices: dict[str, int] = {}
-        lowlinks: dict[str, int] = {}
-        stack: list[str] = []
-        on_stack: set[str] = set()
+        visited: set[str] = set()
+        finish_order: list[str] = []
+        for start in sorted(self._items):
+            if start in visited:
+                continue
+            stack: list[tuple[str, bool]] = [(start, False)]
+            while stack:
+                item_id, expanded = stack.pop()
+                if expanded:
+                    finish_order.append(item_id)
+                    continue
+                if item_id in visited:
+                    continue
+                visited.add(item_id)
+                stack.append((item_id, True))
+                stack.extend(
+                    (target_id, False)
+                    for target_id in reversed(adjacency.get(item_id, ()))
+                    if target_id not in visited
+                )
+
+        assigned: set[str] = set()
         groups: list[tuple[str, ...]] = []
-
-        def visit(item_id: str) -> None:
-            nonlocal index
-            indices[item_id] = index
-            lowlinks[item_id] = index
-            index += 1
-            stack.append(item_id)
-            on_stack.add(item_id)
-            for target_id in adjacency.get(item_id, ()):
-                if target_id not in indices:
-                    visit(target_id)
-                    lowlinks[item_id] = min(lowlinks[item_id], lowlinks[target_id])
-                elif target_id in on_stack:
-                    lowlinks[item_id] = min(lowlinks[item_id], indices[target_id])
-            if lowlinks[item_id] != indices[item_id]:
-                return
+        for start in reversed(finish_order):
+            if start in assigned:
+                continue
             component: list[str] = []
-            while True:
-                member = stack.pop()
-                on_stack.remove(member)
-                component.append(member)
-                if member == item_id:
-                    break
+            pending = [start]
+            assigned.add(start)
+            while pending:
+                item_id = pending.pop()
+                component.append(item_id)
+                for source_id in reversed(reverse_adjacency.get(item_id, ())):
+                    if source_id not in assigned:
+                        assigned.add(source_id)
+                        pending.append(source_id)
             ordered = tuple(sorted(component))
             if len(ordered) > 1 or ordered[0] in self_loops:
                 groups.append(ordered)
-
-        for item_id in sorted(self._items):
-            if item_id not in indices:
-                visit(item_id)
         return tuple(sorted(groups))
 
     def resolve(
@@ -143,6 +158,14 @@ class ContextConstraintGraph:
         retain_superseded: bool = False,
     ) -> ConstraintResolution:
         """Return a legal directed closure or raise an explicit typed failure."""
+        supersession_cycles = self._directed_cycles(self._supersedes)
+        if supersession_cycles:
+            raise ConstraintUnsatisfiable(
+                violations=tuple(
+                    "supersession_cycle:" + "->".join((*group, group[0]))
+                    for group in supersession_cycles
+                )
+            )
         selected = set(selected_item_ids)
         unknown_selected = sorted(selected - self._items.keys())
         if unknown_selected:

@@ -16,7 +16,7 @@ from contextos.benchmarks.longbench_models import (
     PreparedLongBenchSubset,
 )
 from contextos.cli import app
-from contextos.models import ContextItem, ContextType
+from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
 from contextos.providers.base import ProviderResponse
 
 runner = CliRunner()
@@ -103,6 +103,84 @@ def test_cli_contextos_optimize_is_the_default(tmp_path: Path) -> None:
     )
     assert result.exit_code == 0
     assert "Strategy: contextos" in result.stdout
+
+
+def test_cli_optimize_accepts_explicit_constraint_policy(tmp_path: Path) -> None:
+    timestamp = datetime(2026, 1, 1, tzinfo=UTC)
+    old = ContextItem(
+        id="old",
+        content="Use the legacy endpoint.",
+        type=ContextType.TASK_STATE,
+        created_at=timestamp,
+        updated_at=timestamp,
+    )
+    current = ContextItem(
+        id="current",
+        content="Use the current endpoint.",
+        type=ContextType.TASK_STATE,
+        created_at=timestamp,
+        updated_at=timestamp,
+    )
+    edge = ContextEdge(
+        source_id="current",
+        target_id="old",
+        relation=DependencyRelation.SUPERSEDES,
+        weight=1.0,
+    )
+    input_path = tmp_path / "items.json"
+    input_path.write_text(
+        json.dumps(
+            {
+                "items": [old.model_dump(mode="json"), current.model_dump(mode="json")],
+                "edges": [edge.model_dump(mode="json")],
+            }
+        ),
+        encoding="utf-8",
+    )
+    policy_path = tmp_path / "constraints.json"
+    policy_path.write_text(json.dumps({"enabled": True}), encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        [
+            "optimize",
+            "--input",
+            str(input_path),
+            "--budget",
+            "20",
+            "--constraint-policy",
+            str(policy_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Strategy: contextos_constraint_aware" in result.stdout
+    assert "Selected items: current" in result.stdout
+
+
+def test_cli_rejects_constraint_policy_for_baseline(tmp_path: Path) -> None:
+    input_path = tmp_path / "items.json"
+    policy_path = tmp_path / "constraints.json"
+    write_input(input_path)
+    policy_path.write_text(json.dumps({"enabled": True}), encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        [
+            "optimize",
+            "--input",
+            str(input_path),
+            "--budget",
+            "20",
+            "--strategy",
+            "full",
+            "--constraint-policy",
+            str(policy_path),
+        ],
+    )
+
+    assert result.exit_code == 2
+    assert "valid only with --strategy contextos" in result.stderr
 
 
 @pytest.mark.parametrize("strategy", ["relevance-only", "naive-extractive"])
