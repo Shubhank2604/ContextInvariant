@@ -18,7 +18,11 @@ from contextos.embeddings import (
     DeterministicEmbeddingProvider,
     EmbeddingProvider,
 )
-from contextos.errors import EmbeddingProviderError, MandatoryContextOverflow
+from contextos.errors import (
+    EmbeddingProviderError,
+    MandatoryContextOverflow,
+    UnknownDependencyReference,
+)
 from contextos.layout import LayoutStrategy, OriginalOrderLayout, PositionAwareLayout
 from contextos.models import ContextEdge, ContextItem, validate_unique_item_ids
 from contextos.scoring import ScoreBreakdown
@@ -54,6 +58,7 @@ class CompressionExecutionEngine(Protocol):
         *,
         task: str,
         policy: OptimizationPolicy,
+        required_references: Mapping[str, Sequence[str]] | None = None,
     ) -> CompressionExecution:
         """Execute a previously constructed allocation plan."""
         ...
@@ -97,6 +102,8 @@ class ContextOptimizer:
         task: str,
         items: Sequence[ContextItem],
         policy: OptimizationPolicy,
+        *,
+        required_references: Mapping[str, Sequence[str]] | None = None,
     ) -> OptimizedContext:
         """Execute the backwards-compatible integrated optimization pipeline."""
         timings: dict[str, float] = {}
@@ -236,15 +243,24 @@ class ContextOptimizer:
             "allocation_plan",
             lambda: TokenBudgetAllocator().allocate(survivors, scores=scores, policy=policy),
         )
-        compression = stage(
-            "compression",
-            lambda: self._compression_executor.execute(
+
+        def execute_compression() -> CompressionExecution:
+            if required_references:
+                return self._compression_executor.execute(
+                    plan,
+                    survivors,
+                    task=task,
+                    policy=policy,
+                    required_references=required_references,
+                )
+            return self._compression_executor.execute(
                 plan,
                 survivors,
                 task=task,
                 policy=policy,
-            ),
-        )
+            )
+
+        compression = stage("compression", execute_compression)
 
         def final_selection() -> list[ContextItem]:
             survivor_by_id = {item.id: item for item in survivors}
@@ -368,6 +384,13 @@ class ContextOptimizer:
         graph = ContextConstraintGraph(tokenized, self._edges)
         representations = self._constraint_policy.validated_representations
         conflict_winners = self._constraint_policy.conflict_winners
+        required_references = self._constraint_policy.required_references
+        unknown_reference_items = sorted(required_references.keys() - by_id.keys())
+        if unknown_reference_items:
+            raise UnknownDependencyReference(
+                "dependency references target unknown item IDs: "
+                + ", ".join(unknown_reference_items)
+            )
         representation_map = {
             representation.source_item_id: representation.representation_item_id
             for representation in representations
@@ -411,7 +434,12 @@ class ContextOptimizer:
                 edges=candidate_edges,
                 layout=self._layout,
                 compression_executor=self._compression_executor,
-            ).optimize(task, prepared, policy)
+            )._optimize_unconstrained(
+                task,
+                prepared,
+                policy,
+                required_references=required_references,
+            )
             resolution = graph.resolve(
                 tuple(item.id for item in result.selected_items),
                 representations=representations,

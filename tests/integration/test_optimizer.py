@@ -17,13 +17,16 @@ from contextos import (
     ContextItem,
     ContextOptimizer,
     ContextType,
+    DependencyReferenceRequirement,
     OptimizationPolicy,
     ValidatedRepresentation,
 )
+from contextos.compression import CompressionExecutor, CompressionResult
 from contextos.errors import (
     EmbeddingProviderError,
     MandatoryContextOverflow,
     RequiredContextOverflow,
+    UnknownDependencyReference,
     UnresolvedConflict,
 )
 from contextos.models import DependencyRelation
@@ -52,6 +55,25 @@ class ConstantEmbeddingProvider:
 
     def embed(self, texts: Sequence[str]) -> NDArray[np.float64]:
         return np.ones((len(texts), 3), dtype=np.float64)
+
+
+class ReferenceDroppingCompressor:
+    def compress(
+        self,
+        item: ContextItem,
+        target_tokens: int,
+        task: str,
+    ) -> CompressionResult:
+        del target_tokens, task
+        return CompressionResult(
+            content="short summary",
+            original_tokens=item.token_count or 0,
+            compressed_tokens=2,
+            source_item_id=item.id,
+            strategy="reference_dropping_test",
+            provenance=(item.id,),
+            lossy=True,
+        )
 
 
 def make_item(
@@ -400,7 +422,7 @@ def test_public_optimizer_uses_validated_representation_for_required_source() ->
     )
     compact = make_item("compact", "summary", ContextType.RETRIEVED_DOCUMENT, 2)
     compact.importance = 0.0
-    decoy = make_item("decoy", "noise", ContextType.TASK_STATE, 3)
+    decoy = make_item("decoy", "summary", ContextType.RETRIEVED_DOCUMENT, 3)
     decoy.importance = 1.0
     representation = ValidatedRepresentation(
         source_item_id="source",
@@ -446,7 +468,9 @@ def test_public_optimizer_uses_validated_representation_for_required_source() ->
     }
     assert result.constraint_resolution.added_required_item_ids == ("compact",)
     source_trace = next(trace for trace in result.trace.items if trace.item_id == "source")
+    decoy_trace = next(trace for trace in result.trace.items if trace.item_id == "decoy")
     assert source_trace.decision_reason == "replaced_by_validated_representation"
+    assert decoy_trace.exact_duplicate_of == "compact"
     assert ConstraintPolicy.model_validate_json(constraint_policy.model_dump_json()) == (
         constraint_policy
     )
@@ -531,3 +555,72 @@ def test_constraint_policy_rejects_ambiguous_duplicate_rules() -> None:
         )
     with pytest.raises(ValidationError):
         ConstraintPolicy.model_validate({"enabled": 1})
+
+
+def test_constraint_aware_compression_preserves_required_literal_references() -> None:
+    source = make_item(
+        "source",
+        "Keep auth_001X. filler filler filler filler.",
+        ContextType.MEMORY,
+        0,
+    )
+    requirement = DependencyReferenceRequirement(
+        item_id="source",
+        references=("auth_001X",),
+    )
+    constraint_policy = ConstraintPolicy.enforced(dependency_references=(requirement,))
+
+    result = ContextOptimizer(
+        tokenizer=WordTokenizer(),
+        compression_executor=CompressionExecutor(
+            WordTokenizer(),
+            type_aware=ReferenceDroppingCompressor(),
+        ),
+        constraint_policy=constraint_policy,
+    ).optimize(
+        "Keep the authentication reference",
+        [source],
+        policy(3).model_copy(update={"minimum_compressed_tokens": 1}),
+    )
+
+    assert result.selected_items[0].content == "Keep auth_001X."
+    trace = result.trace.items[0]
+    assert trace.fallback_path == ["reference_dropping_test", "extractive"]
+    assert trace.transformation_attempts[0].violations == (
+        "missing_dependency_reference:auth_001X",
+    )
+    assert any(
+        outcome.validator == "DependencyReferenceValidator"
+        for outcome in trace.transformation_attempts[1].validator_outcomes
+    )
+    assert result.trace.constraint_policy == constraint_policy
+    assert ConstraintPolicy.model_validate_json(constraint_policy.model_dump_json()) == (
+        constraint_policy
+    )
+
+
+def test_constraint_policy_rejects_invalid_dependency_reference_requirements() -> None:
+    requirement = DependencyReferenceRequirement(
+        item_id="source",
+        references=("auth_001X",),
+    )
+
+    with pytest.raises(ValidationError, match="unique item IDs"):
+        ConstraintPolicy.enforced(dependency_references=(requirement, requirement))
+    with pytest.raises(ValidationError, match="must be unique"):
+        DependencyReferenceRequirement(
+            item_id="source",
+            references=("auth_001X", "auth_001X"),
+        )
+    with pytest.raises(UnknownDependencyReference, match="missing"):
+        ContextOptimizer(
+            tokenizer=WordTokenizer(),
+            constraint_policy=ConstraintPolicy.enforced(
+                dependency_references=(
+                    DependencyReferenceRequirement(
+                        item_id="missing",
+                        references=("auth_001X",),
+                    ),
+                )
+            ),
+        ).optimize("task", [make_item("known", "known", ContextType.MEMORY, 0)], policy(2))

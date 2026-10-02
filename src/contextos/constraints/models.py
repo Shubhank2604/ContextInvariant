@@ -69,6 +69,31 @@ class ValidatedRepresentation(BaseModel):
         return self
 
 
+class DependencyReferenceRequirement(BaseModel):
+    """Literal references that must survive transformation of one context item."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    item_id: str
+    references: tuple[str, ...] = Field(min_length=1)
+
+    @field_validator("item_id")
+    @classmethod
+    def reject_blank_item_id(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("dependency reference item ID must not be blank")
+        return value
+
+    @field_validator("references")
+    @classmethod
+    def validate_references(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        if any(not value.strip() for value in values):
+            raise ValueError("dependency references must not be blank")
+        if len(values) != len(set(values)):
+            raise ValueError("dependency references must be unique")
+        return values
+
+
 class ConstraintPolicy(BaseModel):
     """Serializable opt-in policy for directed hard-constraint enforcement."""
 
@@ -79,6 +104,7 @@ class ConstraintPolicy(BaseModel):
     retain_superseded: StrictBool = False
     validated_representations: tuple[ValidatedRepresentation, ...] = ()
     conflict_overrides: tuple[ConflictOverride, ...] = ()
+    dependency_references: tuple[DependencyReferenceRequirement, ...] = ()
 
     @model_validator(mode="after")
     def validate_unique_rules(self) -> ConstraintPolicy:
@@ -96,6 +122,9 @@ class ConstraintPolicy(BaseModel):
         conflict_pairs = [override.pair for override in self.conflict_overrides]
         if len(conflict_pairs) != len(set(conflict_pairs)):
             raise ValueError("conflict overrides must have unique endpoint pairs")
+        reference_item_ids = [requirement.item_id for requirement in self.dependency_references]
+        if len(reference_item_ids) != len(set(reference_item_ids)):
+            raise ValueError("dependency reference requirements must have unique item IDs")
         return self
 
     @classmethod
@@ -106,6 +135,7 @@ class ConstraintPolicy(BaseModel):
         retain_superseded: bool = False,
         validated_representations: tuple[ValidatedRepresentation, ...] = (),
         conflict_overrides: tuple[ConflictOverride, ...] = (),
+        dependency_references: tuple[DependencyReferenceRequirement, ...] = (),
     ) -> ConstraintPolicy:
         """Return an enabled policy with explicit conflict semantics."""
         return cls(
@@ -114,12 +144,21 @@ class ConstraintPolicy(BaseModel):
             retain_superseded=retain_superseded,
             validated_representations=validated_representations,
             conflict_overrides=conflict_overrides,
+            dependency_references=dependency_references,
         )
 
     @property
     def conflict_winners(self) -> dict[tuple[str, str], str]:
         """Return normalized winner choices for the constraint resolver."""
         return {override.pair: override.winner_item_id for override in self.conflict_overrides}
+
+    @property
+    def required_references(self) -> dict[str, tuple[str, ...]]:
+        """Return per-item literal references for transformation validation."""
+        return {
+            requirement.item_id: requirement.references
+            for requirement in self.dependency_references
+        }
 
 
 class ConstraintResolution(BaseModel):

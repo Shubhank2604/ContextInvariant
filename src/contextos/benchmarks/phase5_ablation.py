@@ -6,7 +6,7 @@ import hashlib
 import json
 import math
 from collections import defaultdict
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from enum import StrEnum
 from pathlib import Path
 from statistics import mean
@@ -102,8 +102,10 @@ class FrozenV040CompressionExecutor:
         *,
         task: str,
         policy: OptimizationPolicy,
+        required_references: Mapping[str, Sequence[str]] | None = None,
     ) -> CompressionExecution:
         """Execute the allocation using the exact v0.4 type router and checks."""
+        del required_references
         by_id = {item.id: item for item in items}
         direct_by_type: dict[ContextType, int] = defaultdict(int)
         for selection in plan.direct_selected:

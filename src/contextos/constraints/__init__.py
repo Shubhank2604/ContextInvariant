@@ -5,6 +5,7 @@ from contextos.constraints.models import (
     ConflictPolicy,
     ConstraintPolicy,
     ConstraintResolution,
+    DependencyReferenceRequirement,
     ValidatedRepresentation,
 )
 from contextos.constraints.resolver import ContextConstraintGraph
@@ -15,5 +16,6 @@ __all__ = [
     "ConstraintPolicy",
     "ConstraintResolution",
     "ContextConstraintGraph",
+    "DependencyReferenceRequirement",
     "ValidatedRepresentation",
 ]

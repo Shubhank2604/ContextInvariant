@@ -15,6 +15,7 @@ from contextos.constraints import (
     ConstraintPolicy,
     ConstraintResolution,
     ContextConstraintGraph,
+    DependencyReferenceRequirement,
     ValidatedRepresentation,
 )
 from contextos.contracts import PreservationContract, RetentionPolicy
@@ -53,6 +54,7 @@ __all__ = [
     "ContextOptimizer",
     "ContextType",
     "ContractValidationEngine",
+    "DependencyReferenceRequirement",
     "DependencyRelation",
     "FullContextBaseline",
     "LastNTokensBaseline",
