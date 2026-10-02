@@ -31,6 +31,19 @@ Thumbs.db
 out/
 benchmarks/results/*
 !benchmarks/results/.gitkeep
+!benchmarks/results/README.md
+!benchmarks/results/20261002T032535.450250Z-phase5-ablation-full/
+!benchmarks/results/20261002T032535.450250Z-phase5-ablation-full/**
+!benchmarks/results/20261002T010620.923753Z-constraint-model-full/
+!benchmarks/results/20261002T010620.923753Z-constraint-model-full/**
+!benchmarks/results/20261002T011212.526789Z-constraint-model-full/
+!benchmarks/results/20261002T011212.526789Z-constraint-model-full/**
+!benchmarks/results/20261002T012723.643351Z-constraint-model-full/
+!benchmarks/results/20261002T012723.643351Z-constraint-model-full/**
+!benchmarks/results/20261002T021250.312800Z-comparison-standard/
+!benchmarks/results/20261002T021250.312800Z-comparison-standard/**
+!benchmarks/results/20261002T032213.979841Z-layout-comparison-full/
+!benchmarks/results/20261002T032213.979841Z-layout-comparison-full/**
 benchmark-cache/
 model-cache/
 

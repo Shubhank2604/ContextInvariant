@@ -1,0 +1,44 @@
+{
+  "benchmark": "positional-retrieval",
+  "dataset_sha256": "d34010099ae28cb6b43526528ebe35535ae1329a02c3e2a6ec2f80be4c7ee4f4",
+  "executed_context_lengths": [
+    4096,
+    8192,
+    16384,
+    32768
+  ],
+  "max_context_tokens": 32800,
+  "metadata": {
+    "case_count": 20,
+    "controlled_reproduction": true,
+    "paper_doi": "10.1162/tacl_a_00638",
+    "prediction_count": 60,
+    "temperature": 0
+  },
+  "model": "gpt-5.4-mini-2026-03-17",
+  "performance_measurement": {
+    "provider_usage": "recorded when exposed by provider",
+    "provider_wall_clock": "time.perf_counter"
+  },
+  "profile": "full",
+  "provider": "openai",
+  "requested_context_lengths": [
+    4096,
+    8192,
+    16384,
+    32768
+  ],
+  "run_id": "348d1b7edd95158ba1df",
+  "schema_version": "1.0",
+  "skipped_context_lengths": [],
+  "statistics": {
+    "confidence_interval": "not reported",
+    "reason": "one observation per context-length, position, and strategy cell",
+    "repeat_policy": "repeat only when model nondeterminism could change the conclusion"
+  },
+  "strategies": [
+    "original_full",
+    "relevance_descending",
+    "contextos_position_aware"
+  ]
+}

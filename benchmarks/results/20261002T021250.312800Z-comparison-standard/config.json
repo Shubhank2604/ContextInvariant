@@ -1,0 +1,52 @@
+{
+  "benchmark": "longbench-subset",
+  "execution": {
+    "baseline_v040_sha": "4fdd88391300c56ad17af5458897ccdd08d6f7bf",
+    "context_budget_tokens": 8000,
+    "max_chunk_tokens": 256,
+    "max_context_tokens": 32000,
+    "minimum_request_interval_seconds": 8.0,
+    "origin": "contextos_benchmark_longbench_phase5_run",
+    "phase5_protocol": "full_context_vs_frozen_v040_vs_full_phase5",
+    "pricing": {
+      "cached_input_usd_per_million": 0.075,
+      "input_usd_per_million": 0.75,
+      "output_usd_per_million": 4.5
+    },
+    "provider_max_retries": 10,
+    "resume": {
+      "retried_prediction_count": 28,
+      "source_artifact": "benchmarks\\results\\20261002T020526.153036Z-comparison-standard",
+      "source_git_sha": "f1e92ff39212ee4996273949e21d2f9caa375c20",
+      "source_predictions_sha256": "34788b2e64ec382c9ee42957a835c32429da6c2b9da9bde7abe90032df84b68e"
+    },
+    "temperature": 0.0
+  },
+  "model": "gpt-5.4-mini-2026-03-17",
+  "performance_measurement": {
+    "memory": "process-lifetime peak resident set from native OS counters",
+    "memory_is_process_rss": true,
+    "optimizer_wall_clock": "time.perf_counter",
+    "provider_wall_clock": "time.perf_counter"
+  },
+  "prepared_sha256": "6f23bfe13611664c293ddc54f1a60d2889cd5949e206963f4bd9b068e55cf01e",
+  "profile": "standard",
+  "provider": "openai",
+  "sampling_seed": 404,
+  "schema_version": "1.0",
+  "source_repository": "zai-org/LongBench",
+  "source_revision": "5e628be",
+  "source_split": "test",
+  "statistics": {
+    "confidence_level": 0.95,
+    "method": "percentile bootstrap; paired for strategy deltas",
+    "minimum_sample_size": 20,
+    "repeat_policy": "repeat only when model nondeterminism could change the conclusion",
+    "resamples": 1000
+  },
+  "strategies": [
+    "full_context",
+    "phase5_full",
+    "phase5_v040"
+  ]
+}

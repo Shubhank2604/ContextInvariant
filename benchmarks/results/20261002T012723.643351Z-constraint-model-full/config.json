@@ -1,0 +1,45 @@
+{
+  "baseline_v040_sha": "4fdd88391300c56ad17af5458897ccdd08d6f7bf",
+  "benchmark": "contextos-bench-constraints-model",
+  "case_count": 90,
+  "current_research_sha": "f1e92ff39212ee4996273949e21d2f9caa375c20",
+  "execution": {
+    "budget_ratio": 0.8,
+    "embedding_provider": "deterministic",
+    "max_output_tokens": 96,
+    "temperature": 0.0,
+    "tokenizer": "TiktokenTokenizer"
+  },
+  "generation_seed": 505,
+  "generator_version": "1.4.0",
+  "model": "gpt-5.4-2026-03-05",
+  "phase5_components": {
+    "constraint_resolver_version": "phase5d-v1",
+    "contract_schema_version": "phase5c-v1",
+    "omission_risk_weight": 0.2,
+    "risk_aware_allocation": true,
+    "trace_schema_version": "phase5h-v2",
+    "transformation_risk_weight": 0.15,
+    "validator_version": "phase5f-v1"
+  },
+  "pricing": {
+    "cached_input_usd_per_million": 0.25,
+    "input_usd_per_million": 2.5,
+    "output_usd_per_million": 15.0
+  },
+  "profile": "full",
+  "prompt_version": "phase5j-constraint-prompt-v1",
+  "provider": "openai",
+  "schema_version": "phase5j-v1",
+  "statistics": {
+    "confidence_level": 0.95,
+    "method": "percentile bootstrap; paired for strategy deltas",
+    "minimum_sample_size": 20,
+    "repeat_policy": "each repeat must be a separate immutable bundle"
+  },
+  "strategies": [
+    "full_context",
+    "phase5_full",
+    "phase5_v040"
+  ]
+}

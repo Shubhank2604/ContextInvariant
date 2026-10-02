@@ -1,0 +1,18 @@
+{
+  "contextos_version": "0.5.0",
+  "dependency_versions": {
+    "numpy": "2.3.2",
+    "openai": "3.13.0",
+    "pydantic": "2.11.7",
+    "tiktoken": "0.14.0",
+    "typer": "0.27.2"
+  },
+  "embedding_model": "not-applicable",
+  "embedding_provider": "not-applicable",
+  "git_sha": "f1e92ff39212ee4996273949e21d2f9caa375c20",
+  "llm_model": "gpt-5.4-mini-2026-03-17",
+  "llm_provider": "openai",
+  "operating_system": "Windows-11-10.0.26300-SP0",
+  "python_version": "3.13.9",
+  "recorded_at_utc": "2026-10-02T03:22:13.979841Z"
+}

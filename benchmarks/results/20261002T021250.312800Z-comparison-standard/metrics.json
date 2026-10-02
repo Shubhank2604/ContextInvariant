@@ -1,0 +1,4466 @@
+{
+  "case_scores": [
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Yes",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "9a19f9594aa73716dd38bcbd5ff1c04e57a6649800570f80",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Yes",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "9a19f9594aa73716dd38bcbd5ff1c04e57a6649800570f80",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Yes",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "9a19f9594aa73716dd38bcbd5ff1c04e57a6649800570f80",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Michael Kemp Tippett"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Michael Tippett",
+      "quality_retention": 1.0,
+      "score": 0.8,
+      "source_id": "7d3bc2e36b406094cb586b4eeb07f13a7f1ac9dfbdce7d1f",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Michael Kemp Tippett"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Michael Tippett",
+      "quality_retention": 1.0,
+      "score": 0.8,
+      "source_id": "7d3bc2e36b406094cb586b4eeb07f13a7f1ac9dfbdce7d1f",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Michael Kemp Tippett"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Michael Tippett",
+      "quality_retention": 1.0,
+      "score": 0.8,
+      "source_id": "7d3bc2e36b406094cb586b4eeb07f13a7f1ac9dfbdce7d1f",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Baron of Holberg"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Baron of Holberg",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c1cfe7334235bf4a9ef11293d8be2d4055a70ac89334be2c",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Baron of Holberg"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Den politiske kandest\u00f8ber",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "c1cfe7334235bf4a9ef11293d8be2d4055a70ac89334be2c",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Baron of Holberg"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Den politiske kandest\u00f8ber",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "c1cfe7334235bf4a9ef11293d8be2d4055a70ac89334be2c",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "poet and novelist"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Both are poets and former University of East Anglia creative writing professors.",
+      "quality_retention": 1.0,
+      "score": 0.13333333333333333,
+      "source_id": "75d66ce7bb5fbcea2d942895c0b10144ba9a94282e2e9f15",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "poet and novelist"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "poets",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "75d66ce7bb5fbcea2d942895c0b10144ba9a94282e2e9f15",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "poet and novelist"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "poets",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "75d66ce7bb5fbcea2d942895c0b10144ba9a94282e2e9f15",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Louisville"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Louisville, Kentucky",
+      "quality_retention": 1.0,
+      "score": 0.6666666666666666,
+      "source_id": "90caafc7fe51eee4143874971f67bb3e0107d26179c437f7",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Louisville"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Louisville, Kentucky",
+      "quality_retention": 1.0,
+      "score": 0.6666666666666666,
+      "source_id": "90caafc7fe51eee4143874971f67bb3e0107d26179c437f7",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Louisville"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Louisville, Kentucky",
+      "quality_retention": 1.0,
+      "score": 0.6666666666666666,
+      "source_id": "90caafc7fe51eee4143874971f67bb3e0107d26179c437f7",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "United States Secretary of the Interior"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "United States Secretary of the Interior",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "5affd6b287c8ce97502760e33a71598e8eee24b78c3dd95c",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "United States Secretary of the Interior"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "United States Secretary of the Interior",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "5affd6b287c8ce97502760e33a71598e8eee24b78c3dd95c",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "United States Secretary of the Interior"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "United States Secretary of the Interior",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "5affd6b287c8ce97502760e33a71598e8eee24b78c3dd95c",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "no"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "87fd3f0590498461d595ff1823632c79b66cf313cf55fbb3",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "no"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "87fd3f0590498461d595ff1823632c79b66cf313cf55fbb3",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "no"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "87fd3f0590498461d595ff1823632c79b66cf313cf55fbb3",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Big 12 Conference"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Big 12 Conference",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6e541b3b8fc7e59da0da6548a17932b403b2e865d4036982",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Big 12 Conference"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Big 12 Conference",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6e541b3b8fc7e59da0da6548a17932b403b2e865d4036982",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Big 12 Conference"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Big 12 Conference",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6e541b3b8fc7e59da0da6548a17932b403b2e865d4036982",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Tommy"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Pinball Wizard",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "60ec93a22fbcb65eeadd9f1d2b3c8e4ed44d3a2c4285b168",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Tommy"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Pinball Wizard",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "60ec93a22fbcb65eeadd9f1d2b3c8e4ed44d3a2c4285b168",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Tommy"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Pinball Wizard",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "60ec93a22fbcb65eeadd9f1d2b3c8e4ed44d3a2c4285b168",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "British"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "British",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0a44085d7963681015a69416470b86da02135ac722d6301b",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "British"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Australian",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "0a44085d7963681015a69416470b86da02135ac722d6301b",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "British"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "British",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0a44085d7963681015a69416470b86da02135ac722d6301b",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Betty Cohen"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Ted Turner",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "77439b0a62b6de3a022b1d7a5678c1c00fa8d9af42fea1bf",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Betty Cohen"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Ted Turner",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "77439b0a62b6de3a022b1d7a5678c1c00fa8d9af42fea1bf",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Betty Cohen"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Ted Turner",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "77439b0a62b6de3a022b1d7a5678c1c00fa8d9af42fea1bf",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "1998"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "1998",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c9ee71b5dc7f5a4538d7727c95f80c174d3c9819dfbeac5a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "1998"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "1998",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c9ee71b5dc7f5a4538d7727c95f80c174d3c9819dfbeac5a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "1998"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "1998",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c9ee71b5dc7f5a4538d7727c95f80c174d3c9819dfbeac5a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Neighbours"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Neighbours",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "019dbd177ddcff6752aaabc8c0e459f3ae4003f718bd672b",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Neighbours"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Neighbours",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "019dbd177ddcff6752aaabc8c0e459f3ae4003f718bd672b",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Neighbours"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Neighbours",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "019dbd177ddcff6752aaabc8c0e459f3ae4003f718bd672b",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "West African descendants"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Yoruba people",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "4636487a1855382398fe1e54284cb7dd3d7b8d178ac4a476",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "West African descendants"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Yoruba people",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "4636487a1855382398fe1e54284cb7dd3d7b8d178ac4a476",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "West African descendants"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Yoruba people",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "4636487a1855382398fe1e54284cb7dd3d7b8d178ac4a476",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Cartoon Cartoon Fridays"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Cartoon Cartoon Fridays, Cartoon Cartoons",
+      "quality_retention": 1.0,
+      "score": 0.7499999999999999,
+      "source_id": "fda38e0c47dcd2b4f1de4adefeb00ab431221c0ef9adeb31",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Cartoon Cartoon Fridays"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Cartoon Cartoon Fridays\n",
+      "quality_retention": 1.3333333333333335,
+      "score": 1.0,
+      "source_id": "fda38e0c47dcd2b4f1de4adefeb00ab431221c0ef9adeb31",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Cartoon Cartoon Fridays"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Cartoon Cartoon Fridays\n",
+      "quality_retention": 1.3333333333333335,
+      "score": 1.0,
+      "source_id": "fda38e0c47dcd2b4f1de4adefeb00ab431221c0ef9adeb31",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "BBC Formula One"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "BBC Formula One coverage",
+      "quality_retention": 1.0,
+      "score": 0.8571428571428571,
+      "source_id": "302ee593ca790dfb2dcbfd4341817fc64f8d106f65f61867",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "BBC Formula One"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "BBC Formula One coverage",
+      "quality_retention": 1.0,
+      "score": 0.8571428571428571,
+      "source_id": "302ee593ca790dfb2dcbfd4341817fc64f8d106f65f61867",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "BBC Formula One"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "BBC Formula One coverage",
+      "quality_retention": 1.0,
+      "score": 0.8571428571428571,
+      "source_id": "302ee593ca790dfb2dcbfd4341817fc64f8d106f65f61867",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "\"Talk That Talk\""
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Talk That Talk",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e4df9576e5cd102024e81baf94a43325335d0ba2d8892041",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "\"Talk That Talk\""
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Talk That Talk",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e4df9576e5cd102024e81baf94a43325335d0ba2d8892041",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "\"Talk That Talk\""
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Talk That Talk",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e4df9576e5cd102024e81baf94a43325335d0ba2d8892041",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Wicked Twister"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Steel Venom",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "8bcda9c521bb7cb5dcd9a8d4987bd5bcf4ec455a84c62f81",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Wicked Twister"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Steel Venom",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "8bcda9c521bb7cb5dcd9a8d4987bd5bcf4ec455a84c62f81",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Wicked Twister"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Steel Venom",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "8bcda9c521bb7cb5dcd9a8d4987bd5bcf4ec455a84c62f81",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "A123 Systems, LLC"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "A123 Systems",
+      "quality_retention": 1.0,
+      "score": 0.8,
+      "source_id": "4b1df711ec0557b9df23de534c1ce99b7f37528f643b8c29",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "A123 Systems, LLC"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "A123 Systems",
+      "quality_retention": 1.0,
+      "score": 0.8,
+      "source_id": "4b1df711ec0557b9df23de534c1ce99b7f37528f643b8c29",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "A123 Systems, LLC"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "A123 Systems",
+      "quality_retention": 1.0,
+      "score": 0.8,
+      "source_id": "4b1df711ec0557b9df23de534c1ce99b7f37528f643b8c29",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "1978"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "1978",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6c64a81fa526cb96d0a191d9cbd85a7e917b5d4f03b316d7",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "1978"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "1978",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6c64a81fa526cb96d0a191d9cbd85a7e917b5d4f03b316d7",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "1978"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "1978",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6c64a81fa526cb96d0a191d9cbd85a7e917b5d4f03b316d7",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "14"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "14",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "f536646dd72a8a4f5ebddec61a67b8319dc9187d47bb7fc6",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "14"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "14 points",
+      "quality_retention": 0.6666666666666666,
+      "score": 0.6666666666666666,
+      "source_id": "f536646dd72a8a4f5ebddec61a67b8319dc9187d47bb7fc6",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "14"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "14 points",
+      "quality_retention": 0.6666666666666666,
+      "score": 0.6666666666666666,
+      "source_id": "f536646dd72a8a4f5ebddec61a67b8319dc9187d47bb7fc6",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Tharangambadi"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Tharangambadi Taluk",
+      "quality_retention": 1.0,
+      "score": 0.6666666666666666,
+      "source_id": "11a7ad9d646184c16480376226d58f1b2754b095563c8344",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Tharangambadi"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Tharangambadi",
+      "quality_retention": 1.5,
+      "score": 1.0,
+      "source_id": "11a7ad9d646184c16480376226d58f1b2754b095563c8344",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Tharangambadi"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Tharangambadi",
+      "quality_retention": 1.5,
+      "score": 1.0,
+      "source_id": "11a7ad9d646184c16480376226d58f1b2754b095563c8344",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Henry Jackson Society"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Henry Jackson Society",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "1df269c3eca341348a837f39c628f59aa40d663c07875d24",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Henry Jackson Society"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Center for Dark Energy Biosphere Investigations",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "1df269c3eca341348a837f39c628f59aa40d663c07875d24",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Henry Jackson Society"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "Center for Dark Energy Biosphere Investigations",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "1df269c3eca341348a837f39c628f59aa40d663c07875d24",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "J\u0101nis Strazdi\u0146\u0161"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "J\u0101nis Strazdi\u0146\u0161",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b84411acb9b2e39a68f92ed9e164eb053d3dd9ba4160f0af",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "J\u0101nis Strazdi\u0146\u0161"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "J\u0101nis Ozols",
+      "quality_retention": 0.5,
+      "score": 0.5,
+      "source_id": "b84411acb9b2e39a68f92ed9e164eb053d3dd9ba4160f0af",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "J\u0101nis Strazdi\u0146\u0161"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "J\u0101nis \u0160ipk\u0113vics and Andris S\u0113j\u0101ns",
+      "quality_retention": 0.28571428571428575,
+      "score": 0.28571428571428575,
+      "source_id": "b84411acb9b2e39a68f92ed9e164eb053d3dd9ba4160f0af",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "821"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "821",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6320310adc4a826b1bb240c63ac1735b7b29e93a59782364",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "821"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "326",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "6320310adc4a826b1bb240c63ac1735b7b29e93a59782364",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "821"
+      ],
+      "dataset": "hotpotqa",
+      "metric": "qa_f1",
+      "prediction": "821",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "6320310adc4a826b1bb240c63ac1735b7b29e93a59782364",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "The Comedians Of Comedy"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "The Comedians of Comedy",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "24a43c1b071d8bb99f51fec368dbc438cf7aea1f549ea195",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "The Comedians Of Comedy"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "The Comedians of Comedy",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "24a43c1b071d8bb99f51fec368dbc438cf7aea1f549ea195",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "The Comedians Of Comedy"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "The Comedians of Comedy",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "24a43c1b071d8bb99f51fec368dbc438cf7aea1f549ea195",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Preslav"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Bulgaria",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "e5eb5e5215ff4d3f7a036fa1a20699d85cdfb68a7908f086",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Preslav"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Bulgaria",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "e5eb5e5215ff4d3f7a036fa1a20699d85cdfb68a7908f086",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Preslav"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Bulgaria",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "e5eb5e5215ff4d3f7a036fa1a20699d85cdfb68a7908f086",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Yes",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0c43156b7d6bc17425a89dc6c6d48fc8c2c72ac9eba55a87",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Yes",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0c43156b7d6bc17425a89dc6c6d48fc8c2c72ac9eba55a87",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Yes",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0c43156b7d6bc17425a89dc6c6d48fc8c2c72ac9eba55a87",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Morocco"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Portugal",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "bf2899717e8d7d3d83d865ca5ff59e26d7f647e6025e2d52",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Morocco"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Marrakesh",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "bf2899717e8d7d3d83d865ca5ff59e26d7f647e6025e2d52",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Morocco"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Marrakesh",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "bf2899717e8d7d3d83d865ca5ff59e26d7f647e6025e2d52",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Wooden Crosses"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Wooden Crosses",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0ef1c3ac6b07212a6d5a91bfab2c12f2823412f10f667616",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Wooden Crosses"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Wooden Crosses",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0ef1c3ac6b07212a6d5a91bfab2c12f2823412f10f667616",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Wooden Crosses"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Wooden Crosses",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0ef1c3ac6b07212a6d5a91bfab2c12f2823412f10f667616",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Prometheus Award"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "three film-festival awards\n",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "29ec971fbdf0df2d0c41c497de945024db6159c0c30be307",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Prometheus Award"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Best Cutting Edge Film, Audience Choice \u2013 Feature-Length Narrative Film, and Special Jury Prize for Libertarian Ideals",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "29ec971fbdf0df2d0c41c497de945024db6159c0c30be307",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Prometheus Award"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Special Jury Prize for Libertarian Ideals",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "29ec971fbdf0df2d0c41c497de945024db6159c0c30be307",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Italy"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Forl\u00ec",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "78436f55ae9c254da5a54558ddd196c94850ba7a2b6fa637",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Italy"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Forl\u00ec",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "78436f55ae9c254da5a54558ddd196c94850ba7a2b6fa637",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Italy"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Forl\u00ec",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "78436f55ae9c254da5a54558ddd196c94850ba7a2b6fa637",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Marie of Hohenstaufen"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Marie of Brabant, Countess of Savoy",
+      "quality_retention": 1.0,
+      "score": 0.4444444444444444,
+      "source_id": "37022dee1597491021c2aa7522276a600eb0dd316f12cbb6",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Marie of Hohenstaufen"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Marie of Brabant, Queen of France",
+      "quality_retention": 1.0,
+      "score": 0.4444444444444444,
+      "source_id": "37022dee1597491021c2aa7522276a600eb0dd316f12cbb6",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Marie of Hohenstaufen"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Marie of Brabant, Queen of France",
+      "quality_retention": 1.0,
+      "score": 0.4444444444444444,
+      "source_id": "37022dee1597491021c2aa7522276a600eb0dd316f12cbb6",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Prince Albert of Prussia"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Princess Alexandrine of Prussia",
+      "quality_retention": 1.0,
+      "score": 0.5,
+      "source_id": "24e27e943be014d4549674d581cdc20fdae92fa3d9cd256c",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Prince Albert of Prussia"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Prince Albert of Prussia",
+      "quality_retention": 2.0,
+      "score": 1.0,
+      "source_id": "24e27e943be014d4549674d581cdc20fdae92fa3d9cd256c",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Prince Albert of Prussia"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Paul Frederick, Grand Duke of Mecklenburg-Schwerin",
+      "quality_retention": 0.4,
+      "score": 0.2,
+      "source_id": "24e27e943be014d4549674d581cdc20fdae92fa3d9cd256c",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "poisoning"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "arsenic poisoning",
+      "quality_retention": 1.0,
+      "score": 0.6666666666666666,
+      "source_id": "98ead8987446388d37301c03d7d9f24e2f511a9e0c10bcdf",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "poisoning"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "arsenic poisoning",
+      "quality_retention": 1.0,
+      "score": 0.6666666666666666,
+      "source_id": "98ead8987446388d37301c03d7d9f24e2f511a9e0c10bcdf",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "poisoning"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "arsenic poisoning",
+      "quality_retention": 1.0,
+      "score": 0.6666666666666666,
+      "source_id": "98ead8987446388d37301c03d7d9f24e2f511a9e0c10bcdf",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "America"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "American",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "d267c5682ee42c1a570524a4b129fa908997a0ecfe07f8f6",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "America"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "American",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "d267c5682ee42c1a570524a4b129fa908997a0ecfe07f8f6",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "America"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "American",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "d267c5682ee42c1a570524a4b129fa908997a0ecfe07f8f6",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "illness"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "unknown",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "025911ff0afd34976b0a800c198c4117f95edfcd7b64bb24",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "illness"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "illness",
+      "quality_retention": null,
+      "score": 1.0,
+      "source_id": "025911ff0afd34976b0a800c198c4117f95edfcd7b64bb24",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "illness"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "illness",
+      "quality_retention": null,
+      "score": 1.0,
+      "source_id": "025911ff0afd34976b0a800c198c4117f95edfcd7b64bb24",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Monster On The Campus"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Monster On The Campus",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "655c0c4e465b47d7fd829d3a487705991f4c059cee3c9aed",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Monster On The Campus"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Monster On The Campus",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "655c0c4e465b47d7fd829d3a487705991f4c059cee3c9aed",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Monster On The Campus"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Monster On The Campus",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "655c0c4e465b47d7fd829d3a487705991f4c059cee3c9aed",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Charles Wheatstone"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Charles Wheatstone",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0c4dd15b43d1061d372c11946aa71630926e2570f333f538",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Charles Wheatstone"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Charles Wheatstone",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0c4dd15b43d1061d372c11946aa71630926e2570f333f538",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Charles Wheatstone"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Charles Wheatstone",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0c4dd15b43d1061d372c11946aa71630926e2570f333f538",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Oklahoma City, Oklahoma"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Oklahoma City, Oklahoma",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "7940c60a5ff2d81b62d118253577d1d891057ca45695e91a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Oklahoma City, Oklahoma"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Oklahoma City, Oklahoma",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "7940c60a5ff2d81b62d118253577d1d891057ca45695e91a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Oklahoma City, Oklahoma"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Oklahoma City, Oklahoma",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "7940c60a5ff2d81b62d118253577d1d891057ca45695e91a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "27 June 1839"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "27 June 1839",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "70923ff731dcad518ecdcdc8b53e165e8515a96ecf8f23c7",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "27 June 1839"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "27 June 1839",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "70923ff731dcad518ecdcdc8b53e165e8515a96ecf8f23c7",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "27 June 1839"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "27 June 1839",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "70923ff731dcad518ecdcdc8b53e165e8515a96ecf8f23c7",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "0d02726cbaab0fbd2e84b7537550154e8aa96f81abb2864b",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "0d02726cbaab0fbd2e84b7537550154e8aa96f81abb2864b",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "yes"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "0d02726cbaab0fbd2e84b7537550154e8aa96f81abb2864b",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "All-American Co-Ed"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "All-American Co-Ed",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b126cad8f81aed3c5cc29c20c25b1adc7d1f33e1c4e264c3",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "All-American Co-Ed"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "All-American Co-Ed",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b126cad8f81aed3c5cc29c20c25b1adc7d1f33e1c4e264c3",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "All-American Co-Ed"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "All-American Co-Ed",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b126cad8f81aed3c5cc29c20c25b1adc7d1f33e1c4e264c3",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Cunimund"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Rosamund",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "c8fd8db4d295aef41a9434299a8eeffb9af5e2bbcde4f13a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Cunimund"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Cunimund",
+      "quality_retention": null,
+      "score": 1.0,
+      "source_id": "c8fd8db4d295aef41a9434299a8eeffb9af5e2bbcde4f13a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Cunimund"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Cunimund",
+      "quality_retention": null,
+      "score": 1.0,
+      "source_id": "c8fd8db4d295aef41a9434299a8eeffb9af5e2bbcde4f13a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "1 August 1813"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "1 August 1813",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "3cff7074281c58717aa65021d875cc1e6a6321f71cd77742",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "1 August 1813"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "1813",
+      "quality_retention": 0.5,
+      "score": 0.5,
+      "source_id": "3cff7074281c58717aa65021d875cc1e6a6321f71cd77742",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "1 August 1813"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "1813",
+      "quality_retention": 0.5,
+      "score": 0.5,
+      "source_id": "3cff7074281c58717aa65021d875cc1e6a6321f71cd77742",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Bajo Otro Sol"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Bajo otro sol",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "3292d2bcbbf8fc4816d168bcb7f81c13341198da1e88b903",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Bajo Otro Sol"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Bajo Otro Sol",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "3292d2bcbbf8fc4816d168bcb7f81c13341198da1e88b903",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Bajo Otro Sol"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Bajo otro sol",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "3292d2bcbbf8fc4816d168bcb7f81c13341198da1e88b903",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Ozalj"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Ozalj, present-day Croatia",
+      "quality_retention": 1.0,
+      "score": 0.5,
+      "source_id": "41ac2a4beb0af8f58d01863a62b90692f7c7d74b5e3a58d9",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Ozalj"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Ozalj, present day Croatia",
+      "quality_retention": 0.8,
+      "score": 0.4,
+      "source_id": "41ac2a4beb0af8f58d01863a62b90692f7c7d74b5e3a58d9",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Ozalj"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Ozalj, present day Croatia",
+      "quality_retention": 0.8,
+      "score": 0.4,
+      "source_id": "41ac2a4beb0af8f58d01863a62b90692f7c7d74b5e3a58d9",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Vienna"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Vienna",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "1edc61803f35344a5a4b6d273e6eb0f643fefcec0fa0a22a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Vienna"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Vienna",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "1edc61803f35344a5a4b6d273e6eb0f643fefcec0fa0a22a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Vienna"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Vienna",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "1edc61803f35344a5a4b6d273e6eb0f643fefcec0fa0a22a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "no"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "f0523a41000b43996413780968b611c3f4d28b87f4acc859",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "no"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "f0523a41000b43996413780968b611c3f4d28b87f4acc859",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "no"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "No",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "f0523a41000b43996413780968b611c3f4d28b87f4acc859",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Gura Humorului"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Gura Humorului, Austro-Hungarian Empire (now Romania)",
+      "quality_retention": 1.0,
+      "score": 0.5,
+      "source_id": "56db201f810a3d01b7d14e8e9e6dd94820ecaf2f4a86b2b9",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Gura Humorului"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Gura Humorului, Austro-Hungarian Empire (now Romania)",
+      "quality_retention": 1.0,
+      "score": 0.5,
+      "source_id": "56db201f810a3d01b7d14e8e9e6dd94820ecaf2f4a86b2b9",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Gura Humorului"
+      ],
+      "dataset": "2wikimqa",
+      "metric": "qa_f1",
+      "prediction": "Gura Humorului, Austro-Hungarian Empire (now Romania)",
+      "quality_retention": 1.0,
+      "score": 0.5,
+      "source_id": "56db201f810a3d01b7d14e8e9e6dd94820ecaf2f4a86b2b9",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 30"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 30",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "4e53ec041f1ceb316c1c9849d1eab12a8515d3b65a76bd5f",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 30"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 30",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "4e53ec041f1ceb316c1c9849d1eab12a8515d3b65a76bd5f",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 30"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 30",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "4e53ec041f1ceb316c1c9849d1eab12a8515d3b65a76bd5f",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 11"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 11",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "aecfed8ea782c2bd0c97f1adf2219f5dc09c49e95804cf95",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 11"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 11",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "aecfed8ea782c2bd0c97f1adf2219f5dc09c49e95804cf95",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 11"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 11",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "aecfed8ea782c2bd0c97f1adf2219f5dc09c49e95804cf95",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 7"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 7",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e40c5d61ecb2557ea47573b7eee9ffececbf282e4d6f006a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 7"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 7",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e40c5d61ecb2557ea47573b7eee9ffececbf282e4d6f006a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 7"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 7",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e40c5d61ecb2557ea47573b7eee9ffececbf282e4d6f006a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 26"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 26",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0a9b8e6220e20bcbd1de72d117f8e987e2f99f00bf1dba0f",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 26"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 26",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0a9b8e6220e20bcbd1de72d117f8e987e2f99f00bf1dba0f",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 26"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 26",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0a9b8e6220e20bcbd1de72d117f8e987e2f99f00bf1dba0f",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 25"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 25",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "efcf3ee65d4424edb335a406492480b5c709f4309b8b7849",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 25"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 25",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "efcf3ee65d4424edb335a406492480b5c709f4309b8b7849",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 25"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 25",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "efcf3ee65d4424edb335a406492480b5c709f4309b8b7849",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 26"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 26",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "44fb4f052e527a75773941e1f839d072fb0ac2209d426ee5",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 26"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 26",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "44fb4f052e527a75773941e1f839d072fb0ac2209d426ee5",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 26"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 26",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "44fb4f052e527a75773941e1f839d072fb0ac2209d426ee5",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 18"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 18",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "8900dfd4bf8db53d20dfc3cd68cff2c1e52b83f55fde56f9",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 18"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 18",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "8900dfd4bf8db53d20dfc3cd68cff2c1e52b83f55fde56f9",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 18"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 18",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "8900dfd4bf8db53d20dfc3cd68cff2c1e52b83f55fde56f9",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 3"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 3",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "690c4fcd905bedb060a4fc907c6919c2df35561eb9127a76",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 3"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 3",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "690c4fcd905bedb060a4fc907c6919c2df35561eb9127a76",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 3"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 3",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "690c4fcd905bedb060a4fc907c6919c2df35561eb9127a76",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 28"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 28",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c57907e42f244e15eb8010bee58219db030e3d94e1b8152a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 28"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 28",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c57907e42f244e15eb8010bee58219db030e3d94e1b8152a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 28"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 28",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c57907e42f244e15eb8010bee58219db030e3d94e1b8152a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 12"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 12",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "a69f6f88c90965fbf2c6c60245d05d24232baa9a9e4fbd44",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 12"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 12",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "a69f6f88c90965fbf2c6c60245d05d24232baa9a9e4fbd44",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 12"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 12",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "a69f6f88c90965fbf2c6c60245d05d24232baa9a9e4fbd44",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 19",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "284ffdb8de1a59ef639b0772e726c210b275e78d9183a422",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 19",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "284ffdb8de1a59ef639b0772e726c210b275e78d9183a422",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 19",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "284ffdb8de1a59ef639b0772e726c210b275e78d9183a422",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 10"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 10",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "935e107e7d9805db8f0faeb52d959c2199ba87c874774360",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 10"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 10",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "935e107e7d9805db8f0faeb52d959c2199ba87c874774360",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 10"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 10",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "935e107e7d9805db8f0faeb52d959c2199ba87c874774360",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 6"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 6",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "2b93d7e3c62da186d08e765770424b9993c95381b6750cb2",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 6"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 6",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "2b93d7e3c62da186d08e765770424b9993c95381b6750cb2",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 6"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 29",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "2b93d7e3c62da186d08e765770424b9993c95381b6750cb2",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 29"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 29",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "761dff7fa52f3669a4899785a1a61aa1b419697ef5186ae7",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 29"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 30",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "761dff7fa52f3669a4899785a1a61aa1b419697ef5186ae7",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 29"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 29",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "761dff7fa52f3669a4899785a1a61aa1b419697ef5186ae7",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 24"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 24",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "9e9ad1e4584e23efaf805b95ae854ad3e1276e5ed535ae59",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 24"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 24",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "9e9ad1e4584e23efaf805b95ae854ad3e1276e5ed535ae59",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 24"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 24",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "9e9ad1e4584e23efaf805b95ae854ad3e1276e5ed535ae59",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 19",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "5a61c459d1ed6095d953951f6f1a5c9cc73c81fc09a71576",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 30",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "5a61c459d1ed6095d953951f6f1a5c9cc73c81fc09a71576",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 30",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "5a61c459d1ed6095d953951f6f1a5c9cc73c81fc09a71576",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 10"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 10",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c667a3a8f76b1a7a353eb34f57529c38ccc7310a58087e90",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 10"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 10",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c667a3a8f76b1a7a353eb34f57529c38ccc7310a58087e90",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 10"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 10",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "c667a3a8f76b1a7a353eb34f57529c38ccc7310a58087e90",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 19",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0cd53931f2ffb958264a415bddf98b732832def3997916d2",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 19",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0cd53931f2ffb958264a415bddf98b732832def3997916d2",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 19"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 19",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "0cd53931f2ffb958264a415bddf98b732832def3997916d2",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 29"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 29",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b3b50664aa10d1a972da79a46bfc5af0ed460d0344c4f5c6",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 29"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 29",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b3b50664aa10d1a972da79a46bfc5af0ed460d0344c4f5c6",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 29"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 29",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b3b50664aa10d1a972da79a46bfc5af0ed460d0344c4f5c6",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 28"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 28",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "78c8d1ac1a497db2bc8450073948f47300fc868545f6c748",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 28"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 28",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "78c8d1ac1a497db2bc8450073948f47300fc868545f6c748",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 28"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 28",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "78c8d1ac1a497db2bc8450073948f47300fc868545f6c748",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 4"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 4",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e4cb26fd37b76ec42450c9b7f0816cbad7b40d7a59864b91",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 4"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 4",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e4cb26fd37b76ec42450c9b7f0816cbad7b40d7a59864b91",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 4"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 4",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "e4cb26fd37b76ec42450c9b7f0816cbad7b40d7a59864b91",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 13"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 13",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b935d8af4ca892e8f1dfb9af0ade863eb5bc9f1bc4e7099b",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 13"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 13",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b935d8af4ca892e8f1dfb9af0ade863eb5bc9f1bc4e7099b",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 13"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 13",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "b935d8af4ca892e8f1dfb9af0ade863eb5bc9f1bc4e7099b",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 22"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 22",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "2db15acab1b3ee478922a99301133b12c76b6f27fdc6978d",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 22"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 22",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "2db15acab1b3ee478922a99301133b12c76b6f27fdc6978d",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 22"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 23",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "2db15acab1b3ee478922a99301133b12c76b6f27fdc6978d",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 18"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 18",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "7ddd206e2015d772d5047e1d4088446d7a8edecee87d5828",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 18"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 27",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "7ddd206e2015d772d5047e1d4088446d7a8edecee87d5828",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 18"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 27",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "7ddd206e2015d772d5047e1d4088446d7a8edecee87d5828",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "Paragraph 7"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 7",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "88df598a6f2c492ee83f53f3a21f33e4b8e51e6088c378d3",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "Paragraph 7"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 7",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "88df598a6f2c492ee83f53f3a21f33e4b8e51e6088c378d3",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "Paragraph 7"
+      ],
+      "dataset": "passage_retrieval_en",
+      "metric": "retrieval",
+      "prediction": "Paragraph 7",
+      "quality_retention": 1.0,
+      "score": 1.0,
+      "source_id": "88df598a6f2c492ee83f53f3a21f33e4b8e51e6088c378d3",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "        return new SvnJavaAddCommand();"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `SvnJavaScmProvider` class continuation for the missing `getAddCommand()` and the rest of the command factory methods.\n\n```java\n    /**\n     * {@inheritDoc}\n     */\n    protected SvnCommand getAddCommand()\n    {\n        return new SvnJava",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "90e1e94dad37699bf5788977dbd428bd6f7b54110a49fa44",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "        return new SvnJavaAddCommand();"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `SvnJavaRemoveCommand.java` code:\n\n```java\npackage org.apache.maven.scm.provider.svn.svnjava.command.remove;\n\nimport java.io.File;\n\nimport org.apache.maven.scm.ScmException;\nimport org.apache.maven.scm.ScmFile;\nimport org.apache.maven",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "90e1e94dad37699bf5788977dbd428bd6f7b54110a49fa44",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "        return new SvnJavaAddCommand();"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `SvnJavaRemoveCommand.java` code based on the snippet you provided:\n\n```java\npackage org.apache.maven.scm.provider.svn.svnjava.command.remove;\n\nimport java.io.File;\n\nimport org.apache.maven.scm.ScmException;\nimport org.apache.maven.scm.Scm",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "90e1e94dad37699bf5788977dbd428bd6f7b54110a49fa44",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "\t\t\t\t\t\tsavefunc = savemgh_v2"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the next line that completes the shown block:\n\n```python\n\t\t\t\t\t\tsaveauto(outdata, masking_array[0], \"pFWER_%s\" % opts.tmifile[0], affine_array[0])\n```\n\nIf you want, I can also help",
+      "quality_retention": 1.0,
+      "score": 0.12,
+      "source_id": "ca29a391edd0d83b0e2ca7866b46d8472fc032c11c2e0b59",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "\t\t\t\t\t\tsavefunc = savemgh_v2"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is a cleaned, completed version of the missing/fragmented code pieces you posted. I\u2019ve reconstructed the most likely intended implementations and fixed obvious syntax issues.\n\n```python\nimport os\nimport pickle\nimport struct\nfrom time import gmtime, strftime, time\n\nimport nibabel as nib\n",
+      "quality_retention": 0.8333333333333334,
+      "score": 0.1,
+      "source_id": "ca29a391edd0d83b0e2ca7866b46d8472fc032c11c2e0b59",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "\t\t\t\t\t\tsavefunc = savemgh_v2"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is a cleaned and completed version of the missing/garbled parts, with the obvious syntax errors fixed and the incomplete functions filled in as far as possible from the surrounding code.\n\n```python\ndef merge_adjacency_array(adjacent_range, adjacency_array):\n\tv_count = 0\n\tif len(adj",
+      "quality_retention": 0.9166666666666667,
+      "score": 0.11,
+      "source_id": "ca29a391edd0d83b0e2ca7866b46d8472fc032c11c2e0b59",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "    PCollection<GCPProject> allProjects ="
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `DesiredStateEnforcer` pipeline construction code, continuing from the last line:\n\n```java\n    // Read projects from the CRM API.\n    PCollection<GCPProject> liveProjects =\n        pipeline.apply(\"Read live projects\", Read.from(new LiveProject",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "503f9ad54895e3f1df00f0c52f9c73ab79add5c6d077ad85",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "    PCollection<GCPProject> allProjects ="
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the missing line to complete the pipeline construction:\n\n```java\n    // Read projects from the CRM API.\n    PCollection<GCPProject> liveProjects =\n        pipeline.apply(\"Read live projects\", Read.from(new LiveProjectSource(org)));\n```\n\nIf you want, I can also complete the rest",
+      "quality_retention": null,
+      "score": 0.23,
+      "source_id": "503f9ad54895e3f1df00f0c52f9c73ab79add5c6d077ad85",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "    PCollection<GCPProject> allProjects ="
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the missing line to complete the pipeline:\n\n```java\n    // Read projects from the CRM API.\n    PCollection<GCPProject> liveProjects =\n        pipeline.apply(\"Read live projects\", Read.from(new LiveProjectSource(org)));\n```\n\nIf you want, I can also complete the rest of",
+      "quality_retention": null,
+      "score": 0.13,
+      "source_id": "503f9ad54895e3f1df00f0c52f9c73ab79add5c6d077ad85",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "            new_user = create_inactive_user(email, full_name)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s the next part of the `request_invitation` view, continuing from where your code stops:\n\n```python\n            comments = form.cleaned_data['comments']\n            user = create_inactive_user(email, full_name)\n            user.save()\n\n            # Send invitation email\n",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "68f47d51d86f9370e438fdc919e3bc0e02e8d82aa51fd37e",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "            new_user = create_inactive_user(email, full_name)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s the completed code for the missing parts, cleaned up and filled in so the forms/models/utilities are consistent.\n\n```python\n# connect/accounts/models.py\n\nclass Skill(models.Model):\n    \"\"\"\n    Represents a skill in the community.\n    \"\"\"\n    name = models.CharField(_('name'), max_length",
+      "quality_retention": null,
+      "score": 0.18,
+      "source_id": "68f47d51d86f9370e438fdc919e3bc0e02e8d82aa51fd37e",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "            new_user = create_inactive_user(email, full_name)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s the completed code for the missing parts, cleaned up and filled in so the forms/models/utilities are consistent.\n\n```python\n# connect/accounts/models.py\n\nclass Skill(models.Model):\n    \"\"\"\n    Represents a skill in the community.\n    \"\"\"\n    name = models.CharField(_('name'), max_length",
+      "quality_retention": null,
+      "score": 0.18,
+      "source_id": "68f47d51d86f9370e438fdc919e3bc0e02e8d82aa51fd37e",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "        CloseHandle(handle)  # will raise exception if the handle is invalid"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s a reasonable completion for the test, based on the surrounding code and the intent of `CreateEvent`:\n\n```python\n        self.assertIsNotNone(handle)\n        self.assertTrue(handle)\n        CloseHandle(handle)\n```\n\nIf you want the full test method in context, it would be:\n\n",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ba6ce7d62ebf668111f5490a7eef0502c24fdc199c1b49d6",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "        CloseHandle(handle)  # will raise exception if the handle is invalid"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `WindowsAPIError` class in `pywincffi/exceptions.py`:\n\n```python\nclass WindowsAPIError(PyWinCFFIError):\n    \"\"\"\n    A subclass of :class:`PyWinCFFIError` that's raised when there was a",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ba6ce7d62ebf668111f5490a7eef0502c24fdc199c1b49d6",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "        CloseHandle(handle)  # will raise exception if the handle is invalid"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `WindowsAPIError` class in `pywincffi/exceptions.py`:\n\n```python\nclass WindowsAPIError(PyWinCFFIError):\n    \"\"\"\n    A subclass of :class:`PyWinCFFIError` that's raised when there was a",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ba6ce7d62ebf668111f5490a7eef0502c24fdc199c1b49d6",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "            while (transactionIterator.nextTransactionState() == TransactionState.OK) {\r"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `CommandLog.execute()` method, continuing from the last line you provided:\n\n```java\n            while (transactionIterator.nextTransactionState() == TransactionState.OK) {\n\n                Transaction t = transactionIterator.next();\n                printer.print(t);\n                System.out.println(print);\n                print.setLength(",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "19066882a192c514e9f9dd3c6c835142c4c457c6e7dcd833",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "            while (transactionIterator.nextTransactionState() == TransactionState.OK) {\r"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `CommandLog.execute()` method, continuing from the last visible line:\n\n```java\n            while (transactionIterator.hasNext()) {\n                Transaction t = transactionIterator.next();\n                printer.print(t);\n                System.out.println(print);\n                print.setLength(0);\n            }\n\n            TransactionState",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "19066882a192c514e9f9dd3c6c835142c4c457c6e7dcd833",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "            while (transactionIterator.nextTransactionState() == TransactionState.OK) {\r"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `CommandLog.execute()` part, continuing from:\n\n```java\nTransactionIterator transactionIterator = transactionLog.iterator();\n```\n\n```java\n            while (transactionIterator.nextTransactionState() == TransactionState.OK) {\n\n                Transaction t = transactionIterator.next();\n                printer.print",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "19066882a192c514e9f9dd3c6c835142c4c457c6e7dcd833",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "            GCActivitySet gcActivitySet,"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `ChartPanelSingle` code for the missing part, continuing from `gcActivityAdded(...)` and including the rest of the class structure.\n\n```java\npackage gchisto.gui.panels.gcdistribution;\n\nimport gchisto.gcactivity.GCActivity;\nimport gchisto.gcactivity",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "1a60a2ee9abcfde312a1167e037b9a65932c0750052c7d63",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "            GCActivitySet gcActivitySet,"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here are the missing pieces completed in a consistent way with the surrounding code.\n\n### 1) `GCTraceCheckpoint.extendSizes()`\nThe method name in your snippet is cut off; it should be `extendSizes()`:\n\n```java\nprivate void extendSizes() {\n    assert gcTraceSize == ",
+      "quality_retention": null,
+      "score": 0.19,
+      "source_id": "1a60a2ee9abcfde312a1167e037b9a65932c0750052c7d63",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "            GCActivitySet gcActivitySet,"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here are the missing pieces completed in a consistent way with the surrounding code.\n\n### 1) `GCTraceCheckpoint`\nThe method name should be `extendSizes()`:\n\n```java\nsynchronized private void extendSizes() {\n    assert gcTraceSize == 0;\n\n    int newGCTraceSize =",
+      "quality_retention": null,
+      "score": 0.19,
+      "source_id": "1a60a2ee9abcfde312a1167e037b9a65932c0750052c7d63",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "    url(r'^(?P<pipeline_id>[0-9a-f-]+)/details$', PipelineDetailView.as_view(), name=\"pipeline-details\"),"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the next line that should follow the last URL pattern:\n\n```python\n    url(r'^new/package/(?P<slug>[\\w\\-\\+]+)$', staff_member_required(AddPackageCIPipeline.as_view(), login_url=LOGIN_URL), name=\"package-add-ci-pipeline\"),\n``",
+      "quality_retention": 1.0,
+      "score": 0.17,
+      "source_id": "12c0e9ecc66a1718c836090eb2bd15f1eefd072943eaa8ce",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "    url(r'^(?P<pipeline_id>[0-9a-f-]+)/details$', PipelineDetailView.as_view(), name=\"pipeline-details\"),"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed next line of code for the URL configuration:\n\n```python\n    url(r'^new$', staff_member_required(AddCIPipeline.as_view(), login_url=LOGIN_URL), name=\"add-ci-pipeline\"),\n```\n\nIf you want, I can also help reconstruct the rest of the `",
+      "quality_retention": 0.823529411764706,
+      "score": 0.14,
+      "source_id": "12c0e9ecc66a1718c836090eb2bd15f1eefd072943eaa8ce",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "    url(r'^(?P<pipeline_id>[0-9a-f-]+)/details$', PipelineDetailView.as_view(), name=\"pipeline-details\"),"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing part:\n\n```python\ndef generate_reports(request):\n    \"\"\"\n    Generates Reports\n    \"\"\"\n    if request.is_ajax():\n        post_params = request.POST.dict()\n        report_subject = post_params.get('subject', '')\n        reports_manager = ReportsManager()\n\n        if report",
+      "quality_retention": 0.9411764705882353,
+      "score": 0.16,
+      "source_id": "12c0e9ecc66a1718c836090eb2bd15f1eefd072943eaa8ce",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "                new RegisterFragment.RegistrationParam(success, email, password, message));"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing line in `UserRegistrationTask`:\n\n```java\n        ObservableRegistry.getObservable(classToNotify).notifyFragments(\n                new RegisterFragment.RegistrationParam(success, email, password, message));\n```\n\nSo the full ending of `onPostExecute` should be:\n\n",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "92ef9cc55d363565ca6ca5377f9bb6666861d3c1a87783cb",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "                new RegisterFragment.RegistrationParam(success, email, password, message));"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s a completed version of the missing pieces, with the obvious syntax/typo issues fixed so the code can compile.\n\n## 1) `Log.java`\n```java\npublic class Log {\n    static final boolean LOG_I = BuildConfig.DEBUG;\n    static final boolean LOG_E = BuildConfig.DEBUG",
+      "quality_retention": null,
+      "score": 0.23,
+      "source_id": "92ef9cc55d363565ca6ca5377f9bb6666861d3c1a87783cb",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "                new RegisterFragment.RegistrationParam(success, email, password, message));"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is a completed version of the missing pieces, with the obvious syntax/typo issues fixed so the code is consistent and compilable.\n\n### 1) `Log.java`\n```java\npublic class Log {\n    static final boolean LOG_I = BuildConfig.DEBUG;\n    static final boolean LOG_E =",
+      "quality_retention": null,
+      "score": 0.13,
+      "source_id": "92ef9cc55d363565ca6ca5377f9bb6666861d3c1a87783cb",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "                } catch(FilesNotFoundException ex) {"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "",
+      "quality_retention": null,
+      "score": null,
+      "source_id": "a22fc8c575abd0b749f0893c6cd4e745d98462d936c48d87",
+      "status": "context_overflow",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "                } catch(FilesNotFoundException ex) {"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing part in `FilesAccountInfo.java`:\n\n```java\n/**\n * @param containerCount The number of containers in the account\n */\npublic void setContainerCount(int containerCount) {\n    this.containerCount = containerCount;\n}\n```\n\nSo the full class should",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "a22fc8c575abd0b749f0893c6cd4e745d98462d936c48d87",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "                } catch(FilesNotFoundException ex) {"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the missing completion for the `FilesAccountInfo` class:\n\n```java\n\t/**\n\t * @param containerCount The number of containers in the account\n\t */\n\tpublic void setContainerCount(int containerCount) {\n\t\tthis.containerCount = containerCount;\n\t}\n}\n```\n\nIf you want",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "a22fc8c575abd0b749f0893c6cd4e745d98462d936c48d87",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "                    p = KaldiProcessWorker(i, return_queue, function, error_dict, stopped)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is a completed version of the missing pieces, based on the surrounding code and the expected MFA style.\n\n```python\n# montreal_forced_aligner/exceptions.py\n\nclass KaldiProcessingError(MFAError):\n    \"\"\"\n    Exception class for when a Kaldi binary has an exception\n\n    Parameters",
+      "quality_retention": 1.0,
+      "score": 0.24,
+      "source_id": "b877775e781d202a1a1d3be84bf34716f5ae94fb01abccee",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "                    p = KaldiProcessWorker(i, return_queue, function, error_dict, stopped)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `load_scp` function in `montreal_forced_aligner/helper.py`:\n\n```python\ndef load_scp(path: str, data_type: Optional[Type] = str) -> CorpusMappingType:\n    \"\"\"\n    Load a Kaldi script file",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "b877775e781d202a1a1d3be84bf34716f5ae94fb01abccee",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "                    p = KaldiProcessWorker(i, return_queue, function, error_dict, stopped)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is a completed version of the missing `load_scp` function from `montreal_forced_aligner/helper.py`:\n\n```python\ndef load_scp(path: str, data_type: Optional[Type] = str) -> CorpusMappingType:\n    \"\"\"\n    Load a Kaldi script file",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "b877775e781d202a1a1d3be84bf34716f5ae94fb01abccee",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "\tpublic LevelIO levelManager;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "",
+      "quality_retention": null,
+      "score": null,
+      "source_id": "dde86d25f9a52f8d67cc6f37f5638bbb706f5f65ba922154",
+      "status": "context_overflow",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "\tpublic LevelIO levelManager;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "It looks like the pasted source is incomplete and mixed from multiple files, so I can\u2019t reliably reconstruct the exact \u201cnext line\u201d without more context.\n\nIf you mean the very last visible line:\n\n```java\npublic Player player;\n```\n\nthen the next line is likely another field declaration in `Cubesha",
+      "quality_retention": null,
+      "score": 0.09,
+      "source_id": "dde86d25f9a52f8d67cc6f37f5638bbb706f5f65ba922154",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "\tpublic LevelIO levelManager;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "It looks like the pasted source is incomplete and heavily corrupted in several places, so I can\u2019t reliably reconstruct the exact \u201cnext line of code\u201d from context alone.\n\nIf you want, I can still help in one of these ways:\n\n1. **Rebuild the missing method/class** if you paste the",
+      "quality_retention": null,
+      "score": 0.13,
+      "source_id": "dde86d25f9a52f8d67cc6f37f5638bbb706f5f65ba922154",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "register = XPath30Parser.register"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing line:\n\n```python\ndef is_document_node(obj: Any) -> bool:\n    return hasattr(obj, 'getroot') and hasattr(obj, 'parse') and hasattr(obj, 'iter')\n```\n\nIf you want, I can also help reconstruct the rest of",
+      "quality_retention": 1.0,
+      "score": 0.2,
+      "source_id": "c5bfda64a6ca1498224213401c35967580a0a22d662b831a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "register = XPath30Parser.register"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `AnyURI.validate()` method and the surrounding class logic, reconstructed from the snippet you provided:\n\n```python\nfrom urllib.parse import urlparse\nimport re\n\nWRONG_ESCAPE_PATTERN = re.compile(r'%(?![0-9A-Fa-f]{2})",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "c5bfda64a6ca1498224213401c35967580a0a22d662b831a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "register = XPath30Parser.register"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "It looks like the snippet is incomplete and heavily mixed from multiple files, so I can\u2019t reliably reconstruct the exact \u201cnext line of code\u201d from context alone.\n\nIf you want, I can still help in one of these ways:\n\n1. **Rebuild the missing function/class** if you paste a larger",
+      "quality_retention": 0.6,
+      "score": 0.12,
+      "source_id": "c5bfda64a6ca1498224213401c35967580a0a22d662b831a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "\tprivate CountryServices countryServices;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing line in `ManageController`:\n\n```java\n@Resource\nprivate CountryServices countryServices;\n```\n\nIf you want, I can also help reconstruct the rest of `ManageController` or fix the import/package ordering issues in the snippet you pasted.",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "100dbc990bc2d7eec54973c0555245aa566691b4f093da12",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "\tprivate CountryServices countryServices;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `UserServices` method and the related `equals/hashCode` blocks, plus the likely missing `deleteUserById` declaration in the interface.\n\n### `src/main/java/top/phrack/ctf/models/services/UserServices.java`\n```java\npublic interface",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "100dbc990bc2d7eec54973c0555245aa566691b4f093da12",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "\tprivate CountryServices countryServices;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `UserServices` method and the related `equals/hashCode` blocks, plus the likely missing `deleteUserById` declaration in `UserServices`.\n\n### `src/main/java/top/phrack/ctf/models/services/UserServices.java`\n```java\npublic",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "100dbc990bc2d7eec54973c0555245aa566691b4f093da12",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "                    PathParser pathParser = parserHolder.getPathParser();"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the missing continuation for `OpenAPIProcessor` after:\n\n```java\nTypeElement annotation = elementUtils.getTypeElement(parserHolder.getSupportedAnnotation());\n```\n\n```java\n                    return roundEnv.getElementsAnnotatedWith(annotation)\n                            .stream()\n                            .peek(currentAnnotated",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "a2435a3378aae494dbdb012260af73c281743712ebe4c8ae",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "                    PathParser pathParser = parserHolder.getPathParser();"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is a complete implementation for the missing `DefaultCodeGenerator` class, which matches the surrounding factory and interface design.\n\n### `src/main/java/com/cosium/openapi/annotation_processor/code/DefaultCodeGenerator.java`\n```java\npackage com.cosium.openapi.annotation_processor",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "a2435a3378aae494dbdb012260af73c281743712ebe4c8ae",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "                    PathParser pathParser = parserHolder.getPathParser();"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s a complete implementation for the missing `DefaultCodeGenerator` class, which matches the surrounding factory and interface design.\n\nCreate this file:\n\n`src/main/java/com/cosium/openapi/annotation_processor/code/DefaultCodeGenerator.java`\n\n```java\npackage com.cosium.openapi.annotation_processor.code;\n\nimport",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "a2435a3378aae494dbdb012260af73c281743712ebe4c8ae",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "    Call<Suggestions> getSuggestions(@QueryMap Map<String, String> serviceIds,"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `IApiClient` interface with the missing `suggest` endpoint added in a consistent style with the rest of the file:\n\n```java\npackage com.tenor.android.core.network;\n\nimport android.support.annotation.IntRange;\nimport android.support.annotation.NonNull;\nimport com.tenor.android.core.constant",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "33951a25f017d2172b8a79991732adbd55c8d346f1cbbe0c",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "    Call<Suggestions> getSuggestions(@QueryMap Map<String, String> serviceIds,"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `TrendingTermResponse` class:\n\n```java\npublic class TrendingTermResponse extends AbstractResponse {\n\n    private static final long serialVersionUID = -8215681889738059793L;\n    private List<String> results;\n\n    @NonNull\n    public List",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "33951a25f017d2172b8a79991732adbd55c8d346f1cbbe0c",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "    Call<Suggestions> getSuggestions(@QueryMap Map<String, String> serviceIds,"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `TrendingTermResponse.java` class:\n\n```java\npackage com.tenor.android.core.response.impl;\n\nimport android.support.annotation.NonNull;\nimport com.tenor.android.core.response.AbstractResponse;\nimport com.tenor.android.core.util.AbstractListUtils;\nimport java.util.Collections;\n",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "33951a25f017d2172b8a79991732adbd55c8d346f1cbbe0c",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "    ci_pipeline_manager = CIPipelineManager()"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s the completed continuation for the code after:\n\n```python\nclass ManagersMixin(object):\n    \"\"\"\n    Managers Mixin\n    \"\"\"\n    inventory_manager = InventoryManager()\n    packages_manager = PackagesManager()\n    jobs_log_manager = JobsLogManager()\n    jobs_template_manager = JobTemplateManager()\n    release",
+      "quality_retention": 1.0,
+      "score": 0.22,
+      "source_id": "a3ab85fe65dc358a7be39837cc12cfa72c0239b1b8a78339",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "    ci_pipeline_manager = CIPipelineManager()"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `get_ci_platform_workflow_steps` method and the surrounding `ci_lang_job_map` logic, cleaned up and made consistent with the rest of the class:\n\n```python\n    def get_ci_platform_workflow_steps(self, pipeline_uuid):\n        \"\"\"\n        Get CI",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "a3ab85fe65dc358a7be39837cc12cfa72c0239b1b8a78339",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "    ci_pipeline_manager = CIPipelineManager()"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing part of `ci_lang_job_map` and the surrounding method, reconstructed from the context:\n\n```python\n    def ci_lang_job_map(self, pipelines, workflow_step='default'):\n        \"\"\"\n        Get CI Platform Target Language: Job UID map\n        :param pipelines",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "a3ab85fe65dc358a7be39837cc12cfa72c0239b1b8a78339",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "        TcClassParser(self.__con).parse("
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing part, based on the surrounding implementation style:\n\n```python\n    def __parse_tc_class(self, device):\n        TcClassParser(self.__con).parse(\n            device, run_tc_show(TcSubCommand.CLASS, device, self.__tc_command_output)\n       ",
+      "quality_retention": 1.0,
+      "score": 0.16,
+      "source_id": "2067b981ea8febe9283b2f18a0f277fbac25d422c5887f25",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "        TcClassParser(self.__con).parse("
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `TcFilterParser` parts, reconstructed from the surrounding context.\n\n```python\n    def __parse_filter_ipv6(self, line):\n        value_hex, mask_hex, match_id = self.__parse_filter_ip_line(line)\n\n        if (\n            match_id in self",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "2067b981ea8febe9283b2f18a0f277fbac25d422c5887f25",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "        TcClassParser(self.__con).parse("
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `TcFilterParser` IPv6 parsing section, along with the surrounding methods so it fits correctly into the file:\n\n```python\n    def __parse_filter_ipv6(self, line):\n        value_hex, mask_hex, match_id = self.__parse_filter_ip_line",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "2067b981ea8febe9283b2f18a0f277fbac25d422c5887f25",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "            index = index_for(key)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s the missing completion for the `Engine.load` method in `bloop/engine.py`:\n\n```python\n        for obj in objs:\n            table_name = get_table_name(obj.__class__)\n            key = dump_key(self, obj)\n            table_index.setdefault(table_name, []).append(obj)\n",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "09f1c795988b6571bc3f9a976ba15ba37dbdb36ea9727d61",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "            index = index_for(key)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `render` function in `bloop/conditions.py`:\n\n```python\ndef render(engine, obj=None, filter=None, projection=None, key=None, condition=None, update=None):\n    renderer = ConditionRenderer(engine)\n    renderer.render(\n        obj=obj,",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "09f1c795988b6571bc3f9a976ba15ba37dbdb36ea9727d61",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "            index = index_for(key)"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed line and surrounding code for `bloop/conditions.py`:\n\n```python\ndef render(engine, obj=None, filter=None, projection=None, key=None, condition=None, update=None):\n    renderer = ConditionRenderer(engine)\n    renderer.render(\n        obj=obj, condition=condition,\n",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "09f1c795988b6571bc3f9a976ba15ba37dbdb36ea9727d61",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "\tCall<ImgurResponseWrapper<List<Image>>> listAccountImages("
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `Notification.java` class with the missing imports and a standard constructor-less model structure filled in consistently with the rest of the codebase:\n\n```java\npackage com.github.kskelm.baringo.model;\n\nimport com.google.gson.annotations.SerializedName;\n\npublic class Notification {\n\n\t/**\n\t *",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "dcd7ed9229f821ccc684202b894b1b7c19bd21bf18954edb",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "\tCall<ImgurResponseWrapper<List<Image>>> listAccountImages("
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `ChangedAccountSettings` class, reconstructed from the fragments you provided and filled in with the missing fields, constructors, getters/setters, and `toString()`:\n\n```java\npackage com.github.kskelm.baringo.model;\n\nimport com.google.gson.annotations.SerializedName;\n\npublic class",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "dcd7ed9229f821ccc684202b894b1b7c19bd21bf18954edb",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "\tCall<ImgurResponseWrapper<List<Image>>> listAccountImages("
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed `ChangedAccountSettings` class with the missing parts filled in and the constructor finished:\n\n```java\npackage com.github.kskelm.baringo.model;\n\nimport com.google.gson.annotations.SerializedName;\n\npublic class ChangedAccountSettings {\n\n\t@SerializedName(\"bio\")\n\tprivate String bio;\n\t",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "dcd7ed9229f821ccc684202b894b1b7c19bd21bf18954edb",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "    private CodeGeneratorFactory codeGeneratorFactory;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s the completed continuation for `OpenAPIProcessor` after:\n\n```java\nprivate SpecificationGeneratorFactory specificationGeneratorFactory;\n```\n\n```java\n    private CodeGeneratorFactory codeGeneratorFactory;\n    private IOptions options;\n\n    @Override\n    public Set<String> getSupportedAnnotationTypes() {\n        return",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ea73e4e9f46fa0f5bc37d1ace51629badf6ce4b9e239a93e",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "    private CodeGeneratorFactory codeGeneratorFactory;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing parts, with the obvious syntax issues fixed as well.\n\n### `OptionsBuilder.java`\n```java\npackage com.cosium.openapi.annotation_processor.option;\n\nimport java.util.Arrays;\nimport java.util.LinkedHashSet;\nimport java.util.Map;\nimport java.util.Set;\nimport java",
+      "quality_retention": null,
+      "score": 0.2,
+      "source_id": "ea73e4e9f46fa0f5bc37d1ace51629badf6ce4b9e239a93e",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "    private CodeGeneratorFactory codeGeneratorFactory;"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing part in `OpenAPIProcessor`:\n\n```java\n    private CodeGeneratorFactory codeGeneratorFactory;\n    private IOptions options;\n\n    @Override\n    public synchronized void init(ProcessingEnvironment processingEnv) {\n        super.init(processing",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ea73e4e9f46fa0f5bc37d1ace51629badf6ce4b9e239a93e",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "        DataState dataState = null;\r"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing part of `CommandSnapshot.execute()`:\n\n```java\n    public void execute() {\n\n        final StringBuilder print = new StringBuilder();\n        DataDecoder decoder = null;\n\n        try {\n            // choose decoder\n            if (dataDecoder == null || dataDecoder.trim",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "5031dcca48753053c774705c0bf327e12c3cea3ffeeac136",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "        DataState dataState = null;\r"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here\u2019s a completed version of the missing/unfinished parts, with the iterator logic fixed and the surrounding classes filled in where the snippet was cut off.\n\n### Completed `TransactionLogIterator` logic\n\n```java\n@Override\npublic TransactionState nextTransactionState() {\n\n    if (s != TransactionState.OK)",
+      "quality_retention": null,
+      "score": 0.12,
+      "source_id": "5031dcca48753053c774705c0bf327e12c3cea3ffeeac136",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "        DataState dataState = null;\r"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is a completed and cleaned-up version of the missing `TransactionLogIterator` logic, including the `nextTransactionState()` method and the iterator class structure.\n\n```java\n@Override\npublic TransactionState nextTransactionState() {\n\n    if (s != TransactionState.OK) {\n        loadNextTransaction();\n   ",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "5031dcca48753053c774705c0bf327e12c3cea3ffeeac136",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "        UnifiedOrderResponse response = wxPayClient.execute(request);"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed continuation for the test code after:\n\n```java\nUnifiedOrderRequest request = new UnifiedOrderRequest(\"commodity-899\", SDKUtils\n        .genOutTradeNo(),\n        1, \"192.168.1.1\", asyncNotifyUrl, \"NATIVE\", nonceStr",
+      "quality_retention": 1.0,
+      "score": 0.22,
+      "source_id": "f16a1bd770c0a155028c1739d45e1a8af99665d8ff791d48",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "        UnifiedOrderResponse response = wxPayClient.execute(request);"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing part in `WXPayClientTest`:\n\n```java\n        UnifiedOrderResponse response = wxPayClient.unifiedOrder(request);\n        LOG.info(\"scanPay response: {}\", JSON.toJSONString(response));\n        Assert.assertNotNull(response);\n    }\n```\n\nIf you",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "f16a1bd770c0a155028c1739d45e1a8af99665d8ff791d48",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "        UnifiedOrderResponse response = wxPayClient.execute(request);"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `UnifiedOrderRequest` constructor and the next line in your test:\n\n```java\nUnifiedOrderRequest request = new UnifiedOrderRequest(\n        \"commodity-899\",\n        SDKUtils.genOutTradeNo(),\n        1,\n        \"192.168.1.",
+      "quality_retention": 0.0,
+      "score": 0.0,
+      "source_id": "f16a1bd770c0a155028c1739d45e1a8af99665d8ff791d48",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "    return Pair(e1, e2, typ_mul(ty1, ty2))"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the missing completion for the `pair` constructor in `boole/core/expr.py`:\n\n```python\n    if ty1 == None or ty2 == None:\n        raise Exception(\"Cannot infer type of pair components\")\n\n    # Build the Sigma type of the pair\n    sig_ty =",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ea15e5f0253c69b2379552e337b49283e404108fe6a4380a",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "    return Pair(e1, e2, typ_mul(ty1, ty2))"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `pair` constructor in `boole/core/expr.py`:\n\n```python\n@with_info(st_term)\ndef pair(expr1, expr2):\n    \"\"\"Turn a pair of simply typed arguments\n    into a Pair.\n    \n    Arguments:\n    - `",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ea15e5f0253c69b2379552e337b49283e404108fe6a4380a",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "    return Pair(e1, e2, typ_mul(ty1, ty2))"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `pair` constructor in `boole/core/expr.py`:\n\n```python\n@with_info(st_term)\ndef pair(expr1, expr2):\n    \"\"\"Turn a pair of simply typed arguments\n    into a Pair.\n    \n    Arguments:\n    - `",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "ea15e5f0253c69b2379552e337b49283e404108fe6a4380a",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    },
+    {
+      "answers": [
+        "    private WeeklyCaptionProvider weeklyCaptionFormatProvider = date -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(getLocale()).format(date);"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed continuation for the `Calendar` class after:\n\n```java\n/** Caption format provuder for the weekly view */\n```\n\n```java\nprivate WeeklyCaptionProvider weeklyCaptionProvider = date -> DateTimeFormatter\n        .ofLocalizedDate(FormatStyle.MEDIUM)\n        .withLocale",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "dca6537e7a416a56bbde3e982c0bfe267e7b914ec525b580",
+      "status": "ok",
+      "strategy": "full_context"
+    },
+    {
+      "answers": [
+        "    private WeeklyCaptionProvider weeklyCaptionFormatProvider = date -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(getLocale()).format(date);"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `BasicWeekClickHandler` class:\n\n```java\npackage org.vaadin.addon.calendar.handler;\n\nimport java.time.ZonedDateTime;\nimport java.time.temporal.ChronoField;\nimport java.time.temporal.ChronoUnit;\n\nimport org.vaadin.addon.calendar.ui.Calendar",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "dca6537e7a416a56bbde3e982c0bfe267e7b914ec525b580",
+      "status": "ok",
+      "strategy": "phase5_full"
+    },
+    {
+      "answers": [
+        "    private WeeklyCaptionProvider weeklyCaptionFormatProvider = date -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(getLocale()).format(date);"
+      ],
+      "dataset": "repobench-p",
+      "metric": "code_similarity",
+      "prediction": "Here is the completed code for the missing `BasicWeekClickHandler` class:\n\n```java\npackage org.vaadin.addon.calendar.handler;\n\nimport java.time.ZonedDateTime;\nimport java.time.temporal.ChronoField;\nimport java.time.temporal.ChronoUnit;\n\nimport org.vaadin.addon.calendar.ui.Calendar",
+      "quality_retention": null,
+      "score": 0.0,
+      "source_id": "dca6537e7a416a56bbde3e982c0bfe267e7b914ec525b580",
+      "status": "ok",
+      "strategy": "phase5_v040"
+    }
+  ],
+  "dataset_aggregates": [
+    {
+      "case_count": 25,
+      "dataset": "2wikimqa",
+      "mean_compression_time_ms": 0.0,
+      "mean_embedding_time_ms": 0.0,
+      "mean_input_context_tokens": 7144.8,
+      "mean_model_ttft_ms": 894.3898000021,
+      "mean_quality_retention": 1.0,
+      "mean_score": 0.5844444444444444,
+      "metric": "qa_f1",
+      "p50_optimizer_latency_ms": 6.962799991015345,
+      "p95_optimizer_latency_ms": 11.370019993046297,
+      "quality_retention_ci95": null,
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.7577777777777778,
+        "low": 0.4222222222222222,
+        "resamples": 1000,
+        "seed": 3631275116
+      },
+      "strategy": "full_context",
+      "successful_case_count": 25,
+      "total_cached_tokens": 13824,
+      "total_estimated_cost_usd": 0.1243488,
+      "total_optimizer_latency_ms": 171.82420002063736,
+      "total_output_tokens": 203,
+      "total_provider_latency_ms": 49995.83769997116
+    },
+    {
+      "case_count": 25,
+      "dataset": "2wikimqa",
+      "mean_compression_time_ms": 1.0532600025180727,
+      "mean_embedding_time_ms": 72.21059199888259,
+      "mean_input_context_tokens": 6210.56,
+      "mean_model_ttft_ms": 761.7246479995083,
+      "mean_quality_retention": 1.0176470588235293,
+      "mean_score": 0.6604444444444444,
+      "metric": "qa_f1",
+      "p50_optimizer_latency_ms": 85.68150000064634,
+      "p95_optimizer_latency_ms": 239.3034800072198,
+      "quality_retention_ci95": null,
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.8160555555555554,
+        "low": 0.48487777777777774,
+        "resamples": 1000,
+        "seed": 2872541550
+      },
+      "strategy": "phase5_full",
+      "successful_case_count": 25,
+      "total_cached_tokens": 143360,
+      "total_estimated_cost_usd": 0.0197535,
+      "total_optimizer_latency_ms": 2494.1329000575934,
+      "total_output_tokens": 218,
+      "total_provider_latency_ms": 48058.319100004155
+    },
+    {
+      "case_count": 25,
+      "dataset": "2wikimqa",
+      "mean_compression_time_ms": 0.7747120026033372,
+      "mean_embedding_time_ms": 64.04160000383854,
+      "mean_input_context_tokens": 6210.76,
+      "mean_model_ttft_ms": 746.1093959969003,
+      "mean_quality_retention": 0.9235294117647059,
+      "mean_score": 0.6284444444444445,
+      "metric": "qa_f1",
+      "p50_optimizer_latency_ms": 67.99999999930151,
+      "p95_optimizer_latency_ms": 164.62685999576928,
+      "quality_retention_ci95": null,
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.7818333333333333,
+        "low": 0.45643333333333336,
+        "resamples": 1000,
+        "seed": 1299182176
+      },
+      "strategy": "phase5_v040",
+      "successful_case_count": 25,
+      "total_cached_tokens": 13824,
+      "total_estimated_cost_usd": 0.10715805,
+      "total_optimizer_latency_ms": 1984.1068000532687,
+      "total_output_tokens": 209,
+      "total_provider_latency_ms": 46070.87850003154
+    },
+    {
+      "case_count": 25,
+      "dataset": "hotpotqa",
+      "mean_compression_time_ms": 0.0,
+      "mean_embedding_time_ms": 0.0,
+      "mean_input_context_tokens": 12323.52,
+      "mean_model_ttft_ms": 902.2389079991262,
+      "mean_quality_retention": 1.0,
+      "mean_score": 0.7469523809523809,
+      "metric": "qa_f1",
+      "p50_optimizer_latency_ms": 9.726499993121251,
+      "p95_optimizer_latency_ms": 19.85640000202693,
+      "quality_retention_ci95": {
+        "confidence_level": 0.95,
+        "high": 1.0,
+        "low": 1.0,
+        "resamples": 1000,
+        "seed": 161027335
+      },
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.880295238095238,
+        "low": 0.5814261904761906,
+        "resamples": 1000,
+        "seed": 161027334
+      },
+      "strategy": "full_context",
+      "successful_case_count": 25,
+      "total_cached_tokens": 31232,
+      "total_estimated_cost_usd": 0.2085084,
+      "total_optimizer_latency_ms": 271.9198999402579,
+      "total_output_tokens": 193,
+      "total_provider_latency_ms": 45060.73489997652
+    },
+    {
+      "case_count": 25,
+      "dataset": "hotpotqa",
+      "mean_compression_time_ms": 1.2609239993616939,
+      "mean_embedding_time_ms": 145.0865959969815,
+      "mean_input_context_tokens": 7656.84,
+      "mean_model_ttft_ms": 851.8682999990415,
+      "mean_quality_retention": 0.7619047619047619,
+      "mean_score": 0.5716190476190476,
+      "metric": "qa_f1",
+      "p50_optimizer_latency_ms": 210.06159999524243,
+      "p95_optimizer_latency_ms": 325.0535999948624,
+      "quality_retention_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.9523809523809523,
+        "low": 0.555357142857143,
+        "resamples": 1000,
+        "seed": 4294643923
+      },
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.7312809523809524,
+        "low": 0.392,
+        "resamples": 1000,
+        "seed": 4294643922
+      },
+      "strategy": "phase5_full",
+      "successful_case_count": 25,
+      "total_cached_tokens": 178432,
+      "total_estimated_cost_usd": 0.0232569,
+      "total_optimizer_latency_ms": 4652.562900038902,
+      "total_output_tokens": 181,
+      "total_provider_latency_ms": 47039.19780001161
+    },
+    {
+      "case_count": 25,
+      "dataset": "hotpotqa",
+      "mean_compression_time_ms": 1.5335959999356419,
+      "mean_embedding_time_ms": 141.9054120022338,
+      "mean_input_context_tokens": 7656.12,
+      "mean_model_ttft_ms": 879.0178359975107,
+      "mean_quality_retention": 0.8469387755102041,
+      "mean_score": 0.6430476190476191,
+      "metric": "qa_f1",
+      "p50_optimizer_latency_ms": 180.52550000720657,
+      "p95_optimizer_latency_ms": 260.0642799923662,
+      "quality_retention_ci95": {
+        "confidence_level": 0.95,
+        "high": 1.0080215419501133,
+        "low": 0.6620748299319729,
+        "resamples": 1000,
+        "seed": 1839107594
+      },
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.8106761904761904,
+        "low": 0.47613333333333335,
+        "resamples": 1000,
+        "seed": 1839107593
+      },
+      "strategy": "phase5_v040",
+      "successful_case_count": 25,
+      "total_cached_tokens": 14848,
+      "total_estimated_cost_usd": 0.1337151,
+      "total_optimizer_latency_ms": 4230.73009995278,
+      "total_output_tokens": 192,
+      "total_provider_latency_ms": 43952.95609999448
+    },
+    {
+      "case_count": 25,
+      "dataset": "passage_retrieval_en",
+      "mean_compression_time_ms": 0.0,
+      "mean_embedding_time_ms": 0.0,
+      "mean_input_context_tokens": 12645.12,
+      "mean_model_ttft_ms": 903.9948719984386,
+      "mean_quality_retention": 1.0,
+      "mean_score": 1.0,
+      "metric": "retrieval",
+      "p50_optimizer_latency_ms": 4.508700018050149,
+      "p95_optimizer_latency_ms": 8.679280010983346,
+      "quality_retention_ci95": {
+        "confidence_level": 0.95,
+        "high": 1.0,
+        "low": 1.0,
+        "resamples": 1000,
+        "seed": 3830328307
+      },
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 1.0,
+        "low": 1.0,
+        "resamples": 1000,
+        "seed": 3830328306
+      },
+      "strategy": "full_context",
+      "successful_case_count": 25,
+      "total_cached_tokens": 12544,
+      "total_estimated_cost_usd": 0.23119155,
+      "total_optimizer_latency_ms": 145.3046000970062,
+      "total_output_tokens": 175,
+      "total_provider_latency_ms": 105717.03369999886
+    },
+    {
+      "case_count": 25,
+      "dataset": "passage_retrieval_en",
+      "mean_compression_time_ms": 2.1706680033821613,
+      "mean_embedding_time_ms": 119.97430400573649,
+      "mean_input_context_tokens": 7930.4,
+      "mean_model_ttft_ms": 839.72403199994,
+      "mean_quality_retention": 0.88,
+      "mean_score": 0.88,
+      "metric": "retrieval",
+      "p50_optimizer_latency_ms": 152.0524000225123,
+      "p95_optimizer_latency_ms": 268.546839983901,
+      "quality_retention_ci95": {
+        "confidence_level": 0.95,
+        "high": 1.0,
+        "low": 0.76,
+        "resamples": 1000,
+        "seed": 557296712
+      },
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 1.0,
+        "low": 0.72,
+        "resamples": 1000,
+        "seed": 557296711
+      },
+      "strategy": "phase5_full",
+      "successful_case_count": 25,
+      "total_cached_tokens": 133120,
+      "total_estimated_cost_usd": 0.06280575,
+      "total_optimizer_latency_ms": 3925.2406999876257,
+      "total_output_tokens": 175,
+      "total_provider_latency_ms": 61438.999800011516
+    },
+    {
+      "case_count": 25,
+      "dataset": "passage_retrieval_en",
+      "mean_compression_time_ms": 1.7822160001378506,
+      "mean_embedding_time_ms": 85.5732800019905,
+      "mean_input_context_tokens": 7929.64,
+      "mean_model_ttft_ms": 805.034952001879,
+      "mean_quality_retention": 0.84,
+      "mean_score": 0.84,
+      "metric": "retrieval",
+      "p50_optimizer_latency_ms": 78.09270001598634,
+      "p95_optimizer_latency_ms": 222.93533998890774,
+      "quality_retention_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.96,
+        "low": 0.68,
+        "resamples": 1000,
+        "seed": 640584355
+      },
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.96,
+        "low": 0.68,
+        "resamples": 1000,
+        "seed": 640584354
+      },
+      "strategy": "phase5_v040",
+      "successful_case_count": 25,
+      "total_cached_tokens": 61440,
+      "total_estimated_cost_usd": 0.11119425,
+      "total_optimizer_latency_ms": 2596.1703000066336,
+      "total_output_tokens": 175,
+      "total_provider_latency_ms": 91605.03950004932
+    },
+    {
+      "case_count": 25,
+      "dataset": "repobench-p",
+      "mean_compression_time_ms": 0.0,
+      "mean_embedding_time_ms": 0.0,
+      "mean_input_context_tokens": 8791.391304347826,
+      "mean_model_ttft_ms": 959.2031130450778,
+      "mean_quality_retention": 1.0,
+      "mean_score": 0.05782608695652174,
+      "metric": "code_similarity",
+      "p50_optimizer_latency_ms": 3.240999998524785,
+      "p95_optimizer_latency_ms": 8.75850000884384,
+      "quality_retention_ci95": null,
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.09565217391304348,
+        "low": 0.021695652173913085,
+        "resamples": 1000,
+        "seed": 3204947448
+      },
+      "strategy": "full_context",
+      "successful_case_count": 23,
+      "total_cached_tokens": 24064,
+      "total_estimated_cost_usd": 0.16063305,
+      "total_optimizer_latency_ms": 90.53699995274656,
+      "total_output_tokens": 1469,
+      "total_provider_latency_ms": 122887.63569996809
+    },
+    {
+      "case_count": 25,
+      "dataset": "repobench-p",
+      "mean_compression_time_ms": 0.3010960016399622,
+      "mean_embedding_time_ms": 43.06122799986042,
+      "mean_input_context_tokens": 6345.08,
+      "mean_model_ttft_ms": 766.4113200013526,
+      "mean_quality_retention": 0.23669467787114848,
+      "mean_score": 0.0592,
+      "metric": "code_similarity",
+      "p50_optimizer_latency_ms": 41.820499987807125,
+      "p95_optimizer_latency_ms": 187.94609999749787,
+      "quality_retention_ci95": null,
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.09441999999999999,
+        "low": 0.026390000000000007,
+        "resamples": 1000,
+        "seed": 2208483144
+      },
+      "strategy": "phase5_full",
+      "successful_case_count": 25,
+      "total_cached_tokens": 171264,
+      "total_estimated_cost_usd": 0.0311973,
+      "total_optimizer_latency_ms": 1531.842800002778,
+      "total_output_tokens": 1600,
+      "total_provider_latency_ms": 56969.73730021273
+    },
+    {
+      "case_count": 25,
+      "dataset": "repobench-p",
+      "mean_compression_time_ms": 0.6558440008666366,
+      "mean_embedding_time_ms": 44.30376800009981,
+      "mean_input_context_tokens": 6316.68,
+      "mean_model_ttft_ms": 795.8547720010392,
+      "mean_quality_retention": 0.35112044817927174,
+      "mean_score": 0.046,
+      "metric": "code_similarity",
+      "p50_optimizer_latency_ms": 41.947800025809556,
+      "p95_optimizer_latency_ms": 178.42863998375813,
+      "quality_retention_ci95": null,
+      "score_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.0736,
+        "low": 0.0204,
+        "resamples": 1000,
+        "seed": 319116542
+      },
+      "strategy": "phase5_v040",
+      "successful_case_count": 25,
+      "total_cached_tokens": 17920,
+      "total_estimated_cost_usd": 0.1341555,
+      "total_optimizer_latency_ms": 1429.9729999911506,
+      "total_output_tokens": 1600,
+      "total_provider_latency_ms": 48347.256999928504
+    }
+  ],
+  "paired_comparisons": [
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 25,
+      "dataset": "2wikimqa",
+      "mean_score_delta": 0.076,
+      "metric": "qa_f1",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.2,
+        "low": -0.036,
+        "resamples": 1000,
+        "seed": 1536744944
+      }
+    },
+    {
+      "candidate_strategy": "phase5_v040",
+      "case_count": 25,
+      "dataset": "2wikimqa",
+      "mean_score_delta": 0.044000000000000004,
+      "metric": "qa_f1",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.17209999999999992,
+        "low": -0.06,
+        "resamples": 1000,
+        "seed": 185588114
+      }
+    },
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 25,
+      "dataset": "2wikimqa",
+      "mean_score_delta": 0.032,
+      "metric": "qa_f1",
+      "reference_strategy": "phase5_v040",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.096,
+        "low": 0.0,
+        "resamples": 1000,
+        "seed": 2753214663
+      }
+    },
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 25,
+      "dataset": "hotpotqa",
+      "mean_score_delta": -0.17533333333333334,
+      "metric": "qa_f1",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": -0.0386166666666667,
+        "low": -0.33999999999999997,
+        "resamples": 1000,
+        "seed": 2979826834
+      }
+    },
+    {
+      "candidate_strategy": "phase5_v040",
+      "case_count": 25,
+      "dataset": "hotpotqa",
+      "mean_score_delta": -0.1039047619047619,
+      "metric": "qa_f1",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.006699999999999977,
+        "low": -0.23714761904761902,
+        "resamples": 1000,
+        "seed": 2440868556
+      }
+    },
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 25,
+      "dataset": "hotpotqa",
+      "mean_score_delta": -0.07142857142857142,
+      "metric": "qa_f1",
+      "reference_strategy": "phase5_v040",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.01714285714285714,
+        "low": -0.2,
+        "resamples": 1000,
+        "seed": 1592626304
+      }
+    },
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 25,
+      "dataset": "passage_retrieval_en",
+      "mean_score_delta": -0.12,
+      "metric": "retrieval",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.0,
+        "low": -0.24099999999999908,
+        "resamples": 1000,
+        "seed": 1885821107
+      }
+    },
+    {
+      "candidate_strategy": "phase5_v040",
+      "case_count": 25,
+      "dataset": "passage_retrieval_en",
+      "mean_score_delta": -0.16,
+      "metric": "retrieval",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": -0.04,
+        "low": -0.32,
+        "resamples": 1000,
+        "seed": 1527627683
+      }
+    },
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 25,
+      "dataset": "passage_retrieval_en",
+      "mean_score_delta": 0.04,
+      "metric": "retrieval",
+      "reference_strategy": "phase5_v040",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.16,
+        "low": -0.08,
+        "resamples": 1000,
+        "seed": 14298935
+      }
+    },
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 23,
+      "dataset": "repobench-p",
+      "mean_score_delta": 0.002608695652173914,
+      "metric": "code_similarity",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.057402173913043475,
+        "low": -0.05088043478260869,
+        "resamples": 1000,
+        "seed": 1019047008
+      }
+    },
+    {
+      "candidate_strategy": "phase5_v040",
+      "case_count": 23,
+      "dataset": "repobench-p",
+      "mean_score_delta": -0.013478260869565217,
+      "metric": "code_similarity",
+      "reference_strategy": "full_context",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.029576086956521728,
+        "low": -0.06001086956521738,
+        "resamples": 1000,
+        "seed": 1080386334
+      }
+    },
+    {
+      "candidate_strategy": "phase5_full",
+      "case_count": 25,
+      "dataset": "repobench-p",
+      "mean_score_delta": 0.013200000000000002,
+      "metric": "code_similarity",
+      "reference_strategy": "phase5_v040",
+      "score_delta_ci95": {
+        "confidence_level": 0.95,
+        "high": 0.036000000000000004,
+        "low": -0.00720999999999999,
+        "resamples": 1000,
+        "seed": 1240229462
+      }
+    }
+  ],
+  "performance": {
+    "peak_process_memory_bytes": 195465216
+  },
+  "prediction_count": 300,
+  "prepared_sha256": "6f23bfe13611664c293ddc54f1a60d2889cd5949e206963f4bd9b068e55cf01e",
+  "schema_version": "1.3"
+}
