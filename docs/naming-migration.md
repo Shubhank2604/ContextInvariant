@@ -65,3 +65,11 @@ Repository ownership, repository renaming, remote configuration, commits, tag re
 and pushes are performed by the maintainer. Rename the GitHub repository to `ContextInvariant`
 and update the local remote to `https://github.com/Shubhank2604/ContextInvariant.git` before
 publishing the renamed release. The local checkout directory can be renamed separately.
+
+The local master prompt is now `ContextInvariant_MASTER_BUILD_PROMPT.md`; it and the other
+internal build plans remain ignored by Git. Their project, import, and command references use
+the current identity. Original local-plan copies are retained in the ignored
+`out/pre-rename-local-plans/` directory. Generated caches, archived distributions, old
+experiment directories, and the pre-rename cleanup audit retain their historical identities.
+Obsolete generated package metadata was moved out of `src/` to the recoverable, ignored
+`out/pre-rename-package-metadata/` archive.

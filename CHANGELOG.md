@@ -54,12 +54,12 @@ No unreleased changes.
 
 ### Added
 
-- ContextOS-Bench with 50 deterministic coding, research, and support/operations cases and
+- ContextInvariant-Bench with 50 deterministic coding, research, and support/operations cases and
   annotated critical-information requirements.
 - Controlled 4K-32K positional retrieval, a pinned four-task LongBench subset, and deterministic
   LongBench-compatible evaluators.
 - Relevance Only and Naive Extractive baselines alongside Full Context, Last-N, Sliding Window,
-  and ContextOS.
+  and ContextInvariant.
 - Six-variant component ablation, deterministic paired bootstrap intervals, and performance
   telemetry for optimizer, embedding, compression, provider, tokens, and process memory.
 - Immutable seven-file experiment bundles with source revision, environment, configuration, raw

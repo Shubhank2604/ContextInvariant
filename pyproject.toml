@@ -85,7 +85,7 @@ files = ["src", "tests"]
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-extend-exclude = ["ContextOS_MASTER_BUILD_PROMPT.md", "MASTER_BUILD_SPEC.md"]
+extend-exclude = ["ContextInvariant_MASTER_BUILD_PROMPT.md", "MASTER_BUILD_SPEC.md"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
