@@ -366,9 +366,18 @@ class ContextOptimizer:
         tokenized = self._tokenize_items(items)
         by_id = {item.id: item for item in tokenized}
         graph = ContextConstraintGraph(tokenized, self._edges)
+        representations = self._constraint_policy.validated_representations
+        conflict_winners = self._constraint_policy.conflict_winners
+        representation_map = {
+            representation.source_item_id: representation.representation_item_id
+            for representation in representations
+        }
+        universe_seeds = tuple(item_id for item_id in by_id if item_id not in representation_map)
         legal_universe = graph.resolve(
-            tuple(by_id),
+            universe_seeds,
+            representations=representations,
             conflict_policy=self._constraint_policy.conflict_policy,
+            conflict_winners=conflict_winners,
             retain_superseded=self._constraint_policy.retain_superseded,
         )
         legal_ids = set(legal_universe.selected_item_ids)
@@ -383,6 +392,18 @@ class ContextOptimizer:
         final_resolution: ConstraintResolution | None = None
         result: OptimizedContext | None = None
         for _ in range(len(candidates) + 1):
+            if forced:
+                required_seeds = {
+                    representation_map.get(item.id, item.id) for item in tokenized if item.mandatory
+                } | forced
+                graph.resolve(
+                    tuple(required_seeds),
+                    effective_budget=policy.effective_budget,
+                    representations=representations,
+                    conflict_policy=self._constraint_policy.conflict_policy,
+                    conflict_winners=conflict_winners,
+                    retain_superseded=self._constraint_policy.retain_superseded,
+                )
             prepared = self._force_required(candidates, forced)
             result = ContextOptimizer(
                 tokenizer=self._tokenizer,
@@ -393,7 +414,9 @@ class ContextOptimizer:
             ).optimize(task, prepared, policy)
             resolution = graph.resolve(
                 tuple(item.id for item in result.selected_items),
+                representations=representations,
                 conflict_policy=self._constraint_policy.conflict_policy,
+                conflict_winners=conflict_winners,
                 retain_superseded=self._constraint_policy.retain_superseded,
             )
             final_resolution = resolution
@@ -531,6 +554,9 @@ class ContextOptimizer:
 
         removed_superseded = set(resolution.removed_superseded_item_ids)
         removed_conflicting = set(resolution.removed_conflicting_item_ids)
+        represented_sources = set(resolution.represented_item_ids) - set(
+            resolution.selected_item_ids
+        )
         for item in original_items:
             if item.id in traces_by_id:
                 continue
@@ -539,6 +565,8 @@ class ContextOptimizer:
                 reason = "removed_by_supersession_constraint"
             elif item.id in removed_conflicting:
                 reason = "removed_by_conflict_constraint"
+            elif item.id in represented_sources:
+                reason = "replaced_by_validated_representation"
             else:
                 reason = "removed_by_hard_constraint"
             traces_by_id[item.id] = ItemTrace(

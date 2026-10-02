@@ -172,6 +172,28 @@ def test_validated_compressed_representation_satisfies_dependency() -> None:
     assert result.added_required_item_ids == ()
 
 
+def test_validated_representation_is_added_as_required_dependency() -> None:
+    graph = ContextConstraintGraph(
+        [_item("source", tokens=10), _item("compact", tokens=2), _item("operation")],
+        [_edge("operation", "source", DependencyRelation.REQUIRES)],
+    )
+    representation = ValidatedRepresentation(
+        source_item_id="source",
+        representation_item_id="compact",
+        validator_names=("NumericPreservationValidator",),
+    )
+
+    result = graph.resolve(
+        ["operation"],
+        effective_budget=3,
+        representations=[representation],
+    )
+
+    assert result.selected_item_ids == ("compact", "operation")
+    assert result.represented_item_ids == ("source", "compact", "operation")
+    assert result.added_required_item_ids == ("compact",)
+
+
 def test_validated_representation_satisfies_required_retention() -> None:
     required = PreservationContract(retention=RetentionPolicy.REQUIRED)
     graph = ContextConstraintGraph(
@@ -218,6 +240,28 @@ def test_caller_can_resolve_otherwise_ambiguous_conflict() -> None:
     )
 
     assert result.selected_item_ids == ("right",)
+
+
+def test_conflict_override_must_match_a_known_contradiction() -> None:
+    graph = ContextConstraintGraph([_item("left"), _item("right")], [])
+
+    with pytest.raises(ConstraintUnsatisfiable, match="conflict_override_has_no_relation"):
+        graph.resolve(
+            ["left"],
+            conflict_winners={("left", "right"): "right"},
+        )
+
+
+def test_constraint_inputs_reject_unknown_representation_ids() -> None:
+    graph = ContextConstraintGraph([_item("source")], [])
+    representation = ValidatedRepresentation(
+        source_item_id="source",
+        representation_item_id="missing",
+        validator_names=("Validator",),
+    )
+
+    with pytest.raises(UnknownDependencyReference, match="missing"):
+        graph.resolve([], representations=[representation])
 
 
 def test_required_superseded_item_is_unsatisfiable() -> None:

@@ -10,6 +10,7 @@ from contextos.baselines import (
 from contextos.budget import AllocationPlan
 from contextos.config import OptimizationPolicy
 from contextos.constraints import (
+    ConflictOverride,
     ConflictPolicy,
     ConstraintPolicy,
     ConstraintResolution,
@@ -39,6 +40,7 @@ from contextos.validation import ContractValidationEngine, ValidationResult
 
 __all__ = [
     "AllocationPlan",
+    "ConflictOverride",
     "ConflictPolicy",
     "ConflictTraceStatus",
     "ConstraintPolicy",

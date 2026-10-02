@@ -7,8 +7,10 @@ from pathlib import Path
 import numpy as np
 import pytest
 from numpy.typing import NDArray
+from pydantic import ValidationError
 
 from contextos import (
+    ConflictOverride,
     ConflictPolicy,
     ConstraintPolicy,
     ContextEdge,
@@ -16,8 +18,14 @@ from contextos import (
     ContextOptimizer,
     ContextType,
     OptimizationPolicy,
+    ValidatedRepresentation,
 )
-from contextos.errors import EmbeddingProviderError, MandatoryContextOverflow, UnresolvedConflict
+from contextos.errors import (
+    EmbeddingProviderError,
+    MandatoryContextOverflow,
+    RequiredContextOverflow,
+    UnresolvedConflict,
+)
 from contextos.models import DependencyRelation
 from contextos.store import InMemoryContextStore, SQLiteContextStore
 
@@ -337,3 +345,189 @@ def test_public_optimizer_exposes_explicit_unresolved_conflict_policy() -> None:
     assert result.constraint_resolution is not None
     assert result.constraint_resolution.unresolved_conflicts == (("left", "right"),)
     assert ConstraintPolicy.model_validate_json(retain_both.model_dump_json()) == retain_both
+
+
+def test_public_optimizer_reports_dependency_closure_overflow() -> None:
+    operation = make_item(
+        "operation",
+        "execute operation",
+        ContextType.USER_MESSAGE,
+        0,
+        mandatory=True,
+    )
+    dependency = make_item(
+        "dependency",
+        "required dependency has three tokens",
+        ContextType.TASK_STATE,
+        1,
+    )
+    edge = ContextEdge(
+        source_id="operation",
+        target_id="dependency",
+        relation=DependencyRelation.REQUIRES,
+        weight=1.0,
+    )
+
+    with pytest.raises(RequiredContextOverflow) as error:
+        ContextOptimizer(
+            tokenizer=WordTokenizer(),
+            edges=[edge],
+            constraint_policy=ConstraintPolicy.enforced(),
+        ).optimize(
+            "execute",
+            [operation, dependency],
+            policy(4).model_copy(update={"compression_enabled": False}),
+        )
+
+    assert error.value.required_item_ids == ("operation", "dependency")
+    assert error.value.required_tokens == 7
+    assert error.value.effective_budget == 4
+
+
+def test_public_optimizer_uses_validated_representation_for_required_source() -> None:
+    operation = make_item(
+        "operation",
+        "execute",
+        ContextType.USER_MESSAGE,
+        0,
+        mandatory=True,
+    )
+    source = make_item(
+        "source",
+        "large original dependency that cannot fit",
+        ContextType.RETRIEVED_DOCUMENT,
+        1,
+    )
+    compact = make_item("compact", "summary", ContextType.RETRIEVED_DOCUMENT, 2)
+    compact.importance = 0.0
+    decoy = make_item("decoy", "noise", ContextType.TASK_STATE, 3)
+    decoy.importance = 1.0
+    representation = ValidatedRepresentation(
+        source_item_id="source",
+        representation_item_id="compact",
+        validator_names=("ContractValidationEngine",),
+    )
+    edge = ContextEdge(
+        source_id="operation",
+        target_id="source",
+        relation=DependencyRelation.REQUIRES,
+        weight=1.0,
+    )
+    constraint_policy = ConstraintPolicy.enforced(validated_representations=(representation,))
+
+    result = ContextOptimizer(
+        tokenizer=WordTokenizer(),
+        edges=[edge],
+        constraint_policy=constraint_policy,
+    ).optimize(
+        "execute",
+        [operation, source, compact, decoy],
+        policy(2).model_copy(
+            update={
+                "semantic_dedup_enabled": False,
+                "semantic_relevance_enabled": False,
+                "compression_enabled": False,
+                "weight_relevance": 0.0,
+                "weight_importance": 1.0,
+                "weight_recency": 0.0,
+                "weight_novelty": 0.0,
+                "weight_dependency": 0.0,
+                "weight_type_priority": 0.0,
+            }
+        ),
+    )
+
+    assert {item.id for item in result.selected_items} == {"operation", "compact"}
+    assert result.constraint_resolution is not None
+    assert set(result.constraint_resolution.represented_item_ids) == {
+        "operation",
+        "source",
+        "compact",
+    }
+    assert result.constraint_resolution.added_required_item_ids == ("compact",)
+    source_trace = next(trace for trace in result.trace.items if trace.item_id == "source")
+    assert source_trace.decision_reason == "replaced_by_validated_representation"
+    assert ConstraintPolicy.model_validate_json(constraint_policy.model_dump_json()) == (
+        constraint_policy
+    )
+
+
+def test_public_optimizer_applies_serializable_conflict_override() -> None:
+    left = make_item("left", "left state", ContextType.TASK_STATE, 0)
+    right = make_item("right", "right state", ContextType.TASK_STATE, 0)
+    edge = ContextEdge(
+        source_id="left",
+        target_id="right",
+        relation=DependencyRelation.CONTRADICTS,
+        weight=1.0,
+    )
+    override = ConflictOverride(
+        left_item_id="right",
+        right_item_id="left",
+        winner_item_id="right",
+    )
+
+    result = ContextOptimizer(
+        tokenizer=WordTokenizer(),
+        edges=[edge],
+        constraint_policy=ConstraintPolicy.enforced(conflict_overrides=(override,)),
+    ).optimize("resolve", [left, right], policy(4))
+
+    assert [item.id for item in result.selected_items] == ["right"]
+    assert result.constraint_resolution is not None
+    assert result.constraint_resolution.removed_conflicting_item_ids == ("left",)
+
+
+def test_constraint_policy_rejects_ambiguous_duplicate_rules() -> None:
+    representation = ValidatedRepresentation(
+        source_item_id="source",
+        representation_item_id="compact-a",
+        validator_names=("Validator",),
+    )
+    duplicate = representation.model_copy(update={"representation_item_id": "compact-b"})
+    override = ConflictOverride(
+        left_item_id="left",
+        right_item_id="right",
+        winner_item_id="left",
+    )
+    reversed_duplicate = ConflictOverride(
+        left_item_id="right",
+        right_item_id="left",
+        winner_item_id="right",
+    )
+
+    with pytest.raises(ValidationError, match="unique source"):
+        ConstraintPolicy.enforced(validated_representations=(representation, duplicate))
+    with pytest.raises(ValidationError, match="unique endpoint pairs"):
+        ConstraintPolicy.enforced(conflict_overrides=(override, reversed_duplicate))
+    with pytest.raises(ValidationError, match="chains are not supported"):
+        ConstraintPolicy.enforced(
+            validated_representations=(
+                representation,
+                ValidatedRepresentation(
+                    source_item_id="compact-a",
+                    representation_item_id="compact-b",
+                    validator_names=("Validator",),
+                ),
+            )
+        )
+    with pytest.raises(ValidationError, match="must differ"):
+        ValidatedRepresentation(
+            source_item_id="same",
+            representation_item_id="same",
+            validator_names=("Validator",),
+        )
+    with pytest.raises(ValidationError, match="winner must be one"):
+        ConflictOverride(
+            left_item_id="left",
+            right_item_id="right",
+            winner_item_id="third",
+        )
+    with pytest.raises(ValidationError, match="validator names must be unique"):
+        ValidatedRepresentation(
+            source_item_id="source",
+            representation_item_id="compact",
+            validator_names=("Validator", "Validator"),
+        )
+    with pytest.raises(ValidationError):
+        ConstraintPolicy.model_validate({"enabled": 1})

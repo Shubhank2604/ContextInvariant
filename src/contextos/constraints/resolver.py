@@ -150,7 +150,7 @@ class ContextConstraintGraph:
                 "selected constraint IDs are unknown: " + ", ".join(unknown_selected)
             )
         initially_selected = set(selected)
-        representation_map = self._validate_representations(representations, selected)
+        representation_map = self._validate_representations(representations)
         initially_represented = set(selected) | {
             source_id
             for source_id, representation_id in representation_map.items()
@@ -168,12 +168,16 @@ class ContextConstraintGraph:
                 )
             )
         }
-        selected.update(required_roots)
-        added_required: set[str] = required_roots - initially_selected
+        required_selections = {
+            representation_map.get(item_id, item_id) for item_id in required_roots
+        }
+        selected.update(required_selections)
+        added_required: set[str] = required_selections - initially_selected
         removed_superseded: set[str] = set()
         removed_conflicting: set[str] = set()
         unresolved: set[ConflictPair] = set()
         winners = {_pair(*pair): winner for pair, winner in (conflict_winners or {}).items()}
+        self._validate_conflict_winners(winners)
 
         max_iterations = max(1, len(self._items) + len(self._edges))
         for _ in range(max_iterations):
@@ -186,8 +190,9 @@ class ContextConstraintGraph:
             for edge in self._requires:
                 if edge.source_id not in represented or edge.target_id in represented:
                     continue
-                selected.add(edge.target_id)
-                added_required.add(edge.target_id)
+                required_selection = representation_map.get(edge.target_id, edge.target_id)
+                selected.add(required_selection)
+                added_required.add(required_selection)
 
             represented = set(selected) | {
                 source_id
@@ -203,7 +208,7 @@ class ContextConstraintGraph:
                     self._reject_protected_removal(older, represented, "superseded")
                     selected.discard(representation_map.get(older, older))
                     if newer not in represented:
-                        selected.add(newer)
+                        selected.add(representation_map.get(newer, newer))
                     removed_superseded.add(older)
 
             for edge in self._contradicts:
@@ -232,7 +237,7 @@ class ContextConstraintGraph:
                     selected.discard(representation_map.get(loser, loser))
                     removed_conflicting.add(loser)
                 if winner not in represented:
-                    selected.add(winner)
+                    selected.add(representation_map.get(winner, winner))
 
             if selected == before:
                 break
@@ -279,7 +284,6 @@ class ContextConstraintGraph:
     def _validate_representations(
         self,
         representations: Sequence[ValidatedRepresentation],
-        selected: set[str],
     ) -> dict[str, str]:
         mapped: dict[str, str] = {}
         violations: list[str] = []
@@ -295,11 +299,6 @@ class ContextConstraintGraph:
                 raise UnknownDependencyReference(
                     "representation references unknown item IDs: " + ", ".join(unknown)
                 )
-            if representation.representation_item_id not in selected:
-                violations.append(
-                    "representation_not_selected:"
-                    f"{representation.source_item_id}->{representation.representation_item_id}"
-                )
             previous = mapped.get(representation.source_item_id)
             if previous is not None and previous != representation.representation_item_id:
                 violations.append(f"multiple_representations:{representation.source_item_id}")
@@ -307,6 +306,23 @@ class ContextConstraintGraph:
         if violations:
             raise ConstraintUnsatisfiable(violations=tuple(sorted(set(violations))))
         return mapped
+
+    def _validate_conflict_winners(self, winners: Mapping[ConflictPair, str]) -> None:
+        known_pairs = {_pair(edge.source_id, edge.target_id) for edge in self._contradicts}
+        for pair, winner in winners.items():
+            unknown = sorted({*pair, winner} - self._items.keys())
+            if unknown:
+                raise UnknownDependencyReference(
+                    "conflict override references unknown item IDs: " + ", ".join(unknown)
+                )
+            if pair not in known_pairs:
+                raise ConstraintUnsatisfiable(
+                    violations=(f"conflict_override_has_no_relation:{pair[0]}:{pair[1]}",)
+                )
+            if winner not in pair:
+                raise ConstraintUnsatisfiable(
+                    violations=(f"invalid_conflict_winner:{pair[0]}:{pair[1]}:{winner}",)
+                )
 
     def _reject_protected_removal(
         self,

@@ -1,6 +1,7 @@
 """Directed hard-relation enforcement separate from soft dependency scoring."""
 
 from contextos.constraints.models import (
+    ConflictOverride,
     ConflictPolicy,
     ConstraintPolicy,
     ConstraintResolution,
@@ -9,6 +10,7 @@ from contextos.constraints.models import (
 from contextos.constraints.resolver import ContextConstraintGraph
 
 __all__ = [
+    "ConflictOverride",
     "ConflictPolicy",
     "ConstraintPolicy",
     "ConstraintResolution",
