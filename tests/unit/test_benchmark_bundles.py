@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from contextos.benchmarks.bundles import (
+from context_invariant.benchmarks.bundles import (
     REQUIRED_BUNDLE_FILES,
     BenchmarkEnvironment,
     capture_environment,
@@ -21,7 +21,7 @@ def environment(recorded_at: datetime = RECORDED_AT) -> BenchmarkEnvironment:
     return BenchmarkEnvironment(
         recorded_at_utc=recorded_at,
         python_version="3.13.0",
-        contextos_version="fixture-version",
+        context_invariant_version="fixture-version",
         git_sha="abc123",
         operating_system="fixture-os",
         dependency_versions={"pydantic": "2.0"},
@@ -41,14 +41,14 @@ def write_fixture_bundle(
     return write_benchmark_bundle(
         output_directory=output_directory,
         recorded_at_utc=RECORDED_AT,
-        strategy="ContextOS comparison",
+        strategy="ContextInvariant comparison",
         profile="quick",
         config={"benchmark": "fixture"},
         environment=manifest or environment(),
         cases=[{"id": "case-1"}] if cases is None else cases,
         predictions=([{"case_id": "case-1", "score": 1.0}] if predictions is None else predictions),
         metrics={"mean_score": 1.0},
-        metric_rows=[{"strategy": "contextos", "nested": {"low": 0.9}}],
+        metric_rows=[{"strategy": "context_invariant", "nested": {"low": 0.9}}],
         report=report,
     )
 
@@ -57,7 +57,7 @@ def test_bundle_contains_exact_required_files_and_is_idempotent(tmp_path: Path) 
     path = write_fixture_bundle(tmp_path)
 
     assert path == write_fixture_bundle(tmp_path)
-    assert path.name == "20260911T123000.000000Z-contextos-comparison-quick"
+    assert path.name == "20260911T123000.000000Z-contextinvariant-comparison-quick"
     assert {entry.name for entry in path.iterdir()} == REQUIRED_BUNDLE_FILES
     loaded = load_benchmark_bundle(path)
     assert loaded.cases[0]["id"] == "case-1"
@@ -123,18 +123,29 @@ def test_bundle_rejects_empty_metrics_and_report(tmp_path: Path) -> None:
 def test_environment_capture_records_required_provenance() -> None:
     result = capture_environment(
         recorded_at_utc=RECORDED_AT,
-        embedding_provider="contextos",
+        embedding_provider="context_invariant",
         embedding_model="fixture",
         llm_provider="fixture-provider",
         llm_model="fixture-model",
-        dependency_names=("definitely-not-installed-contextos-fixture",),
+        dependency_names=("definitely-not-installed-context_invariant-fixture",),
     )
 
     assert result.recorded_at_utc == RECORDED_AT
     assert result.python_version
-    assert result.contextos_version
+    assert result.context_invariant_version
     assert result.git_sha
     assert result.operating_system
-    assert result.dependency_versions["definitely-not-installed-contextos-fixture"] == (
+    assert result.dependency_versions["definitely-not-installed-context_invariant-fixture"] == (
         "not-installed"
     )
+
+
+def test_environment_loads_historical_identity_and_serializes_current_identity() -> None:
+    historical = environment().model_dump(mode="json")
+    historical["contextos_version"] = historical.pop("context_invariant_version")
+
+    loaded = BenchmarkEnvironment.model_validate(historical)
+
+    assert loaded.context_invariant_version == "fixture-version"
+    assert loaded.model_dump(mode="json")["context_invariant_version"] == "fixture-version"
+    assert "contextos_version" not in loaded.model_dump(mode="json")

@@ -2,7 +2,7 @@
 
 from datetime import UTC, datetime
 
-from contextos import (
+from context_invariant import (
     ConstraintPolicy,
     ContextEdge,
     ContextItem,

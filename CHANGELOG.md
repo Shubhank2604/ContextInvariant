@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to ContextOS are documented in this file. The project follows
+All notable changes to ContextInvariant are documented in this file. The project follows
 [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
@@ -34,6 +34,10 @@ No unreleased changes.
 
 ### Changed
 
+- Renamed the project to ContextInvariant before publication: distribution `context-invariant`,
+  import package `context_invariant`, and CLI `context-invariant`. Updated source, public
+  symbols, examples, documentation, Docker, and CI. Historical evidence remains unchanged;
+  legacy environment manifests remain readable.
 - Package version advanced to `0.5.0` and public documentation consolidated around the README,
   architecture, benchmarking, research, limitations, and evidence ledger.
 - Release automation now includes Linux 3.11-3.13, Windows, wheel/sdist installation, and Docker
@@ -50,12 +54,12 @@ No unreleased changes.
 
 ### Added
 
-- ContextOS-Bench with 50 deterministic coding, research, and support/operations cases and
+- ContextInvariant-Bench with 50 deterministic coding, research, and support/operations cases and
   annotated critical-information requirements.
 - Controlled 4K-32K positional retrieval, a pinned four-task LongBench subset, and deterministic
   LongBench-compatible evaluators.
 - Relevance Only and Naive Extractive baselines alongside Full Context, Last-N, Sliding Window,
-  and ContextOS.
+  and ContextInvariant.
 - Six-variant component ablation, deterministic paired bootstrap intervals, and performance
   telemetry for optimizer, embedding, compression, provider, tokens, and process memory.
 - Immutable seven-file experiment bundles with source revision, environment, configuration, raw

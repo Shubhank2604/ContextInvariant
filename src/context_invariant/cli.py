@@ -1,0 +1,1096 @@
+"""Command-line entry point for ContextInvariant."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from enum import StrEnum
+from pathlib import Path
+from typing import Annotated
+
+import typer
+from pydantic import ValidationError
+
+from context_invariant import ConstraintPolicy, ContextOptimizer, __version__
+from context_invariant.baselines import (
+    BaselineStrategy,
+    FullContextBaseline,
+    LastNTokensBaseline,
+    NaiveExtractiveBaseline,
+    RelevanceOnlyBaseline,
+    SlidingWindowBaseline,
+)
+from context_invariant.benchmarking import run_quick_benchmark, write_deduplication_benchmark_bundle
+from context_invariant.benchmarks.artifacts import load_dataset, write_run_artifact
+from context_invariant.benchmarks.bundles import load_benchmark_bundle
+from context_invariant.benchmarks.constraint_benchmark import (
+    run_constraint_benchmark,
+    write_constraint_artifact,
+)
+from context_invariant.benchmarks.constraint_dataset import generate_constraint_dataset
+from context_invariant.benchmarks.constraint_model import (
+    run_model_constraint_benchmark,
+    write_model_constraint_artifact,
+)
+from context_invariant.benchmarks.constraint_models import ModelPricing
+from context_invariant.benchmarks.longbench import (
+    HuggingFaceLongBenchSource,
+    load_longbench_config,
+    load_longbench_predictions,
+    load_prepared_subset,
+    prepare_longbench_subset,
+    score_longbench_predictions,
+    write_longbench_bundle,
+    write_prepared_subset,
+)
+from context_invariant.benchmarks.longbench_models import LongBenchPrediction, LongBenchProfile
+from context_invariant.benchmarks.longbench_runner import (
+    phase5_longbench_strategies,
+    resume_longbench_comparison,
+    run_longbench_comparison,
+)
+from context_invariant.benchmarks.models import BenchmarkAggregate, BenchmarkRun
+from context_invariant.benchmarks.phase5_ablation import (
+    run_phase5_ablation,
+    write_phase5_ablation_artifact,
+)
+from context_invariant.benchmarks.positional import (
+    load_positional_dataset,
+    positional_summary,
+    run_positional_benchmark,
+    write_positional_run_artifact,
+)
+from context_invariant.benchmarks.positional_models import PositionalDataset
+from context_invariant.benchmarks.runner import (
+    ablation_effects,
+    default_ablation_strategies,
+    run_context_invariant_bench,
+)
+from context_invariant.config import OptimizationPolicy
+from context_invariant.errors import ContextInvariantError
+from context_invariant.models import ContextEdge, ContextItem
+from context_invariant.providers import DeterministicRetrievalProvider, LLMProvider, OpenAIProvider
+from context_invariant.store import SQLiteContextStore
+from context_invariant.tokenization import TiktokenTokenizer
+
+app = typer.Typer(
+    name="context-invariant",
+    help="Construct and inspect LLM context under explicit token budgets.",
+    no_args_is_help=True,
+)
+benchmark_app = typer.Typer(
+    help="Run reproducible ContextInvariant benchmark profiles.",
+    invoke_without_command=True,
+)
+app.add_typer(benchmark_app, name="benchmark")
+longbench_app = typer.Typer(help="Prepare and score the configured LongBench subset.")
+benchmark_app.add_typer(longbench_app, name="longbench")
+store_app = typer.Typer(help="Inspect durable ContextInvariant stores.")
+app.add_typer(store_app, name="store")
+
+
+class BaselineName(StrEnum):
+    """Baseline strategies currently available through the CLI."""
+
+    CONTEXT_INVARIANT = "context_invariant"
+    FULL = "full"
+    LAST_N = "last-n"
+    SLIDING_WINDOW = "sliding-window"
+    RELEVANCE_ONLY = "relevance-only"
+    NAIVE_EXTRACTIVE = "naive-extractive"
+
+
+class PositionalProviderName(StrEnum):
+    """Explicit providers available for the controlled positional experiment."""
+
+    DETERMINISTIC = "deterministic"
+    OPENAI = "openai"
+
+
+@app.callback()
+def main() -> None:
+    """Run ContextInvariant commands."""
+
+
+@app.command()
+def version() -> None:
+    """Print the installed ContextInvariant version."""
+    typer.echo(__version__)
+
+
+def _load_input(input_path: Path) -> tuple[list[ContextItem], list[ContextEdge]]:
+    payload = json.loads(input_path.read_text(encoding="utf-8"))
+    raw_items = payload.get("items") if isinstance(payload, dict) else payload
+    if not isinstance(raw_items, list):
+        raise ValueError("input JSON must be a list or an object containing an 'items' list")
+    raw_edges = payload.get("edges", []) if isinstance(payload, dict) else []
+    if not isinstance(raw_edges, list):
+        raise ValueError("input JSON 'edges' must be a list")
+    return (
+        [ContextItem.model_validate(value) for value in raw_items],
+        [ContextEdge.model_validate(value) for value in raw_edges],
+    )
+
+
+@app.command()
+def optimize(
+    input_path: Annotated[
+        Path,
+        typer.Option("--input", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ],
+    budget: Annotated[int, typer.Option("--budget", min=1)],
+    strategy: Annotated[BaselineName, typer.Option("--strategy")] = BaselineName.CONTEXT_INVARIANT,
+    reserve_output_tokens: Annotated[int, typer.Option("--reserve-output-tokens", min=0)] = 0,
+    task: Annotated[str, typer.Option("--task")] = "",
+    window_seconds: Annotated[int, typer.Option("--window-seconds", min=1)] = 3600,
+    trace_json: Annotated[Path | None, typer.Option("--trace-json")] = None,
+    constraint_policy_path: Annotated[
+        Path | None,
+        typer.Option(
+            "--constraint-policy",
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="JSON ConstraintPolicy file; valid only with the context_invariant strategy.",
+        ),
+    ] = None,
+) -> None:
+    """Construct context with ContextInvariant or a deterministic baseline."""
+    try:
+        items, edges = _load_input(input_path)
+        policy = OptimizationPolicy(
+            max_input_tokens=budget,
+            reserve_output_tokens=reserve_output_tokens,
+        )
+        tokenizer = TiktokenTokenizer()
+        if strategy is BaselineName.CONTEXT_INVARIANT:
+            constraint_policy = (
+                ConstraintPolicy.model_validate_json(
+                    constraint_policy_path.read_text(encoding="utf-8")
+                )
+                if constraint_policy_path is not None
+                else ConstraintPolicy()
+            )
+            result = ContextOptimizer(
+                tokenizer=tokenizer,
+                edges=edges,
+                constraint_policy=constraint_policy,
+            ).optimize(task, items, policy)
+        else:
+            if constraint_policy_path is not None:
+                raise ValueError(
+                    "--constraint-policy is valid only with --strategy context_invariant"
+                )
+            baseline: BaselineStrategy
+            if strategy is BaselineName.FULL:
+                baseline = FullContextBaseline()
+            elif strategy is BaselineName.LAST_N:
+                baseline = LastNTokensBaseline()
+            elif strategy is BaselineName.SLIDING_WINDOW:
+                baseline = SlidingWindowBaseline(window_seconds=window_seconds)
+            elif strategy is BaselineName.RELEVANCE_ONLY:
+                baseline = RelevanceOnlyBaseline()
+            else:
+                baseline = NaiveExtractiveBaseline()
+            result = baseline.optimize(
+                task=task,
+                items=items,
+                policy=policy,
+                tokenizer=tokenizer,
+            )
+        if trace_json is not None:
+            trace_json.parent.mkdir(parents=True, exist_ok=True)
+            trace_json.write_text(result.trace.model_dump_json(indent=2), encoding="utf-8")
+    except (
+        ContextInvariantError,
+        OSError,
+        ValueError,
+        ValidationError,
+        json.JSONDecodeError,
+    ) as exc:
+        typer.echo(f"Optimization failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+
+    typer.echo(f"Strategy: {result.trace.strategy}")
+    typer.echo(f"Input tokens: {result.original_token_count}")
+    typer.echo(
+        f"Final tokens: {result.final_token_count}/{result.budget_allocation.effective_budget}"
+    )
+    typer.echo(
+        f"Selected items: {', '.join(item.id for item in result.selected_items) or '(none)'}"
+    )
+
+
+@benchmark_app.callback()
+def benchmark(
+    ctx: typer.Context,
+    profile: Annotated[str, typer.Option("--profile")] = "quick",
+) -> None:
+    """Run a benchmark profile when no benchmark subcommand is supplied."""
+    if ctx.invoked_subcommand is not None:
+        return
+    if profile != "quick":
+        typer.echo(
+            "Benchmark failed: the callback supports only 'quick'; use 'benchmark run' "
+            "for ContextInvariant-Bench",
+            err=True,
+        )
+        raise typer.Exit(code=2)
+    report = run_quick_benchmark(TiktokenTokenizer())
+    typer.echo(json.dumps(report, indent=2, sort_keys=True))
+
+
+@benchmark_app.command("dedup")
+def benchmark_deduplication(
+    input_path: Annotated[
+        Path,
+        typer.Option("--input", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ] = Path("benchmarks/datasets/deduplication_cases.json"),
+    threshold: Annotated[float, typer.Option("--threshold", min=0.0, max=1.0)] = 0.92,
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+) -> None:
+    """Measure deduplication precision, recall, F1, and false positives."""
+    try:
+        artifact, metrics = write_deduplication_benchmark_bundle(
+            input_path,
+            output_directory,
+            threshold=threshold,
+        )
+    except (OSError, ValueError, ValidationError, json.JSONDecodeError) as exc:
+        typer.echo(f"Deduplication benchmark failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {**metrics.model_dump(mode="json"), "artifact": str(artifact)},
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@benchmark_app.command("run")
+def benchmark_run_command(
+    input_path: Annotated[
+        Path,
+        typer.Option("--input", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ] = Path("benchmarks/datasets/context_invariant_bench.json"),
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    case_limit: Annotated[int | None, typer.Option("--case-limit", min=1)] = None,
+) -> None:
+    """Run ContextInvariant-Bench and write an immutable raw result artifact."""
+    try:
+        dataset = load_dataset(input_path)
+        run = run_context_invariant_bench(
+            dataset,
+            tokenizer=TiktokenTokenizer(),
+            case_limit=case_limit,
+        )
+        artifact_path = write_run_artifact(
+            run,
+            output_directory,
+            dataset=dataset,
+            profile="full" if case_limit is None else f"limited-{case_limit}",
+            strategy_label="comparison",
+        )
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"ContextInvariant-Bench failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "run_id": run.run_id,
+                "artifact": str(artifact_path),
+                "case_count": run.metadata["case_count"],
+                "aggregates": [aggregate.model_dump(mode="json") for aggregate in run.aggregates],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@benchmark_app.command("constraints")
+def benchmark_constraints_command(
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    case_limit: Annotated[int | None, typer.Option("--case-limit", min=1)] = None,
+) -> None:
+    """Run the separate Phase 5 constraint-sensitive benchmark track."""
+    try:
+        dataset = generate_constraint_dataset()
+        run, measurements, aggregates = run_constraint_benchmark(
+            dataset,
+            tokenizer=TiktokenTokenizer(),
+            case_limit=case_limit,
+        )
+        artifact_path = write_constraint_artifact(
+            output_directory,
+            dataset=dataset,
+            run=run,
+            measurements=measurements,
+            aggregates=aggregates,
+            profile="full" if case_limit is None else f"limited-{case_limit}",
+        )
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Constraint benchmark failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "run_id": run.run_id,
+                "artifact": str(artifact_path),
+                "case_count": run.metadata["case_count"],
+                "constraint_aggregates": [
+                    aggregate.model_dump(mode="json") for aggregate in aggregates
+                ],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@benchmark_app.command("ablation")
+def benchmark_ablation_command(
+    input_path: Annotated[
+        Path,
+        typer.Option("--input", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ] = Path("benchmarks/datasets/context_invariant_bench.json"),
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    case_limit: Annotated[int | None, typer.Option("--case-limit", min=1)] = None,
+) -> None:
+    """Run the Phase 4E single-component ContextInvariant ablation study."""
+    try:
+        dataset = load_dataset(input_path)
+        run = run_context_invariant_bench(
+            dataset,
+            tokenizer=TiktokenTokenizer(),
+            strategies=default_ablation_strategies(),
+            case_limit=case_limit,
+        )
+        artifact_path = write_run_artifact(
+            run,
+            output_directory,
+            dataset=dataset,
+            profile="full" if case_limit is None else f"limited-{case_limit}",
+            strategy_label="ablation",
+        )
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"ContextInvariant ablation failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "run_id": run.run_id,
+                "artifact": str(artifact_path),
+                "case_count": run.metadata["case_count"],
+                "aggregates": [aggregate.model_dump(mode="json") for aggregate in run.aggregates],
+                "effects_vs_context_invariant_full": ablation_effects(run),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@benchmark_app.command("phase5-ablation")
+def benchmark_phase5_ablation_command(
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    case_limit: Annotated[int | None, typer.Option("--case-limit", min=1)] = None,
+) -> None:
+    """Run the Phase 5 cumulative ablation across the fixed budget frontier."""
+    try:
+        dataset = generate_constraint_dataset()
+        result = run_phase5_ablation(
+            dataset,
+            tokenizer=TiktokenTokenizer(),
+            case_limit=case_limit,
+        )
+        artifact_path = write_phase5_ablation_artifact(
+            output_directory,
+            dataset=dataset,
+            result=result,
+            profile="full" if case_limit is None else f"limited-{case_limit}",
+        )
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Phase 5 ablation failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact_path),
+                "case_count": result.budget_results[0].run.metadata["case_count"],
+                "budget_ratios": result.budget_ratios,
+                "strategies": result.strategies,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@benchmark_app.command("constraints-model")
+def benchmark_constraints_model_command(
+    model: Annotated[str, typer.Option("--model")],
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    budget_ratio: Annotated[
+        float,
+        typer.Option("--budget-ratio", min=0.01, max=1.0),
+    ] = 1.0,
+    max_output_tokens: Annotated[
+        int,
+        typer.Option("--max-output-tokens", min=1),
+    ] = 96,
+    case_limit: Annotated[int | None, typer.Option("--case-limit", min=1)] = None,
+    input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--input-usd-per-million", min=0.0),
+    ] = None,
+    output_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--output-usd-per-million", min=0.0),
+    ] = None,
+    cached_input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--cached-input-usd-per-million", min=0.0),
+    ] = None,
+) -> None:
+    """Run frozen v0.4 and Full Phase 5 through one explicit OpenAI model."""
+    try:
+        if not model.strip():
+            raise ValueError("--model must not be blank")
+        price_values = (
+            input_usd_per_million,
+            output_usd_per_million,
+            cached_input_usd_per_million,
+        )
+        if any(value is not None for value in price_values) and not all(
+            value is not None for value in price_values
+        ):
+            raise ValueError("all three pricing options must be supplied together")
+        pricing = None
+        if all(value is not None for value in price_values):
+            assert input_usd_per_million is not None
+            assert output_usd_per_million is not None
+            assert cached_input_usd_per_million is not None
+            pricing = ModelPricing(
+                input_usd_per_million=input_usd_per_million,
+                output_usd_per_million=output_usd_per_million,
+                cached_input_usd_per_million=cached_input_usd_per_million,
+            )
+        source = generate_constraint_dataset()
+        dataset, run = run_model_constraint_benchmark(
+            source,
+            provider=OpenAIProvider(model=model, temperature=0.0),
+            provider_name="openai",
+            provider_model=model,
+            tokenizer=TiktokenTokenizer(),
+            budget_ratio=budget_ratio,
+            max_output_tokens=max_output_tokens,
+            temperature=0.0,
+            pricing=pricing,
+            case_limit=case_limit,
+        )
+        if not any(prediction.status == "ok" for prediction in run.predictions):
+            first_warning = next(
+                (prediction.warnings[-1] for prediction in run.predictions if prediction.warnings),
+                "no model-backed constraint case completed",
+            )
+            raise ValueError(f"all model-backed constraint comparisons failed: {first_warning}")
+        artifact = write_model_constraint_artifact(
+            output_directory,
+            dataset=dataset,
+            run=run,
+            profile="full" if case_limit is None else f"limited-{case_limit}",
+        )
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Model-backed constraint benchmark failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact),
+                "case_count": len(dataset.cases),
+                "prediction_count": len(run.predictions),
+                "provider": run.provider,
+                "model": run.model,
+                "budget_ratio": run.budget_ratio,
+                "status_counts": {
+                    status: sum(value.status == status for value in run.predictions)
+                    for status in sorted({value.status for value in run.predictions})
+                },
+                "total_estimated_cost_usd": sum(
+                    value.estimated_cost_usd or 0.0 for value in run.predictions
+                )
+                if run.pricing is not None
+                else None,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@benchmark_app.command("positional")
+def benchmark_positional_command(
+    input_path: Annotated[
+        Path,
+        typer.Option("--input", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ] = Path("benchmarks/datasets/positional_retrieval.json"),
+    output_directory: Annotated[Path, typer.Option("--output-directory")] = Path(
+        "benchmarks/results"
+    ),
+    profile: Annotated[str, typer.Option("--profile")] = "quick",
+    provider_name: Annotated[
+        PositionalProviderName,
+        typer.Option("--provider"),
+    ] = PositionalProviderName.DETERMINISTIC,
+    model: Annotated[str | None, typer.Option("--model")] = None,
+    max_context_tokens: Annotated[
+        int,
+        typer.Option("--max-context-tokens", min=288),
+    ] = 32_800,
+) -> None:
+    """Run the controlled positional-retrieval experiment."""
+    try:
+        if profile not in {"quick", "full"}:
+            raise ValueError("positional profile must be 'quick' or 'full'")
+        dataset = load_positional_dataset(input_path)
+        if profile == "quick":
+            shortest = min(case.target_context_tokens for case in dataset.cases)
+            dataset = PositionalDataset(
+                name=dataset.name,
+                generator_version=dataset.generator_version,
+                generation_seed=dataset.generation_seed,
+                cases=[
+                    case
+                    for case in dataset.cases
+                    if case.target_context_tokens == shortest and case.repetition == 0
+                ],
+            )
+        provider: LLMProvider
+        if provider_name is PositionalProviderName.OPENAI:
+            if model is None or not model.strip():
+                raise ValueError("--model is required for an OpenAI positional run")
+            provider = OpenAIProvider(model=model, temperature=0.0)
+            provider_model = model
+        else:
+            if model is not None:
+                raise ValueError("--model is valid only with --provider openai")
+            provider = DeterministicRetrievalProvider()
+            provider_model = provider.model
+        run = run_positional_benchmark(
+            dataset,
+            provider=provider,
+            provider_name=provider_name.value,
+            provider_model=provider_model,
+            tokenizer=TiktokenTokenizer(),
+            profile=profile,
+            max_context_tokens=max_context_tokens,
+        )
+        artifact = write_positional_run_artifact(run, output_directory, dataset=dataset)
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Positional benchmark failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    summary = positional_summary(run)
+    summary["artifact"] = str(artifact)
+    typer.echo(json.dumps(summary, indent=2, sort_keys=True))
+
+
+@longbench_app.command("prepare")
+def benchmark_longbench_prepare_command(
+    config_path: Annotated[
+        Path,
+        typer.Option("--config", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ] = Path("benchmarks/config/longbench_subset.json"),
+    profile: Annotated[LongBenchProfile, typer.Option("--profile")] = LongBenchProfile.QUICK,
+    output_path: Annotated[Path, typer.Option("--output")] = Path(
+        "out/longbench/prepared-quick.json"
+    ),
+) -> None:
+    """Explicitly download and deterministically prepare external LongBench cases."""
+    try:
+        config = load_longbench_config(config_path)
+        subset = prepare_longbench_subset(
+            config,
+            profile=profile,
+            source=HuggingFaceLongBenchSource(),
+        )
+        artifact = write_prepared_subset(subset, output_path)
+    except (OSError, RuntimeError, ValueError, ValidationError) as exc:
+        typer.echo(f"LongBench preparation failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    counts = {
+        dataset: sum(case.dataset == dataset for case in subset.cases)
+        for dataset in sorted({case.dataset for case in subset.cases})
+    }
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact),
+                "profile": subset.profile,
+                "source_repository": subset.source_repository,
+                "source_revision": subset.source_revision,
+                "case_count": len(subset.cases),
+                "cases_by_dataset": counts,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@longbench_app.command("score")
+def benchmark_longbench_score_command(
+    prepared_path: Annotated[
+        Path,
+        typer.Option("--prepared", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ],
+    predictions_path: Annotated[
+        Path,
+        typer.Option(
+            "--predictions",
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+        ),
+    ],
+    output_path: Annotated[Path, typer.Option("--output")],
+) -> None:
+    """Score complete ID-keyed predictions with deterministic task metrics."""
+    try:
+        subset = load_prepared_subset(prepared_path)
+        predictions = load_longbench_predictions(predictions_path)
+        report = score_longbench_predictions(subset, predictions)
+        artifact = write_longbench_bundle(
+            subset,
+            predictions,
+            report,
+            output_path,
+            execution_config={"origin": "imported_predictions"},
+        )
+    except (OSError, ValueError, ValidationError, json.JSONDecodeError) as exc:
+        typer.echo(f"LongBench scoring failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact),
+                "prediction_count": report.prediction_count,
+                "provider": report.provider,
+                "model": report.model,
+                "dataset_aggregates": [
+                    aggregate.model_dump(mode="json") for aggregate in report.dataset_aggregates
+                ],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@longbench_app.command("run")
+def benchmark_longbench_run_command(
+    prepared_path: Annotated[
+        Path,
+        typer.Option("--prepared", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ],
+    output_path: Annotated[Path, typer.Option("--output")],
+    model: Annotated[str, typer.Option("--model")],
+    context_budget_tokens: Annotated[
+        int,
+        typer.Option("--context-budget-tokens", min=1),
+    ],
+    max_context_tokens: Annotated[
+        int,
+        typer.Option("--max-context-tokens", min=2),
+    ],
+    max_chunk_tokens: Annotated[
+        int,
+        typer.Option("--max-chunk-tokens", min=1),
+    ] = 256,
+) -> None:
+    """Explicitly run all six strategies through one OpenAI model configuration."""
+    try:
+        if not model.strip():
+            raise ValueError("--model must not be blank")
+        subset = load_prepared_subset(prepared_path)
+        predictions = run_longbench_comparison(
+            subset,
+            provider=OpenAIProvider(model=model, temperature=0.0),
+            provider_name="openai",
+            provider_model=model,
+            tokenizer=TiktokenTokenizer(),
+            context_budget_tokens=context_budget_tokens,
+            max_context_tokens=max_context_tokens,
+            max_chunk_tokens=max_chunk_tokens,
+        )
+        if not any(prediction.status == "ok" for prediction in predictions):
+            first_warning = next(
+                (prediction.warnings[0] for prediction in predictions if prediction.warnings),
+                "no strategy completed",
+            )
+            raise ValueError(f"all LongBench comparisons failed: {first_warning}")
+        score_report = score_longbench_predictions(subset, predictions)
+        artifact = write_longbench_bundle(
+            subset,
+            predictions,
+            score_report,
+            output_path,
+            execution_config={
+                "origin": "context_invariant_benchmark_longbench_run",
+                "temperature": 0.0,
+                "context_budget_tokens": context_budget_tokens,
+                "max_context_tokens": max_context_tokens,
+                "max_chunk_tokens": max_chunk_tokens,
+            },
+        )
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"LongBench comparison failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact),
+                "case_count": len(subset.cases),
+                "prediction_count": len(predictions),
+                "provider": "openai",
+                "model": model,
+                "strategies": sorted({prediction.strategy for prediction in predictions}),
+                "status_counts": {
+                    status: sum(prediction.status == status for prediction in predictions)
+                    for status in sorted({prediction.status for prediction in predictions})
+                },
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@longbench_app.command("phase5-run")
+def benchmark_longbench_phase5_run_command(
+    prepared_path: Annotated[
+        Path,
+        typer.Option("--prepared", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ],
+    output_path: Annotated[Path, typer.Option("--output")],
+    model: Annotated[str, typer.Option("--model")],
+    context_budget_tokens: Annotated[
+        int,
+        typer.Option("--context-budget-tokens", min=1),
+    ],
+    max_context_tokens: Annotated[
+        int,
+        typer.Option("--max-context-tokens", min=2),
+    ],
+    max_chunk_tokens: Annotated[
+        int,
+        typer.Option("--max-chunk-tokens", min=1),
+    ] = 256,
+    input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--input-usd-per-million", min=0.0),
+    ] = None,
+    output_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--output-usd-per-million", min=0.0),
+    ] = None,
+    cached_input_usd_per_million: Annotated[
+        float | None,
+        typer.Option("--cached-input-usd-per-million", min=0.0),
+    ] = None,
+    minimum_request_interval_seconds: Annotated[
+        float,
+        typer.Option("--minimum-request-interval-seconds", min=0.0),
+    ] = 0.0,
+    provider_max_retries: Annotated[
+        int,
+        typer.Option("--provider-max-retries", min=0),
+    ] = 6,
+    resume_from: Annotated[
+        Path | None,
+        typer.Option(
+            "--resume-from",
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            readable=True,
+        ),
+    ] = None,
+) -> None:
+    """Compare Full Context, frozen v0.4, and Full Phase 5 on LongBench."""
+    try:
+        if not model.strip():
+            raise ValueError("--model must not be blank")
+        price_values = (
+            input_usd_per_million,
+            output_usd_per_million,
+            cached_input_usd_per_million,
+        )
+        if any(value is not None for value in price_values) and not all(
+            value is not None for value in price_values
+        ):
+            raise ValueError("all three pricing options must be supplied together")
+        pricing = None
+        if all(value is not None for value in price_values):
+            assert input_usd_per_million is not None
+            assert output_usd_per_million is not None
+            assert cached_input_usd_per_million is not None
+            pricing = ModelPricing(
+                input_usd_per_million=input_usd_per_million,
+                output_usd_per_million=output_usd_per_million,
+                cached_input_usd_per_million=cached_input_usd_per_million,
+            )
+        subset = load_prepared_subset(prepared_path)
+        tokenizer = TiktokenTokenizer()
+        provider = OpenAIProvider(
+            model=model,
+            temperature=0.0,
+            minimum_request_interval_seconds=minimum_request_interval_seconds,
+            max_retries=provider_max_retries,
+        )
+        strategies = phase5_longbench_strategies()
+        resumed_prediction_count = 0
+        resume_metadata = None
+        if resume_from is None:
+            predictions = run_longbench_comparison(
+                subset,
+                provider=provider,
+                provider_name="openai",
+                provider_model=model,
+                tokenizer=tokenizer,
+                context_budget_tokens=context_budget_tokens,
+                max_context_tokens=max_context_tokens,
+                max_chunk_tokens=max_chunk_tokens,
+                strategies=strategies,
+                pricing=pricing,
+            )
+        else:
+            source_bundle = load_benchmark_bundle(resume_from)
+            source_config = source_bundle.config
+            prepared_sha = hashlib.sha256(subset.model_dump_json().encode()).hexdigest()
+            source_execution = source_config.get("execution")
+            if not isinstance(source_execution, dict):
+                raise ValueError("resume artifact has no LongBench execution configuration")
+            expected_execution = {
+                "temperature": 0.0,
+                "context_budget_tokens": context_budget_tokens,
+                "max_context_tokens": max_context_tokens,
+                "max_chunk_tokens": max_chunk_tokens,
+                "baseline_v040_sha": "4fdd88391300c56ad17af5458897ccdd08d6f7bf",
+                "phase5_protocol": "full_context_vs_frozen_v040_vs_full_phase5",
+                "pricing": pricing.model_dump(mode="json") if pricing is not None else None,
+            }
+            mismatches = [
+                key
+                for key, expected in expected_execution.items()
+                if source_execution.get(key) != expected
+            ]
+            if (
+                source_config.get("prepared_sha256") != prepared_sha
+                or source_config.get("provider") != "openai"
+                or source_config.get("model") != model
+                or set(source_config.get("strategies", []))
+                != {strategy.name for strategy in strategies}
+                or mismatches
+            ):
+                raise ValueError(
+                    "resume artifact does not match the requested Phase 5 LongBench configuration"
+                )
+            existing_predictions = [
+                LongBenchPrediction.model_validate(value) for value in source_bundle.predictions
+            ]
+            predictions, resumed_prediction_count = resume_longbench_comparison(
+                subset,
+                existing_predictions,
+                provider=provider,
+                provider_name="openai",
+                provider_model=model,
+                tokenizer=tokenizer,
+                context_budget_tokens=context_budget_tokens,
+                max_context_tokens=max_context_tokens,
+                max_chunk_tokens=max_chunk_tokens,
+                strategies=strategies,
+                pricing=pricing,
+            )
+            resume_metadata = {
+                "source_artifact": str(resume_from),
+                "source_git_sha": source_bundle.environment.git_sha,
+                "source_predictions_sha256": hashlib.sha256(
+                    (resume_from / "predictions.jsonl").read_bytes()
+                ).hexdigest(),
+                "retried_prediction_count": resumed_prediction_count,
+            }
+        if not any(prediction.status == "ok" for prediction in predictions):
+            first_warning = next(
+                (prediction.warnings[0] for prediction in predictions if prediction.warnings),
+                "no strategy completed",
+            )
+            raise ValueError(f"all Phase 5 LongBench comparisons failed: {first_warning}")
+        score_report = score_longbench_predictions(subset, predictions)
+        artifact = write_longbench_bundle(
+            subset,
+            predictions,
+            score_report,
+            output_path,
+            execution_config={
+                "origin": "context_invariant_benchmark_longbench_phase5_run",
+                "temperature": 0.0,
+                "context_budget_tokens": context_budget_tokens,
+                "max_context_tokens": max_context_tokens,
+                "max_chunk_tokens": max_chunk_tokens,
+                "baseline_v040_sha": ("4fdd88391300c56ad17af5458897ccdd08d6f7bf"),
+                "phase5_protocol": "full_context_vs_frozen_v040_vs_full_phase5",
+                "pricing": pricing.model_dump(mode="json") if pricing is not None else None,
+                "minimum_request_interval_seconds": minimum_request_interval_seconds,
+                "provider_max_retries": provider_max_retries,
+                "resume": resume_metadata,
+            },
+        )
+    except (ContextInvariantError, OSError, ValueError, ValidationError) as exc:
+        typer.echo(f"Phase 5 LongBench comparison failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(
+        json.dumps(
+            {
+                "artifact": str(artifact),
+                "case_count": len(subset.cases),
+                "prediction_count": len(predictions),
+                "provider": "openai",
+                "model": model,
+                "strategies": [strategy.name for strategy in strategies],
+                "retried_prediction_count": resumed_prediction_count,
+                "status_counts": {
+                    status: sum(prediction.status == status for prediction in predictions)
+                    for status in sorted({prediction.status for prediction in predictions})
+                },
+                "total_estimated_cost_usd": sum(
+                    prediction.estimated_cost_usd or 0.0 for prediction in predictions
+                )
+                if pricing is not None
+                else None,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@app.command()
+def inspect(
+    input_path: Annotated[
+        Path,
+        typer.Option("--input", exists=True, file_okay=True, dir_okay=False, readable=True),
+    ],
+) -> None:
+    """Inspect input composition without running optimization."""
+    try:
+        items, edges = _load_input(input_path)
+        tokenizer = TiktokenTokenizer()
+        by_type: dict[str, int] = {}
+        for item in items:
+            by_type[item.type.value] = by_type.get(item.type.value, 0) + 1
+        report = {
+            "item_count": len(items),
+            "edge_count": len(edges),
+            "mandatory_count": sum(item.mandatory for item in items),
+            "token_count": sum(tokenizer.count_tokens(item.content) for item in items),
+            "items_by_type": dict(sorted(by_type.items())),
+        }
+    except (OSError, ValueError, ValidationError, json.JSONDecodeError) as exc:
+        typer.echo(f"Inspection failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(json.dumps(report, indent=2, sort_keys=True))
+
+
+def _load_benchmark_aggregates(
+    path: Path,
+) -> tuple[str, dict[str, BenchmarkAggregate]]:
+    """Load aggregates from a Phase 4F bundle or a legacy single-file run."""
+    if path.is_dir():
+        bundle = load_benchmark_bundle(path)
+        dataset_sha = str(bundle.config["dataset_sha256"])
+        aggregates = [
+            BenchmarkAggregate.model_validate(value) for value in bundle.metrics["aggregates"]
+        ]
+    else:
+        run = BenchmarkRun.model_validate_json(path.read_text(encoding="utf-8"))
+        dataset_sha = run.dataset_sha256
+        aggregates = run.aggregates
+    return dataset_sha, {aggregate.strategy: aggregate for aggregate in aggregates}
+
+
+@benchmark_app.command("compare")
+def benchmark_compare(
+    left: Annotated[Path, typer.Option("--left", exists=True)],
+    right: Annotated[Path, typer.Option("--right", exists=True)],
+) -> None:
+    """Compare aggregate metrics from two runs of the same dataset."""
+    try:
+        left_sha, left_aggregates = _load_benchmark_aggregates(left)
+        right_sha, right_aggregates = _load_benchmark_aggregates(right)
+        if left_sha != right_sha:
+            raise ValueError("benchmark runs use different datasets")
+        shared_strategies = sorted(set(left_aggregates) & set(right_aggregates))
+        comparison = {
+            strategy: {
+                "task_score_delta": right_aggregates[strategy].mean_task_specific_score
+                - left_aggregates[strategy].mean_task_specific_score,
+                "cir_delta": right_aggregates[strategy].mean_critical_information_recall
+                - left_aggregates[strategy].mean_critical_information_recall,
+                "input_token_delta": right_aggregates[strategy].mean_input_tokens
+                - left_aggregates[strategy].mean_input_tokens,
+                "p95_latency_ms_delta": right_aggregates[strategy].p95_optimizer_latency_ms
+                - left_aggregates[strategy].p95_optimizer_latency_ms,
+            }
+            for strategy in shared_strategies
+        }
+    except (OSError, ValueError, ValidationError, json.JSONDecodeError) as exc:
+        typer.echo(f"Benchmark comparison failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(json.dumps(comparison, indent=2, sort_keys=True))
+
+
+@store_app.command("stats")
+def store_stats(
+    database: Annotated[Path, typer.Option("--database", exists=True, dir_okay=False)],
+) -> None:
+    """Print deterministic item, edge, type, and tier counts for a SQLite store."""
+    try:
+        with SQLiteContextStore(database) as store:
+            items = store.list_items()
+            edges = store.load_dependencies()
+        report = {
+            "item_count": len(items),
+            "edge_count": len(edges),
+            "items_by_type": {
+                context_type: sum(item.type.value == context_type for item in items)
+                for context_type in sorted({item.type.value for item in items})
+            },
+            "items_by_tier": {
+                tier: sum(item.lifecycle_tier.value == tier for item in items)
+                for tier in sorted({item.lifecycle_tier.value for item in items})
+            },
+        }
+    except (ContextInvariantError, OSError, ValueError) as exc:
+        typer.echo(f"Store inspection failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(json.dumps(report, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    app()

@@ -5,8 +5,8 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 
-from contextos.dedup.metrics import DeduplicationCase, evaluate_deduplication_cases
-from contextos.embeddings import DeterministicEmbeddingProvider
+from context_invariant.dedup.metrics import DeduplicationCase, evaluate_deduplication_cases
+from context_invariant.embeddings import DeterministicEmbeddingProvider
 
 
 def test_labeled_deduplication_fixture_reports_raw_and_derived_metrics() -> None:

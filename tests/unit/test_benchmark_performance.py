@@ -2,7 +2,7 @@
 
 import pytest
 
-from contextos.benchmarks.performance import measure_performance, peak_process_memory_bytes
+from context_invariant.benchmarks.performance import measure_performance, peak_process_memory_bytes
 
 
 def test_probe_records_wall_time_and_peak_process_memory() -> None:

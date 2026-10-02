@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
-from contextos import (
+from context_invariant import (
     ConflictTraceStatus,
     ConstraintResolution,
     ConstraintTraceIndex,
@@ -21,9 +21,9 @@ from contextos import (
     PreservationContract,
     summarize_transformation_trace,
 )
-from contextos.errors import UnknownDependencyReference
-from contextos.trace import OptimizationTrace
-from contextos.validation import TransformationAttemptRecord, ValidatorOutcome
+from context_invariant.errors import UnknownDependencyReference
+from context_invariant.trace import OptimizationTrace
+from context_invariant.validation import TransformationAttemptRecord, ValidatorOutcome
 
 _NOW = datetime(2026, 9, 13, tzinfo=UTC)
 

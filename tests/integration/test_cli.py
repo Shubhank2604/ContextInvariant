@@ -7,18 +7,18 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from contextos import __version__
-from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
-from contextos.benchmarks.longbench_models import (
+from context_invariant import __version__
+from context_invariant.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from context_invariant.benchmarks.longbench_models import (
     LongBenchCase,
     LongBenchMetric,
     LongBenchPrediction,
     LongBenchProfile,
     PreparedLongBenchSubset,
 )
-from contextos.cli import app
-from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
-from contextos.providers.base import ProviderResponse
+from context_invariant.cli import app
+from context_invariant.models import ContextEdge, ContextItem, ContextType, DependencyRelation
+from context_invariant.providers.base import ProviderResponse
 
 runner = CliRunner()
 
@@ -92,10 +92,10 @@ def test_cli_quick_benchmark_runs_end_to_end() -> None:
     report = json.loads(result.stdout)
     assert report["profile"] == "quick"
     assert len(report["results"]) == 6
-    assert report["results"][-1]["strategy"] == "contextos"
+    assert report["results"][-1]["strategy"] == "context_invariant"
 
 
-def test_cli_contextos_optimize_is_the_default(tmp_path: Path) -> None:
+def test_cli_context_invariant_optimize_is_the_default(tmp_path: Path) -> None:
     input_path = tmp_path / "items.json"
     write_input(input_path)
     result = runner.invoke(
@@ -103,7 +103,7 @@ def test_cli_contextos_optimize_is_the_default(tmp_path: Path) -> None:
         ["optimize", "--input", str(input_path), "--budget", "20", "--task", "fixture"],
     )
     assert result.exit_code == 0
-    assert "Strategy: contextos" in result.stdout
+    assert "Strategy: context_invariant" in result.stdout
 
 
 def test_cli_optimize_accepts_explicit_constraint_policy(tmp_path: Path) -> None:
@@ -155,7 +155,7 @@ def test_cli_optimize_accepts_explicit_constraint_policy(tmp_path: Path) -> None
     )
 
     assert result.exit_code == 0
-    assert "Strategy: contextos_constraint_aware" in result.stdout
+    assert "Strategy: context_invariant_constraint_aware" in result.stdout
     assert "Selected items: current" in result.stdout
 
 
@@ -181,7 +181,7 @@ def test_cli_rejects_constraint_policy_for_baseline(tmp_path: Path) -> None:
     )
 
     assert result.exit_code == 2
-    assert "valid only with --strategy contextos" in result.stderr
+    assert "valid only with --strategy context_invariant" in result.stderr
 
 
 @pytest.mark.parametrize("strategy", ["relevance-only", "naive-extractive"])
@@ -246,14 +246,14 @@ def test_cli_rejects_unknown_benchmark_profile() -> None:
     assert "supports only 'quick'" in result.stderr
 
 
-def test_cli_contextos_bench_writes_immutable_artifact(tmp_path: Path) -> None:
+def test_cli_context_invariant_bench_writes_immutable_artifact(tmp_path: Path) -> None:
     result = runner.invoke(
         app,
         [
             "benchmark",
             "run",
             "--input",
-            "benchmarks/datasets/contextos_bench.json",
+            "benchmarks/datasets/context_invariant_bench.json",
             "--output-directory",
             str(tmp_path),
             "--case-limit",
@@ -289,15 +289,15 @@ def test_cli_ablation_writes_all_six_variants(tmp_path: Path) -> None:
     artifact = Path(report["artifact"])
     config = json.loads((artifact / "config.json").read_text(encoding="utf-8"))
     assert config["strategies"] == [
-        "contextos_full",
-        "contextos_without_semantic_deduplication",
-        "contextos_without_recency",
-        "contextos_without_dependency_score",
-        "contextos_without_compression",
-        "contextos_without_position_aware_layout",
+        "context_invariant_full",
+        "context_invariant_without_semantic_deduplication",
+        "context_invariant_without_recency",
+        "context_invariant_without_dependency_score",
+        "context_invariant_without_compression",
+        "context_invariant_without_position_aware_layout",
     ]
     assert len((artifact / "predictions.jsonl").read_text(encoding="utf-8").splitlines()) == 6
-    assert set(report["effects_vs_contextos_full"]) == set(config["strategies"][1:])
+    assert set(report["effects_vs_context_invariant_full"]) == set(config["strategies"][1:])
 
 
 def test_cli_benchmark_compare_reports_zero_delta_for_same_run(tmp_path: Path) -> None:
@@ -320,8 +320,8 @@ def test_cli_benchmark_compare_reports_zero_delta_for_same_run(tmp_path: Path) -
 
     assert comparison.exit_code == 0
     report = json.loads(comparison.stdout)
-    assert report["contextos"]["task_score_delta"] == 0.0
-    assert report["contextos"]["cir_delta"] == 0.0
+    assert report["context_invariant"]["task_score_delta"] == 0.0
+    assert report["context_invariant"]["cir_delta"] == 0.0
 
 
 def test_cli_positional_quick_run_writes_raw_artifact(tmp_path: Path) -> None:
@@ -372,8 +372,8 @@ def test_cli_longbench_scores_complete_id_keyed_predictions(tmp_path: Path) -> N
         dataset="hotpotqa",
         source_id="source-1",
         input="What is the answer?",
-        context="The answer is ContextOS.",
-        answers=["ContextOS"],
+        context="The answer is ContextInvariant.",
+        answers=["ContextInvariant"],
         source_length=4,
         language="en",
         metric=LongBenchMetric.QA_F1,
@@ -395,7 +395,7 @@ def test_cli_longbench_scores_complete_id_keyed_predictions(tmp_path: Path) -> N
     prediction = LongBenchPrediction(
         dataset=case.dataset,
         source_id=case.source_id,
-        prediction="ContextOS",
+        prediction="ContextInvariant",
         provider="fixture",
         model="fixture-v1",
     )
@@ -453,7 +453,7 @@ def test_cli_longbench_prepare_uses_explicit_external_adapter(
         ]
 
     monkeypatch.setattr(
-        "contextos.cli.HuggingFaceLongBenchSource.load_task",
+        "context_invariant.cli.HuggingFaceLongBenchSource.load_task",
         fake_load_task,
     )
     output_path = tmp_path / "prepared.json"
@@ -490,8 +490,8 @@ def test_cli_longbench_run_requires_working_explicit_provider(
         dataset="hotpotqa",
         source_id="source-1",
         input="What is the answer?",
-        context="The answer is ContextOS.",
-        answers=["ContextOS"],
+        context="The answer is ContextInvariant.",
+        answers=["ContextInvariant"],
         source_length=4,
         language="en",
         metric=LongBenchMetric.QA_F1,
@@ -542,8 +542,8 @@ def test_cli_longbench_run_scores_and_bundles_provider_results(
         dataset="hotpotqa",
         source_id="source-1",
         input="What is the answer?",
-        context="The answer is ContextOS.",
-        answers=["ContextOS"],
+        context="The answer is ContextInvariant.",
+        answers=["ContextInvariant"],
         source_length=4,
         language="en",
         metric=LongBenchMetric.QA_F1,
@@ -568,13 +568,13 @@ def test_cli_longbench_run_scores_and_bundles_provider_results(
 
         def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
             return ProviderResponse(
-                text="ContextOS",
+                text="ContextInvariant",
                 input_tokens=len(prompt.split()),
                 output_tokens=min(1, max_output_tokens),
                 model="fixture-v1",
             )
 
-    monkeypatch.setattr("contextos.cli.OpenAIProvider", FixtureProvider)
+    monkeypatch.setattr("context_invariant.cli.OpenAIProvider", FixtureProvider)
     output_path = tmp_path / "results"
     result = runner.invoke(
         app,
@@ -612,8 +612,8 @@ def test_cli_longbench_phase5_run_preserves_existing_command_and_uses_three_stra
         dataset="hotpotqa",
         source_id="source-phase5",
         input="What is the answer?",
-        context="The answer is ContextOS.",
-        answers=["ContextOS"],
+        context="The answer is ContextInvariant.",
+        answers=["ContextInvariant"],
         source_length=4,
         language="en",
         metric=LongBenchMetric.QA_F1,
@@ -648,9 +648,9 @@ def test_cli_longbench_phase5_run_preserves_existing_command_and_uses_three_stra
 
         def complete(self, prompt: str, *, max_output_tokens: int) -> ProviderResponse:
             provider_calls.append(prompt)
-            return ProviderResponse(text="ContextOS", input_tokens=8, output_tokens=1)
+            return ProviderResponse(text="ContextInvariant", input_tokens=8, output_tokens=1)
 
-    monkeypatch.setattr("contextos.cli.OpenAIProvider", FixtureProvider)
+    monkeypatch.setattr("context_invariant.cli.OpenAIProvider", FixtureProvider)
     result = runner.invoke(
         app,
         [
@@ -755,7 +755,7 @@ def test_cli_model_backed_constraints_writes_provider_evidence(
                 ttft_ms=0.25,
             )
 
-    monkeypatch.setattr("contextos.cli.OpenAIProvider", FixtureProvider)
+    monkeypatch.setattr("context_invariant.cli.OpenAIProvider", FixtureProvider)
     result = runner.invoke(
         app,
         [

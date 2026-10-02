@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from contextos.models import ContextItem, ContextType
+from context_invariant.models import ContextItem, ContextType
 
 
 @pytest.fixture

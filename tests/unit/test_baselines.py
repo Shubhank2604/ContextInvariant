@@ -6,7 +6,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from contextos.baselines import (
+from context_invariant.baselines import (
     BaselineStrategy,
     FullContextBaseline,
     LastNTokensBaseline,
@@ -14,14 +14,14 @@ from contextos.baselines import (
     RelevanceOnlyBaseline,
     SlidingWindowBaseline,
 )
-from contextos.config import OptimizationPolicy
-from contextos.errors import (
+from context_invariant.config import OptimizationPolicy
+from context_invariant.errors import (
     ContextBudgetOverflow,
     DuplicateContextItemError,
     InvalidOptimizationPolicy,
 )
-from contextos.models import ContextItem, ContextType
-from contextos.trace import OptimizationDecision, OptimizedContext
+from context_invariant.models import ContextItem, ContextType
+from context_invariant.trace import OptimizationDecision, OptimizedContext
 
 
 class WordTokenizer:

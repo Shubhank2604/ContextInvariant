@@ -56,7 +56,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: >-
-          contextos benchmark longbench prepare
+          context-invariant benchmark longbench prepare
           --config benchmarks/config/longbench_subset.json
           --profile "${{ inputs.profile }}"
           --output benchmark-output/prepared.json
@@ -64,7 +64,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: >-
-          contextos benchmark longbench phase5-run
+          context-invariant benchmark longbench phase5-run
           --prepared benchmark-output/prepared.json
           --output benchmark-output/results
           --model "${{ inputs.model }}"

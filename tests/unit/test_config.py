@@ -2,9 +2,9 @@
 
 import pytest
 
-from contextos.config import OptimizationPolicy
-from contextos.errors import InvalidOptimizationPolicy
-from contextos.models import ContextType
+from context_invariant.config import OptimizationPolicy
+from context_invariant.errors import InvalidOptimizationPolicy
+from context_invariant.models import ContextType
 
 
 @pytest.mark.parametrize(

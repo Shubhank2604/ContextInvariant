@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from hypothesis import given
 from hypothesis import strategies as st
 
-from contextos.models import ContextItem, ContextType
+from context_invariant.models import ContextItem, ContextType
 
 
 @given(st.floats(min_value=0.0, max_value=1.0, allow_nan=False))

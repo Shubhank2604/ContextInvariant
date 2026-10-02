@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from contextos.budget import AllocationPlan, CompressionRequest
-from contextos.compression import (
+from context_invariant.budget import AllocationPlan, CompressionRequest
+from context_invariant.compression import (
     CodeCompressor,
     EvidenceCompressor,
     ExtractiveCompressor,
@@ -14,10 +14,10 @@ from contextos.compression import (
     ToolOutputCompressor,
     TypeAwareCompressor,
 )
-from contextos.compression.executor import CompressionExecutor
-from contextos.config import OptimizationPolicy
-from contextos.contracts import PreservationContract
-from contextos.models import ContextItem, ContextType
+from context_invariant.compression.executor import CompressionExecutor
+from context_invariant.config import OptimizationPolicy
+from context_invariant.contracts import PreservationContract
+from context_invariant.models import ContextItem, ContextType
 
 
 class WordTokenizer:

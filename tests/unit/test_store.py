@@ -2,9 +2,9 @@
 
 import pytest
 
-from contextos.errors import ContextItemNotFoundError
-from contextos.models import ContextItem, ContextType, LifecycleTier
-from contextos.store import InMemoryContextStore
+from context_invariant.errors import ContextItemNotFoundError
+from context_invariant.models import ContextItem, ContextType, LifecycleTier
+from context_invariant.store import InMemoryContextStore
 
 
 def test_save_and_load_returns_isolated_copy(context_item: ContextItem) -> None:

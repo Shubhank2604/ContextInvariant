@@ -6,19 +6,19 @@ import json
 import math
 from pathlib import Path
 
-from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
-from contextos.benchmarks.constraint_dataset import (
+from context_invariant.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from context_invariant.benchmarks.constraint_dataset import (
     PHASE5_BASELINE_SHA,
     generate_constraint_dataset,
 )
-from contextos.benchmarks.phase5_ablation import (
+from context_invariant.benchmarks.phase5_ablation import (
     BUDGET_RATIOS,
     Phase5Variant,
     phase5_ablation_strategies,
     run_phase5_ablation,
     write_phase5_ablation_artifact,
 )
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.tokenization import TiktokenTokenizer
 
 EXPECTED_STRATEGIES = (
     "full_context",

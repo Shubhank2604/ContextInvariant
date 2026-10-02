@@ -2,7 +2,7 @@
 
 from datetime import UTC, datetime
 
-from contextos import ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
+from context_invariant import ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
 
 item = ContextItem(
     id="task-1",

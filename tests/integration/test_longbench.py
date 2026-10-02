@@ -4,12 +4,12 @@ from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
-from contextos.benchmarks.longbench import (
+from context_invariant.benchmarks.longbench import (
     load_longbench_config,
     prepare_longbench_subset,
     score_longbench_predictions,
 )
-from contextos.benchmarks.longbench_models import (
+from context_invariant.benchmarks.longbench_models import (
     LongBenchPrediction,
     LongBenchProfile,
 )

@@ -2,8 +2,8 @@
 
 from datetime import UTC, datetime, timedelta
 
-from contextos.dedup import exact_deduplicate, normalize_content, normalized_content_hash
-from contextos.models import ContextItem, ContextType
+from context_invariant.dedup import exact_deduplicate, normalize_content, normalized_content_hash
+from context_invariant.models import ContextItem, ContextType
 
 
 def _item(

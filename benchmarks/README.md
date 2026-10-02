@@ -1,6 +1,6 @@
-# ContextOS benchmarks
+# ContextInvariant benchmarks
 
-ContextOS keeps research evaluation separate from the runtime API. Offline deterministic tracks
+ContextInvariant keeps research evaluation separate from the runtime API. Offline deterministic tracks
 validate selection, constraints, artifacts, and evaluator behavior. Provider-backed tracks run
 only when a user explicitly installs the required dependency, supplies credentials, selects a
 model, and invokes the command.
@@ -10,16 +10,16 @@ Normal tests and CI never download LongBench data or spend API credits.
 ## Quick offline smoke test
 
 ```bash
-contextos benchmark --profile quick
+context-invariant benchmark --profile quick
 ```
 
 This runs one fixed mixed-context case through Full Context, Last-N, Sliding Window, Relevance
-Only, Naive Extractive, and the integrated ContextOS optimizer. Selection and token outcomes are
+Only, Naive Extractive, and the integrated ContextInvariant optimizer. Selection and token outcomes are
 deterministic; wall-clock timing is intentionally excluded from equality checks.
 
-## ContextOS-Bench
+## ContextInvariant-Bench
 
-`datasets/contextos_bench.json` contains 50 deterministic templated cases:
+`datasets/context_invariant_bench.json` contains 50 deterministic templated cases:
 
 - 18 coding-agent cases;
 - 16 research-agent cases;
@@ -30,9 +30,9 @@ old critical evidence, recent noise, duplicate paraphrases, supersession, contra
 one-/two-hop dependencies.
 
 ```bash
-contextos benchmark run --input benchmarks/datasets/contextos_bench.json --output-directory out/contextos-bench
-contextos benchmark ablation --input benchmarks/datasets/contextos_bench.json --output-directory out/phase4-ablation
-contextos benchmark dedup --input benchmarks/datasets/deduplication_cases.json --output-directory out/dedup
+context-invariant benchmark run --input benchmarks/datasets/context_invariant_bench.json --output-directory out/context_invariant-bench
+context-invariant benchmark ablation --input benchmarks/datasets/context_invariant_bench.json --output-directory out/phase4-ablation
+context-invariant benchmark dedup --input benchmarks/datasets/deduplication_cases.json --output-directory out/dedup
 ```
 
 The main runner compares the six strategies under the same case definitions. Metrics include
@@ -40,14 +40,14 @@ task-specific required-fact score, Critical Information Recall, quality retentio
 Full Context reference exists, input tokens, context reduction, compression, decision reasons,
 and stage/runtime telemetry.
 
-The Phase 4 ablation runs Full ContextOS and five single-component removals: semantic
+The Phase 4 ablation runs Full ContextInvariant and five single-component removals: semantic
 deduplication, recency, dependency scoring, compression, and position-aware layout. Its current
 deterministic result is diagnostic; the templated cases do not distinguish every component.
 
 Regenerate the canonical dataset only when intentionally changing its versioned source:
 
 ```bash
-python -m contextos.benchmarks.dataset --output benchmarks/datasets/contextos_bench.json
+python -m context_invariant.benchmarks.dataset --output benchmarks/datasets/context_invariant_bench.json
 pytest --no-cov tests/unit/test_benchmark_schema.py
 ```
 
@@ -71,8 +71,8 @@ constraint violation, dependency closure, state consistency, contradiction leaka
 identifier, and citation-preservation metrics without using an LLM judge.
 
 ```bash
-contextos benchmark constraints --output-directory out/constraints
-contextos benchmark phase5-ablation --output-directory out/phase5-ablation
+context-invariant benchmark constraints --output-directory out/constraints
+context-invariant benchmark phase5-ablation --output-directory out/phase5-ablation
 ```
 
 The cumulative Phase 5 ablation runs the fixed 25%, 35%, 50%, 65%, 80%, and 100% budget
@@ -89,7 +89,7 @@ environment or an ignored local `.env` loader. Never place a real key in `.env.e
 
 ```bash
 python -m pip install -e ".[openai]"
-contextos benchmark constraints-model --model MODEL_ID --budget-ratio 0.8 --output-directory out/constraint-model
+context-invariant benchmark constraints-model --model MODEL_ID --budget-ratio 0.8 --output-directory out/constraint-model
 ```
 
 The command compares Full Context, frozen v0.4, and Full Phase 5 through one temperature-zero
@@ -123,13 +123,13 @@ Prepare external cases explicitly:
 
 ```bash
 python -m pip install -e ".[benchmark]"
-contextos benchmark longbench prepare --config benchmarks/config/longbench_subset.json --profile standard --output out/longbench/prepared-standard.json
+context-invariant benchmark longbench prepare --config benchmarks/config/longbench_subset.json --profile standard --output out/longbench/prepared-standard.json
 ```
 
 Run the Phase 5 comparison only with an explicit model and context limits:
 
 ```bash
-contextos benchmark longbench phase5-run --prepared out/longbench/prepared-standard.json --output out/longbench-comparison --model MODEL_ID --context-budget-tokens 8192 --max-context-tokens MODEL_CONTEXT_LIMIT --minimum-request-interval-seconds 1.5
+context-invariant benchmark longbench phase5-run --prepared out/longbench/prepared-standard.json --output out/longbench-comparison --model MODEL_ID --context-budget-tokens 8192 --max-context-tokens MODEL_CONTEXT_LIMIT --minimum-request-interval-seconds 1.5
 ```
 
 This compares Full Context, frozen v0.4, and Full Phase 5. It supports bounded provider retries,
@@ -147,28 +147,28 @@ statistically non-zero HotpotQA regression.
 
 LongBench and constituent task records remain third-party material. The retained normalized
 case subset is covered by [THIRD_PARTY_DATA.md](results/THIRD_PARTY_DATA.md); it is not
-relicensed under the ContextOS MIT license.
+relicensed under the ContextInvariant MIT license.
 
 ## Controlled positional retrieval
 
 The positional grid crosses four target lengths (4K, 8K, 16K, and 32K), five evidence positions,
-and three layouts (original, relevance-descending, and ContextOS position-aware).
+and three layouts (original, relevance-descending, and ContextInvariant position-aware).
 
 Offline plumbing check:
 
 ```bash
-contextos benchmark positional --profile quick --provider deterministic --output-directory out/positional-quick
+context-invariant benchmark positional --profile quick --provider deterministic --output-directory out/positional-quick
 ```
 
 Explicit provider run:
 
 ```bash
-contextos benchmark positional --profile full --provider openai --model MODEL_ID --max-context-tokens MODEL_CONTEXT_LIMIT --output-directory out/positional-real
+context-invariant benchmark positional --profile full --provider openai --model MODEL_ID --max-context-tokens MODEL_CONTEXT_LIMIT --output-directory out/positional-real
 ```
 
 The retained provider artifact is
 `results/20261002T032213.979841Z-layout-comparison-full`. Every one of its 60 predictions is
-correct, so it is a ceiling-effect null and cannot support a claim that ContextOS reproduced or
+correct, so it is a ceiling-effect null and cannot support a claim that ContextInvariant reproduced or
 mitigated *Lost in the Middle*.
 
 ## Metrics and statistical reporting
@@ -183,7 +183,7 @@ has ten cases, so those reports do not fabricate confidence intervals.
 
 Provider comparisons must use the same case IDs, prompt templates, provider, model snapshot,
 temperature, output limits, and evaluator. Runs from different model or decoding configurations
-are not evidence of a ContextOS effect.
+are not evidence of a ContextInvariant effect.
 
 ## Artifact contract
 
@@ -201,7 +201,7 @@ report.md
 
 Writers refuse an existing path unless its file set and bytes match. Raw cases, predictions, and
 JSON metrics are authoritative; CSV and Markdown are derived views. Environment provenance
-includes Python, ContextOS, Git SHA, operating system, relevant dependencies, embedding model,
+includes Python, ContextInvariant, Git SHA, operating system, relevant dependencies, embedding model,
 and provider/model when applicable.
 
 Generated result directories are ignored by default. The six allowlisted directories in

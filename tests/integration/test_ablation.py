@@ -4,27 +4,27 @@ from pathlib import Path
 
 import pytest
 
-from contextos.benchmarks.artifacts import load_dataset
-from contextos.benchmarks.runner import (
+from context_invariant.benchmarks.artifacts import load_dataset
+from context_invariant.benchmarks.runner import (
     ablation_effects,
     default_ablation_strategies,
-    run_contextos_bench,
+    run_context_invariant_bench,
 )
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.tokenization import TiktokenTokenizer
 
 EXPECTED_ABLATIONS = [
-    "contextos_full",
-    "contextos_without_semantic_deduplication",
-    "contextos_without_recency",
-    "contextos_without_dependency_score",
-    "contextos_without_compression",
-    "contextos_without_position_aware_layout",
+    "context_invariant_full",
+    "context_invariant_without_semantic_deduplication",
+    "context_invariant_without_recency",
+    "context_invariant_without_dependency_score",
+    "context_invariant_without_compression",
+    "context_invariant_without_position_aware_layout",
 ]
 
 
 def test_ablation_study_runs_every_variant_on_every_case() -> None:
-    dataset = load_dataset(Path("benchmarks/datasets/contextos_bench.json"))
-    run = run_contextos_bench(
+    dataset = load_dataset(Path("benchmarks/datasets/context_invariant_bench.json"))
+    run = run_context_invariant_bench(
         dataset,
         tokenizer=TiktokenTokenizer(),
         strategies=default_ablation_strategies(),
@@ -41,15 +41,18 @@ def test_ablation_study_runs_every_variant_on_every_case() -> None:
     assert all(aggregate.p95_optimizer_latency_ms >= 0 for aggregate in run.aggregates)
     assert len(run.paired_comparisons) == 15
     assert all(
-        comparison.reference_strategy == "contextos_full" for comparison in run.paired_comparisons
+        comparison.reference_strategy == "context_invariant_full"
+        for comparison in run.paired_comparisons
     )
     assert all(comparison.delta_ci95 is not None for comparison in run.paired_comparisons)
     assert run.metadata["strategy_configurations"] == {
         strategy.name: strategy.policy_overrides for strategy in default_ablation_strategies()
     }
     effects = ablation_effects(run)
-    assert effects["contextos_without_dependency_score"]["task_score_delta"] == pytest.approx(-0.08)
-    assert effects["contextos_without_dependency_score"]["cir_delta"] == 0.0
+    assert effects["context_invariant_without_dependency_score"][
+        "task_score_delta"
+    ] == pytest.approx(-0.08)
+    assert effects["context_invariant_without_dependency_score"]["cir_delta"] == 0.0
 
 
 def test_each_ablation_changes_exactly_one_policy_component() -> None:
@@ -66,14 +69,14 @@ def test_each_ablation_changes_exactly_one_policy_component() -> None:
     ]
 
 
-def test_ablation_effects_require_full_contextos_reference() -> None:
-    dataset = load_dataset(Path("benchmarks/datasets/contextos_bench.json"))
-    run = run_contextos_bench(
+def test_ablation_effects_require_full_context_invariant_reference() -> None:
+    dataset = load_dataset(Path("benchmarks/datasets/context_invariant_bench.json"))
+    run = run_context_invariant_bench(
         dataset,
         tokenizer=TiktokenTokenizer(),
         strategies=default_ablation_strategies()[1:],
         case_limit=1,
     )
 
-    with pytest.raises(ValueError, match="contextos_full"):
+    with pytest.raises(ValueError, match="context_invariant_full"):
         ablation_effects(run)

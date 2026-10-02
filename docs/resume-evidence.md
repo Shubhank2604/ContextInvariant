@@ -8,7 +8,7 @@ complete interpretation.
 
 ## Approved primary claim
 
-**Claim:** Constraint-aware ContextOS materially reduces structural and answer-level failures
+**Claim:** Constraint-aware ContextInvariant materially reduces structural and answer-level failures
 under token pressure versus the frozen v0.4 runtime.
 
 **Measured result:** At an 80% budget, selection violations fall from 77.78% to 11.11%, an

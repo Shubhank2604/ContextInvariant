@@ -1,1 +1,1 @@
-"""ContextOS test suite."""
+"""ContextInvariant test suite."""

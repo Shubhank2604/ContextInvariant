@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
-from contextos import (
+from context_invariant import (
     ContextItem,
     ContextOptimizer,
     ContextType,
@@ -15,7 +15,7 @@ from contextos import (
     PreservationContract,
     RetentionPolicy,
 )
-from contextos.errors import MandatoryContextOverflow
+from context_invariant.errors import MandatoryContextOverflow
 
 
 class WordTokenizer:

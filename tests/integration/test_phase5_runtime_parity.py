@@ -7,19 +7,19 @@ import json
 from pathlib import Path
 from typing import Any
 
-from contextos.benchmarks.constraint_benchmark import run_constraint_benchmark
-from contextos.benchmarks.constraint_dataset import (
+from context_invariant.benchmarks.constraint_benchmark import run_constraint_benchmark
+from context_invariant.benchmarks.constraint_dataset import (
     PHASE5_BASELINE_SHA,
     generate_constraint_dataset,
 )
-from contextos.benchmarks.constraint_models import ConstraintMeasurement
-from contextos.benchmarks.phase5_ablation import (
+from context_invariant.benchmarks.constraint_models import ConstraintMeasurement
+from context_invariant.benchmarks.phase5_ablation import (
     BUDGET_RATIOS,
     Phase5BenchmarkStrategy,
     Phase5Variant,
     constraint_dataset_at_budget,
 )
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.tokenization import TiktokenTokenizer
 
 FIXTURE_PATH = Path(__file__).parents[1] / "fixtures" / "phase5_full_runtime_parity_v1.json"
 

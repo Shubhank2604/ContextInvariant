@@ -5,17 +5,17 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
-from contextos.benchmarks.constraint_dataset import generate_constraint_dataset
-from contextos.benchmarks.constraint_model import (
+from context_invariant.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from context_invariant.benchmarks.constraint_dataset import generate_constraint_dataset
+from context_invariant.benchmarks.constraint_model import (
     run_model_constraint_benchmark,
     write_model_constraint_artifact,
 )
-from contextos.benchmarks.constraint_models import ConstraintBenchmarkDataset, ModelPricing
-from contextos.benchmarks.phase5_ablation import Phase5Variant
-from contextos.errors import LLMProviderError
-from contextos.providers.base import ProviderResponse
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.benchmarks.constraint_models import ConstraintBenchmarkDataset, ModelPricing
+from context_invariant.benchmarks.phase5_ablation import Phase5Variant
+from context_invariant.errors import LLMProviderError
+from context_invariant.providers.base import ProviderResponse
+from context_invariant.tokenization import TiktokenTokenizer
 
 
 class ConflictSensitiveProvider:

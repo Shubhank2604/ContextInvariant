@@ -5,15 +5,15 @@ from datetime import UTC, datetime, timedelta
 from hypothesis import given
 from hypothesis import strategies as st
 
-from contextos.baselines import (
+from context_invariant.baselines import (
     BaselineStrategy,
     LastNTokensBaseline,
     NaiveExtractiveBaseline,
     RelevanceOnlyBaseline,
     SlidingWindowBaseline,
 )
-from contextos.config import OptimizationPolicy
-from contextos.models import ContextItem, ContextType
+from context_invariant.config import OptimizationPolicy
+from context_invariant.models import ContextItem, ContextType
 
 
 class CharacterTokenizer:
