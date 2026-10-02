@@ -32,6 +32,7 @@ out/
 benchmarks/results/*
 !benchmarks/results/.gitkeep
 !benchmarks/results/README.md
+!benchmarks/results/THIRD_PARTY_DATA.md
 !benchmarks/results/20261002T032535.450250Z-phase5-ablation-full/
 !benchmarks/results/20261002T032535.450250Z-phase5-ablation-full/**
 !benchmarks/results/20261002T010620.923753Z-constraint-model-full/
