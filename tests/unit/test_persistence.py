@@ -7,7 +7,12 @@ from pathlib import Path
 
 import pytest
 
-from contextos.errors import CorruptedStoreError, UnknownDependencyReference
+from contextos.errors import (
+    ContextItemNotFoundError,
+    CorruptedStoreError,
+    DuplicateContextItemError,
+    UnknownDependencyReference,
+)
 from contextos.lifecycle import LifecycleManager, LifecyclePolicy
 from contextos.models import (
     ContextEdge,
@@ -79,6 +84,56 @@ def test_shared_store_rejects_unknown_edge_endpoints(store: ContextStore) -> Non
     )
     with pytest.raises(UnknownDependencyReference):
         store.save_edge(edge)
+
+
+def test_shared_store_context_batch_is_atomic(store: ContextStore) -> None:
+    now = datetime(2026, 1, 2, tzinfo=UTC)
+    existing = make_item("existing", updated_at=now)
+    incoming = make_item("incoming", updated_at=now)
+    store.save_item(existing)
+    invalid_edge = ContextEdge(
+        source_id="incoming",
+        target_id="missing",
+        relation=DependencyRelation.REQUIRES,
+        weight=1.0,
+    )
+
+    with pytest.raises(UnknownDependencyReference):
+        store.save_context([incoming], [invalid_edge])
+
+    assert [item.id for item in store.list_items()] == ["existing"]
+    with pytest.raises(ContextItemNotFoundError):
+        store.load_item("incoming")
+    assert store.load_dependencies() == []
+
+
+def test_shared_store_context_batch_commits_items_before_edges(store: ContextStore) -> None:
+    now = datetime(2026, 1, 2, tzinfo=UTC)
+    left = make_item("left", updated_at=now)
+    right = make_item("right", updated_at=now)
+    edge = ContextEdge(
+        source_id="left",
+        target_id="right",
+        relation=DependencyRelation.REQUIRES,
+        weight=1.0,
+    )
+
+    store.save_context([left, right], [edge])
+
+    assert [item.id for item in store.list_items()] == ["left", "right"]
+    assert store.load_dependencies() == [edge]
+
+
+def test_shared_store_context_batch_rejects_duplicate_inputs_atomically(
+    store: ContextStore,
+) -> None:
+    now = datetime(2026, 1, 2, tzinfo=UTC)
+    duplicate = make_item("duplicate", updated_at=now)
+
+    with pytest.raises(DuplicateContextItemError):
+        store.save_context([duplicate, duplicate], [])
+
+    assert store.list_items() == []
 
 
 def test_sqlite_write_restart_read(tmp_path: Path) -> None:

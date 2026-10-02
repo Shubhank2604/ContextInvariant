@@ -329,10 +329,7 @@ class ContextOptimizer:
         def persist() -> None:
             if self._store is None:
                 return
-            for item in tokenized:
-                self._store.save_item(item)
-            for edge in self._edges:
-                self._store.save_edge(edge)
+            self._store.save_context(tokenized, self._edges)
 
         stage("lifecycle_persistence", persist)
         selected_ids = {item.id for item in laid_out}
@@ -379,6 +376,16 @@ class ContextOptimizer:
         policy: OptimizationPolicy,
     ) -> OptimizedContext:
         """Enforce directed hard constraints around the stable optimization pipeline."""
+        timings: dict[str, float] = {}
+
+        def constraint_stage(name: str, operation: Callable[[], T]) -> T:
+            started = perf_counter()
+            try:
+                return operation()
+            finally:
+                timings[name] = timings.get(name, 0.0) + (perf_counter() - started) * 1000
+
+        setup_started = perf_counter()
         tokenized = self._tokenize_items(items)
         by_id = {item.id: item for item in tokenized}
         graph = ContextConstraintGraph(tokenized, self._edges)
@@ -396,13 +403,18 @@ class ContextOptimizer:
             for representation in representations
         }
         universe_seeds = tuple(item_id for item_id in by_id if item_id not in representation_map)
-        legal_universe = graph.resolve(
-            universe_seeds,
-            representations=representations,
-            conflict_policy=self._constraint_policy.conflict_policy,
-            conflict_winners=conflict_winners,
-            retain_superseded=self._constraint_policy.retain_superseded,
+        timings["constraint_setup"] = (perf_counter() - setup_started) * 1000
+        legal_universe = constraint_stage(
+            "constraint_legal_universe",
+            lambda: graph.resolve(
+                universe_seeds,
+                representations=representations,
+                conflict_policy=self._constraint_policy.conflict_policy,
+                conflict_winners=conflict_winners,
+                retain_superseded=self._constraint_policy.retain_superseded,
+            ),
         )
+        candidate_filter_started = perf_counter()
         legal_ids = set(legal_universe.selected_item_ids)
         candidates = [item for item in tokenized if item.id in legal_ids]
         candidate_edges = [
@@ -410,25 +422,42 @@ class ContextOptimizer:
             for edge in self._edges
             if edge.source_id in legal_ids and edge.target_id in legal_ids
         ]
+        timings["constraint_candidate_filter"] = (perf_counter() - candidate_filter_started) * 1000
         forced: set[str] = set()
         first_resolution: ConstraintResolution | None = None
         final_resolution: ConstraintResolution | None = None
         result: OptimizedContext | None = None
+        optimization_passes = 0
         for _ in range(len(candidates) + 1):
             if forced:
                 required_seeds = {
                     representation_map.get(item.id, item.id) for item in tokenized if item.mandatory
                 } | forced
-                graph.resolve(
-                    tuple(required_seeds),
-                    effective_budget=policy.effective_budget,
-                    representations=representations,
-                    conflict_policy=self._constraint_policy.conflict_policy,
-                    conflict_winners=conflict_winners,
-                    retain_superseded=self._constraint_policy.retain_superseded,
+
+                def validate_required_closure(
+                    selected_ids: tuple[str, ...] = tuple(required_seeds),
+                ) -> ConstraintResolution:
+                    return graph.resolve(
+                        selected_ids,
+                        effective_budget=policy.effective_budget,
+                        representations=representations,
+                        conflict_policy=self._constraint_policy.conflict_policy,
+                        conflict_winners=conflict_winners,
+                        retain_superseded=self._constraint_policy.retain_superseded,
+                    )
+
+                constraint_stage(
+                    "constraint_required_preflight",
+                    validate_required_closure,
                 )
-            prepared = self._force_required(candidates, forced)
-            result = ContextOptimizer(
+
+            def prepare_forced(
+                selected_ids: tuple[str, ...] = tuple(forced),
+            ) -> list[ContextItem]:
+                return self._force_required(candidates, set(selected_ids))
+
+            prepared = constraint_stage("constraint_force_required", prepare_forced)
+            current_result = ContextOptimizer(
                 tokenizer=self._tokenizer,
                 embedding_provider=self._provider,
                 edges=candidate_edges,
@@ -440,18 +469,33 @@ class ContextOptimizer:
                 policy,
                 required_references=required_references,
             )
-            resolution = graph.resolve(
-                tuple(item.id for item in result.selected_items),
-                representations=representations,
-                conflict_policy=self._constraint_policy.conflict_policy,
-                conflict_winners=conflict_winners,
-                retain_superseded=self._constraint_policy.retain_superseded,
+            result = current_result
+            optimization_passes += 1
+            for stage_name, duration in current_result.trace.stage_timings_ms.items():
+                timings[stage_name] = timings.get(stage_name, 0.0) + duration
+
+            def resolve_selection(
+                selected_ids: tuple[str, ...] = tuple(
+                    item.id for item in current_result.selected_items
+                ),
+            ) -> ConstraintResolution:
+                return graph.resolve(
+                    selected_ids,
+                    representations=representations,
+                    conflict_policy=self._constraint_policy.conflict_policy,
+                    conflict_winners=conflict_winners,
+                    retain_superseded=self._constraint_policy.retain_superseded,
+                )
+
+            resolution = constraint_stage(
+                "constraint_resolution",
+                resolve_selection,
             )
             final_resolution = resolution
             if first_resolution is None:
                 first_resolution = resolution
             additions = set(resolution.selected_item_ids) - {
-                item.id for item in result.selected_items
+                item.id for item in current_result.selected_items
             }
             if not additions:
                 break
@@ -459,6 +503,8 @@ class ContextOptimizer:
         else:
             raise AssertionError("constraint-enforced optimization did not converge")
         assert result is not None and first_resolution is not None and final_resolution is not None
+        constraint_result: OptimizedContext = result
+        assembly_started = perf_counter()
         trace_resolution = final_resolution.model_copy(
             update={
                 "added_required_item_ids": first_resolution.added_required_item_ids,
@@ -483,49 +529,72 @@ class ContextOptimizer:
 
         full_original_tokens = sum(item.token_count or 0 for item in tokenized)
         filtered_out = [item for item in tokenized if item.id not in legal_ids]
-        selected_ids = {item.id for item in result.selected_items}
+        selected_ids = {item.id for item in constraint_result.selected_items}
         removed = [item for item in tokenized if item.id not in selected_ids]
         reduction = (
             0.0
             if full_original_tokens == 0
-            else (full_original_tokens - result.final_token_count) / full_original_tokens
+            else (full_original_tokens - constraint_result.final_token_count) / full_original_tokens
         )
-        updated_trace = result.trace.model_copy(
+        updated_trace = constraint_result.trace.model_copy(
             update={
+                "strategy": "contextos_constraint_aware",
                 "constraint_policy": self._constraint_policy,
                 "original_tokens": full_original_tokens,
                 "reduction_ratio": max(0.0, min(reduction, 1.0)),
                 "removed_count": len(removed),
                 "warnings": sorted(
-                    set(result.trace.warnings)
+                    set(constraint_result.trace.warnings)
                     | ({"hard_constraints_filtered_items"} if filtered_out else set())
                 ),
             }
         )
-        result = result.model_copy(
+        constraint_result = constraint_result.model_copy(
             update={
                 "original_token_count": full_original_tokens,
                 "removed_items": removed,
                 "trace": updated_trace,
                 "constraint_resolution": trace_resolution,
                 "metadata": {
-                    **result.metadata,
+                    **constraint_result.metadata,
                     "constraint_policy": self._constraint_policy.model_dump(mode="json"),
                     "constraint_resolution": trace_resolution.model_dump(mode="json"),
                 },
             }
         )
-        result = self._patch_constraint_trace(
-            result,
-            original_items=tokenized,
-            resolution=trace_resolution,
+        timings["constraint_result_assembly"] = (perf_counter() - assembly_started) * 1000
+
+        def patch_trace(
+            current: OptimizedContext = constraint_result,
+        ) -> OptimizedContext:
+            return self._patch_constraint_trace(
+                current,
+                original_items=tokenized,
+                resolution=trace_resolution,
+            )
+
+        constraint_result = constraint_stage(
+            "constraint_trace_patch",
+            patch_trace,
         )
-        if self._store is not None:
-            for item in tokenized:
-                self._store.save_item(item)
-            for edge in self._edges:
-                self._store.save_edge(edge)
-        return result
+
+        def persist() -> None:
+            if self._store is None:
+                return
+            self._store.save_context(tokenized, self._edges)
+
+        constraint_stage("constraint_persistence", persist)
+        constraint_result = constraint_result.model_copy(
+            update={
+                "trace": constraint_result.trace.model_copy(
+                    update={
+                        "optimization_passes": optimization_passes,
+                        "stage_timings_ms": dict(sorted(timings.items())),
+                    }
+                )
+            }
+        )
+        return OptimizedContext.model_validate(constraint_result.model_dump())
 
     def _tokenize_items(self, items: Sequence[ContextItem]) -> list[ContextItem]:
         validate_unique_item_ids(items)

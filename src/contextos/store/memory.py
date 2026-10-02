@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from datetime import datetime
 
 from contextos.errors import ContextItemNotFoundError, UnknownDependencyReference
-from contextos.models import ContextEdge, ContextItem, ContextType, LifecycleTier
+from contextos.models import (
+    ContextEdge,
+    ContextItem,
+    ContextType,
+    LifecycleTier,
+    validate_unique_item_ids,
+)
 
 
 class InMemoryContextStore:
@@ -18,6 +25,30 @@ class InMemoryContextStore:
     def save_item(self, item: ContextItem) -> None:
         """Create or replace an item, isolating store state from caller mutation."""
         self._items[item.id] = item.model_copy(deep=True)
+
+    def save_context(
+        self,
+        items: Sequence[ContextItem],
+        edges: Sequence[ContextEdge],
+    ) -> None:
+        """Atomically save a validated context collection."""
+        validate_unique_item_ids(items)
+        staged_items = {
+            item_id: item.model_copy(deep=True) for item_id, item in self._items.items()
+        }
+        staged_edges = {key: edge.model_copy(deep=True) for key, edge in self._edges.items()}
+        for item in items:
+            staged_items[item.id] = item.model_copy(deep=True)
+        for edge in edges:
+            unknown = sorted({edge.source_id, edge.target_id} - staged_items.keys())
+            if unknown:
+                raise UnknownDependencyReference(
+                    f"Unknown dependency endpoint IDs: {', '.join(unknown)}"
+                )
+            key = (edge.source_id, edge.target_id, edge.relation.value)
+            staged_edges[key] = edge.model_copy(deep=True)
+        self._items = staged_items
+        self._edges = staged_edges
 
     def load_item(self, item_id: str) -> ContextItem:
         """Load an isolated copy of an item."""

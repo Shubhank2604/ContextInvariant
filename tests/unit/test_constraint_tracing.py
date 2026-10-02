@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import pytest
+from pydantic import ValidationError
 
 from contextos import (
     ConflictTraceStatus,
@@ -16,6 +17,7 @@ from contextos import (
     ContextType,
     DependencyRelation,
     OptimizationPolicy,
+    OptimizedContext,
     PreservationContract,
     summarize_transformation_trace,
 )
@@ -202,7 +204,7 @@ def test_optimizer_trace_is_complete_versioned_and_serializable() -> None:
     )
 
     trace = result.trace.items[0]
-    assert result.trace.schema_version == "phase5h-v1"
+    assert result.trace.schema_version == "phase5h-v2"
     assert trace.preservation_contract == contract
     assert trace.omission_risk is not None
     assert trace.transformation_risk is not None
@@ -218,3 +220,34 @@ def test_optimizer_trace_is_complete_versioned_and_serializable() -> None:
 
     restored = OptimizationTrace.model_validate_json(result.trace.model_dump_json())
     assert restored == result.trace
+
+    legacy_payload = result.trace.model_dump()
+    legacy_payload["schema_version"] = "phase5h-v1"
+    legacy_payload.pop("optimization_passes")
+    legacy = OptimizationTrace.model_validate(legacy_payload)
+    assert legacy.schema_version == "phase5h-v1"
+    assert legacy.optimization_passes == 1
+
+
+def test_trace_and_result_models_reject_inconsistent_accounting() -> None:
+    source = _item("source", "one two three")
+    result = ContextOptimizer(tokenizer=WordTokenizer()).optimize(
+        "one",
+        [source],
+        OptimizationPolicy(max_input_tokens=3),
+    )
+
+    invalid_trace = result.trace.model_dump()
+    invalid_trace["original_tokens"] = 4
+    with pytest.raises(ValidationError, match="item tokens must equal original tokens"):
+        OptimizationTrace.model_validate(invalid_trace)
+
+    invalid_timing = result.trace.model_dump()
+    invalid_timing["stage_timings_ms"]["trace"] = float("nan")
+    with pytest.raises(ValidationError, match="finite and non-negative"):
+        OptimizationTrace.model_validate(invalid_timing)
+
+    invalid_result = result.model_dump()
+    invalid_result["final_token_count"] = 2
+    with pytest.raises(ValidationError, match="result and trace final token counts must match"):
+        OptimizedContext.model_validate(invalid_result)

@@ -320,6 +320,8 @@ def test_public_optimizer_enforces_constraints_only_when_explicitly_enabled() ->
     assert enforced.constraint_resolution is not None
     assert set(enforced.constraint_resolution.selected_item_ids) == {"task", "current"}
     assert enforced.constraint_resolution.removed_superseded_item_ids == ("obsolete",)
+    assert enforced.trace.strategy == "contextos_constraint_aware"
+    assert enforced.trace.optimization_passes == 1
     assert enforced.trace.constraint_policy == ConstraintPolicy.enforced()
     assert [trace.item_id for trace in enforced.trace.items] == [
         "task",
@@ -349,12 +351,16 @@ def test_public_optimizer_exposes_explicit_unresolved_conflict_policy() -> None:
         weight=1.0,
     )
 
+    failed_store = InMemoryContextStore()
     with pytest.raises(UnresolvedConflict):
         ContextOptimizer(
             tokenizer=WordTokenizer(),
             edges=[edge],
+            store=failed_store,
             constraint_policy=ConstraintPolicy.enforced(),
         ).optimize("resolve", [left, right], policy(2))
+    assert failed_store.list_items() == []
+    assert failed_store.load_dependencies() == []
 
     retain_both = ConstraintPolicy.enforced(conflict_policy=ConflictPolicy.RETAIN_BOTH)
     result = ContextOptimizer(
@@ -390,10 +396,12 @@ def test_public_optimizer_reports_dependency_closure_overflow() -> None:
         weight=1.0,
     )
 
+    failed_store = InMemoryContextStore()
     with pytest.raises(RequiredContextOverflow) as error:
         ContextOptimizer(
             tokenizer=WordTokenizer(),
             edges=[edge],
+            store=failed_store,
             constraint_policy=ConstraintPolicy.enforced(),
         ).optimize(
             "execute",
@@ -404,6 +412,8 @@ def test_public_optimizer_reports_dependency_closure_overflow() -> None:
     assert error.value.required_item_ids == ("operation", "dependency")
     assert error.value.required_tokens == 7
     assert error.value.effective_budget == 4
+    assert failed_store.list_items() == []
+    assert failed_store.load_dependencies() == []
 
 
 def test_public_optimizer_uses_validated_representation_for_required_source() -> None:
@@ -467,6 +477,18 @@ def test_public_optimizer_uses_validated_representation_for_required_source() ->
         "compact",
     }
     assert result.constraint_resolution.added_required_item_ids == ("compact",)
+    assert result.trace.optimization_passes == 2
+    assert {
+        "constraint_setup",
+        "constraint_legal_universe",
+        "constraint_candidate_filter",
+        "constraint_required_preflight",
+        "constraint_force_required",
+        "constraint_resolution",
+        "constraint_result_assembly",
+        "constraint_trace_patch",
+        "constraint_persistence",
+    } <= result.trace.stage_timings_ms.keys()
     source_trace = next(trace for trace in result.trace.items if trace.item_id == "source")
     decoy_trace = next(trace for trace in result.trace.items if trace.item_id == "decoy")
     assert source_trace.decision_reason == "replaced_by_validated_representation"

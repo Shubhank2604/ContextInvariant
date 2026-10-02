@@ -47,6 +47,7 @@ from contextos.errors import ContextOSError
 from contextos.providers import LLMProvider
 from contextos.providers.base import ProviderResponse
 from contextos.tokenization import Tokenizer
+from contextos.trace import TRACE_SCHEMA_VERSION
 
 MODEL_CONSTRAINT_PROMPT_VERSION = "phase5j-constraint-prompt-v1"
 
@@ -562,7 +563,7 @@ def write_model_constraint_artifact(
             "contract_schema_version": "phase5c-v1",
             "constraint_resolver_version": "phase5d-v1",
             "validator_version": "phase5f-v1",
-            "trace_schema_version": "phase5h-v1",
+            "trace_schema_version": TRACE_SCHEMA_VERSION,
             "risk_aware_allocation": True,
             "omission_risk_weight": first_policy.omission_risk_weight,
             "transformation_risk_weight": first_policy.transformation_risk_weight,

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
 from types import TracebackType
@@ -14,7 +15,13 @@ from contextos.errors import (
     StoreMigrationError,
     UnknownDependencyReference,
 )
-from contextos.models import ContextEdge, ContextItem, ContextType, LifecycleTier
+from contextos.models import (
+    ContextEdge,
+    ContextItem,
+    ContextType,
+    LifecycleTier,
+    validate_unique_item_ids,
+)
 
 CURRENT_SCHEMA_VERSION = 1
 
@@ -95,6 +102,60 @@ class SQLiteContextStore:
                 item.model_dump_json(),
             ),
         )
+
+    def save_context(
+        self,
+        items: Sequence[ContextItem],
+        edges: Sequence[ContextEdge],
+    ) -> None:
+        """Atomically create or replace a collection of items and edges."""
+        validate_unique_item_ids(items)
+        incoming_ids = {item.id for item in items}
+        endpoint_ids = {item_id for edge in edges for item_id in (edge.source_id, edge.target_id)}
+        unknown = sorted(
+            item_id
+            for item_id in endpoint_ids - incoming_ids
+            if self._query_one("SELECT id FROM context_items WHERE id = ?", (item_id,)) is None
+        )
+        if unknown:
+            raise UnknownDependencyReference(
+                f"Unknown dependency endpoint IDs: {', '.join(unknown)}"
+            )
+        try:
+            with self._connection:
+                for item in items:
+                    self._connection.execute(
+                        """
+                        INSERT INTO context_items(
+                            id, context_type, lifecycle_tier, updated_at, payload_json
+                        )
+                        VALUES (?, ?, ?, ?, ?)
+                        ON CONFLICT(id) DO UPDATE SET
+                            context_type=excluded.context_type,
+                            lifecycle_tier=excluded.lifecycle_tier,
+                            updated_at=excluded.updated_at,
+                            payload_json=excluded.payload_json
+                        """,
+                        (
+                            item.id,
+                            item.type.value,
+                            item.lifecycle_tier.value,
+                            item.updated_at.isoformat(),
+                            item.model_dump_json(),
+                        ),
+                    )
+                for edge in edges:
+                    self._connection.execute(
+                        """
+                        INSERT INTO context_edges(source_id, target_id, relation, weight)
+                        VALUES (?, ?, ?, ?)
+                        ON CONFLICT(source_id, target_id, relation)
+                        DO UPDATE SET weight=excluded.weight
+                        """,
+                        (edge.source_id, edge.target_id, edge.relation.value, edge.weight),
+                    )
+        except sqlite3.DatabaseError as exc:
+            raise CorruptedStoreError(f"SQLite context transaction failed: {exc}") from exc
 
     def load_item(self, item_id: str) -> ContextItem:
         """Load and validate one serialized item."""

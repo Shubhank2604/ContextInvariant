@@ -1,5 +1,6 @@
 """Storage abstraction for context items."""
 
+from collections.abc import Sequence
 from datetime import datetime
 from typing import Protocol
 
@@ -11,6 +12,14 @@ class ContextStore(Protocol):
 
     def save_item(self, item: ContextItem) -> None:
         """Create or replace an item by ID."""
+        ...
+
+    def save_context(
+        self,
+        items: Sequence[ContextItem],
+        edges: Sequence[ContextEdge],
+    ) -> None:
+        """Atomically create or replace a collection of items and edges."""
         ...
 
     def load_item(self, item_id: str) -> ContextItem:

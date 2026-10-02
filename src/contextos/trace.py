@@ -5,9 +5,10 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Sequence
 from enum import StrEnum
+from math import isfinite
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from contextos.config import OptimizationPolicy
 from contextos.constraints import ConstraintPolicy, ConstraintResolution
@@ -20,6 +21,8 @@ from contextos.models import (
     validate_unique_item_ids,
 )
 from contextos.validation import TransformationAttemptRecord, ValidatorOutcome
+
+TRACE_SCHEMA_VERSION = "phase5h-v2"
 
 
 class OptimizationDecision(StrEnum):
@@ -297,7 +300,7 @@ class OptimizationTrace(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: str = "phase5h-v1"
+    schema_version: str = TRACE_SCHEMA_VERSION
     strategy: str
     policy: OptimizationPolicy
     constraint_policy: ConstraintPolicy | None = None
@@ -311,8 +314,34 @@ class OptimizationTrace(BaseModel):
     selected_count: int = Field(ge=0)
     removed_count: int = Field(ge=0)
     compressed_count: int = Field(ge=0)
+    optimization_passes: int = Field(default=1, ge=1)
     warnings: list[str] = Field(default_factory=list)
     items: list[ItemTrace]
+
+    @model_validator(mode="after")
+    def validate_accounting(self) -> OptimizationTrace:
+        if self.optional_budget != max(self.effective_budget - self.mandatory_tokens, 0):
+            raise ValueError("trace optional budget must reflect mandatory reservation")
+        if self.final_tokens > self.effective_budget:
+            raise ValueError("trace final tokens exceed effective budget")
+        if self.selected_count + self.removed_count != len(self.items):
+            raise ValueError("trace item counts must partition all item traces")
+        item_ids = [item.item_id for item in self.items]
+        if len(item_ids) != len(set(item_ids)):
+            raise ValueError("trace item IDs must be unique")
+        if sum(item.initial_token_count for item in self.items) != self.original_tokens:
+            raise ValueError("trace item tokens must equal original tokens")
+        if sum(item.final_token_count for item in self.items) != self.final_tokens:
+            raise ValueError("trace item tokens must equal final tokens")
+        retained = sum(item.decision is not OptimizationDecision.REMOVED for item in self.items)
+        if retained != self.selected_count:
+            raise ValueError("trace decisions must match selected count")
+        compressed = sum(item.decision is OptimizationDecision.COMPRESSED for item in self.items)
+        if compressed != self.compressed_count:
+            raise ValueError("trace decisions must match compressed count")
+        if any(not isfinite(value) or value < 0.0 for value in self.stage_timings_ms.values()):
+            raise ValueError("trace stage timings must be finite and non-negative")
+        return self
 
 
 class BudgetAllocation(BaseModel):
@@ -338,3 +367,38 @@ class OptimizedContext(BaseModel):
     trace: OptimizationTrace
     constraint_resolution: ConstraintResolution | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def validate_accounting(self) -> OptimizedContext:
+        selected_ids = [item.id for item in self.selected_items]
+        removed_ids = [item.id for item in self.removed_items]
+        if len(selected_ids) != len(set(selected_ids)):
+            raise ValueError("selected context item IDs must be unique")
+        if len(removed_ids) != len(set(removed_ids)):
+            raise ValueError("removed context item IDs must be unique")
+        if set(selected_ids) & set(removed_ids):
+            raise ValueError("selected and removed context items must be disjoint")
+        if self.original_token_count != self.trace.original_tokens:
+            raise ValueError("result and trace original token counts must match")
+        if self.final_token_count != self.trace.final_tokens:
+            raise ValueError("result and trace final token counts must match")
+        if self.final_token_count != self.budget_allocation.used_tokens:
+            raise ValueError("final tokens must equal allocated used tokens")
+        if (
+            self.budget_allocation.used_tokens + self.budget_allocation.remaining_tokens
+            != self.budget_allocation.effective_budget
+        ):
+            raise ValueError("used and remaining tokens must equal effective budget")
+        if self.budget_allocation.effective_budget != self.trace.effective_budget:
+            raise ValueError("result and trace effective budgets must match")
+        if self.trace.selected_count != len(selected_ids):
+            raise ValueError("trace selected count must match selected context")
+        if self.trace.removed_count != len(removed_ids):
+            raise ValueError("trace removed count must match removed context")
+        if {item.item_id for item in self.trace.items} != set(selected_ids + removed_ids):
+            raise ValueError("trace items must cover selected and removed context exactly")
+        if self.constraint_resolution is not None and set(
+            self.constraint_resolution.selected_item_ids
+        ) != set(selected_ids):
+            raise ValueError("constraint resolution must match selected context")
+        return self
