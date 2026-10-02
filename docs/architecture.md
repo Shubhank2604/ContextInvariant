@@ -1,68 +1,230 @@
 # Architecture
 
-ContextOS sits between application state and an LLM provider. Its staged optimizer will validate and tokenize candidate context, enforce mandatory retention, remove safe redundancy, score optional items, allocate budget, compress where allowed, arrange the final layout, and emit a complete decision trace.
+ContextOS sits between application state and an LLM provider. It accepts typed context items,
+relations, and a token policy, then returns an `OptimizedContext` containing selected items,
+removed items, exact budget accounting, and a versioned decision trace. It does not call the
+downstream LLM during normal optimization.
 
-Semantic deduplication has an explicit default-on policy switch so ablation runs can bypass it without abusing similarity thresholds. Zero-weight recency and dependency configurations return neutral component scores and renormalize the remaining composite signals. These controls exist to isolate measured component effects; normal presets retain the full pipeline.
+## Compatibility boundary
 
-Detailed component boundaries will be documented as each sequential milestone is implemented and verified.
+The public `ContextOptimizer` has two paths:
 
-## Baseline boundary
+- The default unconstrained path preserves the v0.4 selection behavior.
+- The constraint-aware path is enabled only through `ConstraintPolicy.enforced()` and wraps the
+  stable pipeline with legal-state filtering and dependency-closure convergence.
 
-All strategies accept an `OptimizationPolicy`, tokenize isolated copies of input items, and return an `OptimizedContext` with budget accounting and an `OptimizationTrace`:
+This separation keeps legacy users and the frozen research baseline reproducible. Hard relation
+semantics do not alter the v0.4 `DependencyGraph`, which remains a soft, cycle-safe utility
+propagation mechanism.
 
-- Full Context retains input order and raises `ContextBudgetOverflow` instead of truncating.
-- Last-N ranks by `updated_at`, then `created_at`, then item ID, and retains the newest contiguous suffix that fits while preserving original order in the output.
-- Sliding Window uses the newest `updated_at` as its deterministic reference time, removes items outside the configured window, and applies Last-N whole-item selection if the window exceeds budget.
-- Relevance Only ranks whole items solely by task-to-item embedding relevance and greedily admits those that fit. It has no type, recency, dependency, novelty, deduplication, or compression logic.
-- Naive Extractive ranks source sentences solely by task relevance, greedily admits sentences under the common budget, and restores source-item and sentence order. It does not use ContextOS composite scoring or allocation.
+## Constraint-aware execution order
 
-Mandatory retention is intentionally absent from these naive comparison strategies and is identified by a trace warning. Hard retention belongs to the integrated ContextOS optimizer pipeline.
+The implemented order is:
 
-## Semantic selection boundary
+1. Validate unique item IDs and tokenize isolated copies.
+2. Validate dependency-reference and validated-representation configuration.
+3. Construct `ContextConstraintGraph` and resolve the legal candidate universe.
+4. Remove illegal superseded or conflicting candidates according to explicit policy.
+5. Run the stable optimizer over the remaining candidates.
+6. Resolve directed closure over the selected items.
+7. If closure adds required items, mark those items mandatory and rerun the stable optimizer.
+8. Stop at a fixed point, or raise typed infeasibility when the required closure cannot fit.
+9. Assemble the complete result, patch constraint evidence into the trace, and optionally
+   persist the original items and edges atomically.
 
-Embedding providers expose one batch-oriented interface and remain independent from the optimizer. Tests and deterministic local measurements use a stable feature-hash provider; the optional sentence-transformer implementation loads its configured model lazily. Embeddings are cached by the SHA-256 hash of Unicode-normalized content.
+The convergence loop is bounded by the candidate count. ContextOS never drops a selected root
+just to make its dependency closure fit.
 
-Exact deduplication runs before embeddings and may remove only optional items. Mandatory duplicates always survive. Semantic deduplication is scoped to matching context types and uses a configurable cosine threshold, defaulting to `0.92`. Similarity alone is insufficient: differing numbers, dates, identifiers, URLs, paths, code, or negation force both items to survive.
+## Stable optimization pipeline
 
-## Scoring and dependency boundary
+Each stable pass performs:
 
-Every scoring component is independently normalized to `[0,1]`. Composite utility uses policy weights normalized to sum to one. Recency uses exponential half-life decay from an explicit reference time or, for deterministic standalone scoring, the newest item timestamp.
+1. static policy validation;
+2. tokenization and mandatory-budget reservation;
+3. exact deduplication;
+4. guarded semantic deduplication;
+5. contextual budget validation;
+6. relevance, importance, recency, novelty, dependency, and type-priority scoring;
+7. optional omission- and transformation-risk assessment;
+8. deterministic budget allocation;
+9. type-aware transformation and validation;
+10. position-aware or caller-supplied layout;
+11. budget and accounting invariants;
+12. complete per-item trace construction.
 
-Application-provided importance always wins. If it is omitted, the context model applies these deterministic fallbacks; they are configuration defaults, not empirical claims:
+Embedding failures are visible in trace warnings and use the deterministic provider fallback.
+Caller-owned items are never mutated.
 
-| Context type | Importance fallback | Type priority |
-|---|---:|---:|
-| System instruction | 1.00 | 1.00 |
-| Tool definition | 0.70 | 0.50 |
-| User message | 0.70 | 0.70 |
-| Assistant message | 0.40 | 0.50 |
-| Tool output | 0.40 | 0.60 |
-| Retrieved document | 0.50 | 0.65 |
-| Memory | 0.50 | 0.60 |
-| Decision | 0.80 | 0.85 |
-| Error | 0.80 | 0.80 |
-| Plan | 0.60 | 0.55 |
-| Code | 0.70 | 0.75 |
-| Task state | 0.90 | 0.95 |
+## Context model and preservation contracts
 
-Dependency edges are application supplied and retained with their relation type. Score propagation treats an edge as a traversable connection in both directions, multiplies weights along a path, takes the strongest reachable neighbor score, stops at the configured depth (default `2`), and tracks visited IDs to terminate cycles. `SUPERSEDES` and `CONTRADICTS` remain explicit graph evidence; scoring does not silently delete either endpoint.
+`ContextItem` represents system instructions, tool definitions, user/assistant messages, tool
+outputs, retrieved documents, memory, decisions, errors, plans, code, and task state. Every item
+has timezone-aware timestamps, importance, lifecycle state, legacy retention flags, and an
+optional `PreservationContract`.
 
-## Allocation boundary
+Contracts support:
 
-Mandatory tokens are reserved before optional allocation. Static policy errors, mandatory overflow, and context-dependent class-minimum infeasibility are separate typed failures. Class minima are soft floors applied only to optional types present after deduplication; whole-item granularity can leave a floor unmet, which is recorded rather than silently treated as a policy error.
+- `optional`, `required`, and `required_if_referenced` retention;
+- exact number, date, identifier, citation, and negation preservation;
+- structured preservation with unique required top-level keys.
 
-The allocator performs a stable per-type floor pass followed by a global value-density pass. Class maxima apply to raw selections and planned compressed representations. Items that fail raw selection are ranked separately for compression, and the resulting `AllocationPlan` partitions every optional candidate into exactly one outcome: direct selection, a reserved `CompressionRequest`, or rejection with a reason.
+`required` maps to mandatory, non-evictable retention. `required_if_referenced` activates when a
+selected relation requires the item. Unknown contract fields and inconsistent structured-key
+configuration are rejected during model validation.
 
-The allocator never invokes a compressor. It also never evicts a raw selection to make room for a compressed candidate. This deterministic greedy behavior is intentionally not claimed to be globally optimal. The plan retains the full ranked compression-candidate order so the compression stage can reuse returned reservations without recomputing or reordering allocator decisions.
+Items without a contract keep their legacy behavior and serialize `contract` as `null`.
 
-## Compression and layout boundary
+## Directed hard relations
 
-Compression operates on one item at a time and returns source provenance, strategy, original and compressed token counts, and an explicit failure reason. Extractive compression retains exact source sentences in source order. Tool-output compression retains exact critical/task/boundary lines. Optional LLM summarization is disabled by default and cannot process protected content. A failed or under-target attempt releases its unused reservation for later ranked candidates.
+`ContextConstraintGraph` gives relations deterministic enforcement semantics:
 
-Layout is independent from selection. Original-order and relevance-descending layouts serve as controls. Position-aware layout places mandatory system information first, high-utility evidence early, and recent task state or user messages near the end. Layout never modifies item content, so internal code order is preserved.
+- `B REQUIRES A`: selecting or representing `B` requires `A` or an explicitly validated
+  representation of `A`.
+- `B SUPERSEDES A`: current `B` replaces obsolete `A` unless the caller explicitly retains
+  superseded history.
+- `A CONTRADICTS B`: active contradiction requires deterministic authority, a caller override,
+  or an explicit retain-both policy.
+- `B DERIVED_FROM A`: the active derivation remains available as provenance.
+- `RELATED_TO`: soft graph evidence only; it is not a hard constraint.
 
-## Persistence and integrated runtime boundary
+Requirement traversal is directed and cycle-safe. Strongly connected `REQUIRES` components are
+reported as atomic groups.
 
-The in-memory and SQLite stores share item, time/type/tier query, edge, tier-update, and explicit-delete operations. SQLite records its schema version and migrates version-zero stores to the current schema. Lifecycle transitions are deterministic, accept explicit application overrides, and never automatically delete archived records.
+Contradiction authority is compared in this order:
 
-`ContextOptimizer.optimize(task, items, policy)` owns the complete budgeted pipeline. It validates and tokenizes isolated copies, reserves mandatory content, deduplicates, scores, allocates, compresses, lays out, validates invariants, emits a complete trace, and optionally persists items and edges. Provider fallback is visible in trace warnings.
+1. `metadata["canonical"] is True`;
+2. numeric `authority_rank`;
+3. numeric `version`;
+4. numeric `source_priority`;
+5. `updated_at`.
+
+Item ID is not treated as semantic authority. A complete tie raises `UnresolvedConflict` unless
+the caller supplies a winner or selects the retain-both policy.
+
+## Deduplication and scoring
+
+Exact deduplication runs before embeddings and removes only optional items. Semantic
+deduplication compares only matching context types and defaults to cosine threshold `0.92`.
+Differences in numbers, dates, identifiers, URLs, paths, code, or negation force both records to
+survive even when their embeddings are similar.
+
+Every score component is normalized to `[0, 1]`; policy weights are renormalized to sum to one.
+The deterministic local provider supports tests and reproducibility. The optional Sentence
+Transformers provider loads lazily, and embeddings are cached by a normalized-content SHA-256
+digest.
+
+The legacy `DependencyGraph` propagates soft score evidence bidirectionally to bounded depth.
+The hard `ContextConstraintGraph` remains directed and independently decides legal state.
+
+## Risk-aware allocation
+
+Mandatory and required content is reserved before optional ranking, so risk scores cannot make
+hard requirements removable.
+
+For optional items, omission risk combines contract exposure, directed requirements, context
+type, current/canonical metadata, and contradiction/supersession involvement. Transformation
+risk combines transformability, exact-value density, negation, structured contracts, and type
+fragility.
+
+Given utility `u`, omission risk `o`, transformation risk `t`, omission coefficient `lambda`,
+and transformation coefficient `gamma`:
+
+```text
+original_selection_value = (u + lambda * o) / (1 + lambda)
+transformed_selection_value = max(0, original_selection_value - gamma * t)
+```
+
+Raw candidates rank by original value per token; compressed candidates rank by transformed
+value per target token. Risk-aware allocation is opt-in. Its coefficients are research
+parameters, not claimed optima.
+
+The allocator applies per-type floors and maxima, followed by stable global value-density
+selection. Its `AllocationPlan` partitions every optional item into direct selection, reserved
+transformation, or rejection. This deterministic greedy allocator is not claimed globally
+optimal.
+
+## Type-aware transformations
+
+`CompressionExecutor` owns reservation reuse, accounting, fallback, and final validation.
+`TypeAwareCompressor` selects the initial transformation family:
+
+| Context type | Transformation policy |
+|---|---|
+| System instruction and tool definition | Lossless only |
+| Code | Conservative exact-line extraction |
+| Tool output and error | Structured JSON pruning or line-aware extraction |
+| Task state | Structured JSON pruning only |
+| Retrieved document | Verbatim evidence extraction |
+| Messages, memory, decisions, and plans | Verbatim sentence extraction |
+
+Mandatory and explicitly non-compressible items remain lossless. Structured pruning retains
+whole top-level values, prioritizing contract-required, task-mentioned, and operational keys.
+Malformed JSON, scalar roots, arrays, and natural-language task state are not rewritten into
+guessed structure. Code extraction never uses prose summarization or rewrites identifiers.
+
+The optional LLM summarizer remains disabled by default and requires explicit injection.
+
+## Validation and fallback
+
+Every lossy candidate is provisional until deterministic validators check the configured
+contract. Validators cover numbers, dates, identifiers, citations, negation, structured keys
+and values, and caller-declared dependency references. All observed violations are returned;
+validation does not stop at the first failure.
+
+The fallback sequence is bounded:
+
+1. attempt the preferred type-aware transformation;
+2. for eligible prose, attempt deterministic extractive fallback;
+3. retain the original representation if it fits;
+4. otherwise reject an optional item or raise `RequiredContextOverflow` for required content.
+
+Code and structured state do not fall back through generic prose extraction. A lossless
+original selected after fallback is recorded as retained, not compressed.
+
+## Layout
+
+Layout is independent from selection and never changes item content. Available controls include
+original order and relevance-descending order. The default position-aware layout places
+mandatory system information first, high-utility evidence early, and recent task state or user
+messages near the end.
+
+## Tracing
+
+The current trace schema is `phase5h-v2`. Each `ItemTrace` can record:
+
+- preservation contract and final decision;
+- exact/semantic duplicate evidence and utility component scores;
+- activated hard relations, `required_by`, transitive closure, supersession, and conflict state;
+- omission/transformation risk and allocation values;
+- transformation attempts, validators, violations, fallback path, and final representation;
+- final token count and position;
+- conservative, evidence-backed counterfactual fields.
+
+Counterfactual values are `null` when the execution record cannot support them; ContextOS does
+not rerun stages to invent counterfactual evidence.
+
+## Persistence
+
+In-memory and SQLite stores share item, edge, query, lifecycle-tier, and delete operations.
+SQLite maintains a schema version and migrates the supported version-zero layout. Saving a
+constraint-aware optimization uses a single `save_context` operation so a failed write does not
+leave a partial item/edge state.
+
+Lifecycle transitions are deterministic, accept explicit overrides, and never automatically
+delete archived records.
+
+## Typed failures
+
+Important invalid states are explicit:
+
+- `InvalidOptimizationPolicy` for invalid budgets or policy values;
+- `MandatoryContextOverflow` for legacy mandatory content that cannot fit;
+- `RequiredContextOverflow` for a required contract/closure or safe original representation
+  that cannot fit;
+- `ConstraintUnsatisfiable` for mutually illegal constraint state;
+- `UnresolvedConflict` when contradiction authority cannot be resolved;
+- `UnknownDependencyReference` for missing edge, selection, representation, or reference IDs;
+- typed provider, embedding, compression, and persistence errors at their respective boundaries.
+
+The optimizer validates the complete returned result with Pydantic after trace assembly. Invalid
+partial context is not returned.

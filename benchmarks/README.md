@@ -1,147 +1,218 @@
-# ContextOS Benchmarks
+# ContextOS benchmarks
 
-The deterministic smoke profile runs with:
+ContextOS keeps research evaluation separate from the runtime API. Offline deterministic tracks
+validate selection, constraints, artifacts, and evaluator behavior. Provider-backed tracks run
+only when a user explicitly installs the required dependency, supplies credentials, selects a
+model, and invokes the command.
+
+Normal tests and CI never download LongBench data or spend API credits.
+
+## Quick offline smoke test
 
 ```bash
 contextos benchmark --profile quick
 ```
 
-It executes one fixed mixed-context case through Full Context, Last-N, Sliding Window, Relevance Only, Naive Extractive, and the integrated ContextOS optimizer. The report contains deterministic token and selection outcomes; timing measurements remain in optimization traces and are intentionally excluded from deterministic equality checks.
+This runs one fixed mixed-context case through Full Context, Last-N, Sliding Window, Relevance
+Only, Naive Extractive, and the integrated ContextOS optimizer. Selection and token outcomes are
+deterministic; wall-clock timing is intentionally excluded from equality checks.
 
 ## ContextOS-Bench
 
-`datasets/contextos_bench.json` is generated deterministically from versioned templates and contains exactly 50 base cases:
+`datasets/contextos_bench.json` contains 50 deterministic templated cases:
 
 - 18 coding-agent cases;
 - 16 research-agent cases;
 - 16 support/operations cases.
 
-The cases are labeled as templated base data—not hand-authored or generated variants. Every case includes annotated required facts plus exact values, dates or identifiers, old critical evidence, recent irrelevant evidence, duplicate paraphrases, changed-number and negation traps, supersession, contradictions, and one-/two-hop dependencies.
-
-Regenerate and verify the canonical dataset with:
-
-```bash
-python -m contextos.benchmarks.dataset \
-  --output benchmarks/datasets/contextos_bench.json
-pytest tests/unit/test_benchmark_schema.py
-```
-
-Run the benchmark with:
+Cases contain annotated required facts, dates, identifiers, changed-number and negation traps,
+old critical evidence, recent noise, duplicate paraphrases, supersession, contradictions, and
+one-/two-hop dependencies.
 
 ```bash
-contextos benchmark run \
-  --input benchmarks/datasets/contextos_bench.json \
-  --output-directory benchmarks/results
+contextos benchmark run --input benchmarks/datasets/contextos_bench.json --output-directory out/contextos-bench
+contextos benchmark ablation --input benchmarks/datasets/contextos_bench.json --output-directory out/phase4-ablation
+contextos benchmark dedup --input benchmarks/datasets/deduplication_cases.json --output-directory out/dedup
 ```
 
-The shared runner evaluates Full Context, Last-N, Sliding Window, Relevance Only, Naive Extractive, and ContextOS. Full Context receives enough budget to act as the quality reference; other strategies use the case's configured optimization budget. Each raw result contains task-specific required-fact score, quality retention, Critical Information Recall, input tokens, context reduction, compression ratio, optimizer/embedding/compression timing, selected IDs, and decision reasons.
+The main runner compares the six strategies under the same case definitions. Metrics include
+task-specific required-fact score, Critical Information Recall, quality retention where a valid
+Full Context reference exists, input tokens, context reduction, compression, decision reasons,
+and stage/runtime telemetry.
 
-Aggregate reports retain total/p50/p95 optimizer latency, embedding/compression-stage time, and native process peak memory, alongside deterministic bootstrap 95% confidence intervals when at least 20 successful cases are available. Generated artifacts are content-addressed and ignored by default until a later validation phase explicitly approves an immutable result for version control. No benchmark result is hand-authored.
+The Phase 4 ablation runs Full ContextOS and five single-component removals: semantic
+deduplication, recency, dependency scoring, compression, and position-aware layout. Its current
+deterministic result is diagnostic; the templated cases do not distinguish every component.
 
-Run the Phase 4E single-component study with:
+Regenerate the canonical dataset only when intentionally changing its versioned source:
 
 ```bash
-contextos benchmark ablation \
-  --input benchmarks/datasets/contextos_bench.json \
-  --output-directory out/phase4e-ablation
+python -m contextos.benchmarks.dataset --output benchmarks/datasets/contextos_bench.json
+pytest --no-cov tests/unit/test_benchmark_schema.py
 ```
 
-The six variants are full ContextOS and ContextOS without semantic deduplication, recency, dependency scoring, compression, or position-aware layout. Each generated artifact stores the exact policy override and raw case results; CLI output also reports task-score, CIR, mean-input-token, and p95-latency deltas against full ContextOS.
+## Constraint-sensitive development benchmark
 
-`datasets/deduplication_cases.json` remains the focused deduplication regression fixture.
+The Phase 5 track contains 90 deterministic cases, ten from each category:
+
+1. dependency closure;
+2. supersession;
+3. contradiction;
+4. exact numeric preservation;
+5. identifier preservation;
+6. negation and policy preservation;
+7. tool state;
+8. citation and evidence provenance;
+9. multi-hop relations.
+
+Every case carries machine-readable critical IDs, relations, required values, forbidden
+combinations, current/stale state, identifiers, and citations as applicable. The evaluator adds
+constraint violation, dependency closure, state consistency, contradiction leakage, exact-value,
+identifier, and citation-preservation metrics without using an LLM judge.
+
+```bash
+contextos benchmark constraints --output-directory out/constraints
+contextos benchmark phase5-ablation --output-directory out/phase5-ablation
+```
+
+The cumulative Phase 5 ablation runs the fixed 25%, 35%, 50%, 65%, 80%, and 100% budget
+frontier. Zero-success points are retained as legal infeasibility; contracts are never relaxed
+to manufacture coverage.
+
+The final retained deterministic sweep is
+`results/20261002T032535.450250Z-phase5-ablation-full`.
+
+## Model-backed constraint evaluation
+
+Install the optional provider dependency and expose `OPENAI_API_KEY` only in the process
+environment or an ignored local `.env` loader. Never place a real key in `.env.example`.
+
+```bash
+python -m pip install -e ".[openai]"
+contextos benchmark constraints-model --model MODEL_ID --budget-ratio 0.8 --output-directory out/constraint-model
+```
+
+The command compares Full Context, frozen v0.4, and Full Phase 5 through one temperature-zero
+model configuration. Failed and infeasible executions remain in raw predictions, count as answer
+violations, and receive no invented task score. Optional price arguments record estimated cost;
+they do not affect provider billing.
+
+The retained 80% runs are:
+
+- `results/20261002T011212.526789Z-constraint-model-full` — GPT-5.4-mini;
+- `results/20261002T012723.643351Z-constraint-model-full` — GPT-5.4.
+
+The retained 100% GPT-5.4-mini run is
+`results/20261002T010620.923753Z-constraint-model-full`.
+
+## LongBench
+
+`config/longbench_subset.json` pins source revision `5e628be` of `zai-org/LongBench` and selects:
+
+- `hotpotqa` and `2wikimqa`, scored with normalized English token F1;
+- `passage_retrieval_en`, scored with paragraph-number precision;
+- `repobench-p`, scored with first uncommented code-line similarity.
+
+Profiles preserve upstream IDs and are deterministic:
+
+- `quick`: 2 cases per task, 8 total;
+- `standard`: 25 cases per task, 100 total;
+- `full`: every exposed row from the four configurations.
+
+Prepare external cases explicitly:
+
+```bash
+python -m pip install -e ".[benchmark]"
+contextos benchmark longbench prepare --config benchmarks/config/longbench_subset.json --profile standard --output out/longbench/prepared-standard.json
+```
+
+Run the Phase 5 comparison only with an explicit model and context limits:
+
+```bash
+contextos benchmark longbench phase5-run --prepared out/longbench/prepared-standard.json --output out/longbench-comparison --model MODEL_ID --context-budget-tokens 8192 --max-context-tokens MODEL_CONTEXT_LIMIT --minimum-request-interval-seconds 1.5
+```
+
+This compares Full Context, frozen v0.4, and Full Phase 5. It supports bounded provider retries,
+request pacing, and provenance-checked resumption via `--resume-from`. Full Context overflows are
+recorded, never silently truncated.
+
+The older `longbench run` command remains available for the six-strategy Phase 4 comparison.
+`longbench score` validates and scores complete externally generated ID-keyed predictions.
+
+The retained standard Phase 5 comparison is
+`results/20261002T021250.312800Z-comparison-standard`. It contains 298 successful predictions
+and two legitimate Full Context RepoBench-P overflows. Across 98 matched Full Context/Phase 5
+cases, Phase 5 reduces context tokens by 31.58%; quality effects are mixed and include a
+statistically non-zero HotpotQA regression.
+
+LongBench and constituent task records remain third-party material. The retained normalized
+case subset is covered by [THIRD_PARTY_DATA.md](results/THIRD_PARTY_DATA.md); it is not
+relicensed under the ContextOS MIT license.
 
 ## Controlled positional retrieval
 
-`datasets/positional_retrieval.json` is a compact deterministic parameter grid covering 4K, 8K, 16K, and 32K token targets and evidence at the beginning, 25%, middle, 75%, and end. It compares identical records under original/full, relevance-descending, and the production ContextOS position-aware layout.
+The positional grid crosses four target lengths (4K, 8K, 16K, and 32K), five evidence positions,
+and three layouts (original, relevance-descending, and ContextOS position-aware).
 
-Run the offline plumbing check without credentials:
+Offline plumbing check:
 
 ```bash
 contextos benchmark positional --profile quick --provider deterministic --output-directory out/positional-quick
 ```
 
-Run the complete grid against an explicitly selected OpenAI model only when credentials and the stated provider context limit are available:
+Explicit provider run:
 
 ```bash
 contextos benchmark positional --profile full --provider openai --model MODEL_ID --max-context-tokens MODEL_CONTEXT_LIMIT --output-directory out/positional-real
 ```
 
-The real-provider command requires `OPENAI_API_KEY` and the `openai` optional dependency. Unsupported context lengths are recorded as skipped. Artifacts retain raw predictions, exact-match results, token counts, prompt hashes, model identity, total provider latency, and positional aggregates. Offline deterministic accuracy is not evidence about long-context model behavior.
+The retained provider artifact is
+`results/20261002T032213.979841Z-layout-comparison-full`. Every one of its 60 predictions is
+correct, so it is a ceiling-effect null and cannot support a claim that ContextOS reproduced or
+mitigated *Lost in the Middle*.
 
-Regenerate the parameter grid with:
+## Metrics and statistical reporting
 
-```bash
-python -m contextos.benchmarks.positional --output benchmarks/datasets/positional_retrieval.json
+Raw per-case measurements are retained. With at least 20 successful paired cases, reports use a
+seeded 1,000-resample percentile-bootstrap 95% confidence interval over within-case candidate
+minus reference deltas. Unlike LongBench task metrics are never averaged into a universal
+quality number.
+
+The positional grid has one observation per experimental cell, and the deduplication fixture
+has ten cases, so those reports do not fabricate confidence intervals.
+
+Provider comparisons must use the same case IDs, prompt templates, provider, model snapshot,
+temperature, output limits, and evaluator. Runs from different model or decoding configurations
+are not evidence of a ContextOS effect.
+
+## Artifact contract
+
+Every meaningful run writes one timestamped directory containing exactly:
+
+```text
+config.json
+environment.json
+cases.jsonl
+predictions.jsonl
+metrics.json
+metrics.csv
+report.md
 ```
 
-## LongBench subset
+Writers refuse an existing path unless its file set and bytes match. Raw cases, predictions, and
+JSON metrics are authoritative; CSV and Markdown are derived views. Environment provenance
+includes Python, ContextOS, Git SHA, operating system, relevant dependencies, embedding model,
+and provider/model when applicable.
 
-`config/longbench_subset.json` pins the external source revision and configures four representative English tasks:
+Generated result directories are ignored by default. The six allowlisted directories in
+`results/` are the reviewed v0.5.0 evidence set and must remain byte-identical. Their inventory,
+confidence intervals, supported claims, null results, and limitations are consolidated in the
+[v0.5.0 research-readiness report](reports/v0.5.0-research-readiness.md).
 
-- `hotpotqa` and `2wikimqa`: multi-document QA, scored with normalized token F1;
-- `passage_retrieval_en`: synthetic retrieval, scored with the official paragraph-number metric;
-- `repobench-p`: code completion, scored with the official first-code-line similarity method.
+## Interpretation
 
-The [official LongBench repository](https://github.com/THUDM/LongBench) is MIT licensed and documents the provenance of constituent tasks. External records remain subject to their upstream acknowledgements and terms; this project does not redistribute them.
-
-Profiles are deterministic and preserve LongBench `_id` values:
-
-- `quick`: 2 examples per task, 8 total, for development only;
-- `standard`: 25 examples per task, 100 total;
-- `full`: every example exposed by the four pinned task configurations.
-
-Install the optional dependencies and explicitly prepare external data:
-
-```bash
-python -m pip install -e ".[benchmark]"
-contextos benchmark longbench prepare \
-  --config benchmarks/config/longbench_subset.json \
-  --profile standard \
-  --output out/longbench/prepared-standard.json
-```
-
-No download occurs on import, during normal tests, or in standard CI. Prepared datasets remain under ignored local output directories and must not be committed without a separate license/size review.
-
-Predictions are newline-delimited JSON objects keyed by the preserved identity:
-
-```json
-{"dataset":"hotpotqa","source_id":"UPSTREAM_ID","strategy":"full_context","prediction":"...","provider":"PROVIDER","model":"MODEL_ID"}
-```
-
-Score one complete prediction file with:
-
-```bash
-contextos benchmark longbench score \
-  --prepared out/longbench/prepared-standard.json \
-  --predictions out/longbench/predictions.jsonl \
-  --output benchmarks/results
-```
-
-Scoring rejects duplicate, missing, or unknown source IDs and mixed provider/model configurations. Aggregates remain separate by dataset and metric; unlike metrics are never collapsed into an unexplained overall average.
-
-### Statistical reporting
-
-ContextOS-Bench and LongBench retain exact per-case scores and calculate deterministic, 1,000-resample percentile-bootstrap 95% confidence intervals when at least 20 successful cases are available. Comparative intervals bootstrap paired, within-case candidate-minus-reference deltas. Reports include ContextOS directly against each simple baseline as well as the common Full Context reference.
-
-The positional grid has one observation per experimental cell and the deduplication development fixture has 10 cases, so those reports explicitly omit confidence intervals. Real-model runs use temperature `0`, record provider/model/time and decoding settings, and are repeated only if residual nondeterminism could materially change a conclusion. Do not compare different model or decoding configurations as evidence of a ContextOS effect.
-
-### Six-strategy provider comparison
-
-Run all required strategies against one explicitly selected OpenAI configuration:
-
-```bash
-contextos benchmark longbench run \
-  --prepared out/longbench/prepared-standard.json \
-  --output benchmarks/results \
-  --model MODEL_ID \
-  --context-budget-tokens 8192 \
-  --max-context-tokens MODEL_CONTEXT_LIMIT
-```
-
-The runner splits each external context into exact contiguous source-preserving chunks, uses the same case prompt, output bound, provider, model, temperature, evaluator, and constrained context budget for every applicable strategy, and records Full Context as infeasible rather than silently truncating it. The command requires `OPENAI_API_KEY`; it is never run by normal CI. Successful provider execution is scored immediately and written as one complete bundle. The separate `longbench score` command bundles externally supplied prediction JSONL.
-
-The same prepare/run sequence is available through the manual-only `LongBench comparison` GitHub Actions workflow. It requires explicit inputs and the `OPENAI_API_KEY` repository secret; push and pull-request CI never invokes it.
-
-## Artifact bundle contract
-
-Every meaningful benchmark produces `benchmarks/results/<timestamp>-<strategy>-<profile>/` with `config.json`, `environment.json`, `cases.jsonl`, `predictions.jsonl`, `metrics.json`, `metrics.csv`, and `report.md`. Writers refuse an existing directory unless its exact file set and byte content match. Machine-readable raw records are authoritative; reports are derived.
+The controlled constraint benchmark supports a narrow reliability claim under token pressure.
+LongBench does not support universal task-quality superiority, the positional run is
+non-discriminating, and the current cumulative ablation does not establish a causal contribution
+for every Phase 5 mechanism. See [Research](../docs/research.md) and
+[Known limitations](../docs/limitations.md) before citing results.
