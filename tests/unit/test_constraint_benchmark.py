@@ -9,26 +9,27 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
-from contextos.benchmarks.constraint_benchmark import (
+from context_invariant.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from context_invariant.benchmarks.constraint_benchmark import (
     run_constraint_benchmark,
     write_constraint_artifact,
 )
-from contextos.benchmarks.constraint_dataset import (
+from context_invariant.benchmarks.constraint_dataset import (
     PHASE5_BASELINE_SHA,
     generate_constraint_dataset,
 )
-from contextos.benchmarks.constraint_models import (
+from context_invariant.benchmarks.constraint_models import (
     ConstraintBenchmarkCase,
     ConstraintCategory,
 )
-from contextos.benchmarks.runner import ContextOSBenchmarkStrategy
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.benchmarks.runner import ContextInvariantBenchmarkStrategy
+from context_invariant.tokenization import TiktokenTokenizer
 
 
 def test_constraint_dataset_has_ten_cases_per_required_category() -> None:
     dataset = generate_constraint_dataset()
 
+    # The frozen generator keeps its scientific identity across the package rename.
     assert dataset.name == "ContextOS-Bench Constraints"
     assert len(dataset.cases) == 90
     assert Counter(case.constraints.category for case in dataset.cases) == {
@@ -60,7 +61,7 @@ def test_constraint_runner_reports_every_metric_family() -> None:
     run, measurements, aggregates = run_constraint_benchmark(
         representative,
         tokenizer=TiktokenTokenizer(),
-        strategies=[ContextOSBenchmarkStrategy()],
+        strategies=[ContextInvariantBenchmarkStrategy()],
     )
 
     assert len(run.measurements) == 9
@@ -83,7 +84,7 @@ def test_constraint_artifact_records_frozen_baseline(tmp_path: Path) -> None:
     run, measurements, aggregates = run_constraint_benchmark(
         limited,
         tokenizer=TiktokenTokenizer(),
-        strategies=[ContextOSBenchmarkStrategy()],
+        strategies=[ContextInvariantBenchmarkStrategy()],
     )
 
     artifact = write_constraint_artifact(

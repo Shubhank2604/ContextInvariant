@@ -2,8 +2,8 @@
 
 import pytest
 
-from contextos.errors import TokenizerError
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.errors import TokenizerError
+from context_invariant.tokenization import TiktokenTokenizer
 
 
 def test_tiktoken_count_is_deterministic() -> None:

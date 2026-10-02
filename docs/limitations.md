@@ -30,7 +30,7 @@
 - The allocator is deterministic and auditable but is not claimed to be globally optimal.
 - SQLite is the only durable backend; distributed stores and vector databases are outside the
   current scope.
-- ContextOS constructs input context. It does not verify model answers, provide prompt-injection
+- ContextInvariant constructs input context. It does not verify model answers, provide prompt-injection
   security, or guarantee that a downstream model will follow retained instructions.
 
 See the [v0.5.0 research-readiness report](../benchmarks/reports/v0.5.0-research-readiness.md)

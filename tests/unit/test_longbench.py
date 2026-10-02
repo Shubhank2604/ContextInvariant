@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from contextos.benchmarks.longbench import (
+from context_invariant.benchmarks.longbench import (
     code_similarity_score,
     load_longbench_config,
     prepare_longbench_subset,
@@ -17,7 +17,7 @@ from contextos.benchmarks.longbench import (
     score_longbench_predictions,
     write_prepared_subset,
 )
-from contextos.benchmarks.longbench_models import (
+from context_invariant.benchmarks.longbench_models import (
     LongBenchPrediction,
     LongBenchProfile,
     LongBenchSubsetConfig,
@@ -173,7 +173,7 @@ def test_standard_profile_reports_reproducible_bootstrap_intervals() -> None:
             model="fixture-v1",
         )
         for case in subset.cases
-        for strategy in ("full_context", "contextos")
+        for strategy in ("full_context", "context_invariant")
     ]
 
     first = score_longbench_predictions(subset, predictions)

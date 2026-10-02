@@ -5,9 +5,9 @@ from types import SimpleNamespace
 
 import pytest
 
-import contextos.providers.openai as openai_provider_module
-from contextos.errors import LLMProviderError
-from contextos.providers import MockLLMProvider, OpenAIProvider
+import context_invariant.providers.openai as openai_provider_module
+from context_invariant.errors import LLMProviderError
+from context_invariant.providers import MockLLMProvider, OpenAIProvider
 
 
 def test_mock_provider_is_deterministic() -> None:

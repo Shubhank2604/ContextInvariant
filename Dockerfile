@@ -9,10 +9,10 @@ COPY pyproject.toml README.md LICENSE ./
 COPY src ./src
 
 RUN python -m pip install --no-cache-dir . \
-    && groupadd --system contextos \
-    && useradd --system --gid contextos --home-dir /nonexistent contextos
+    && groupadd --system context-invariant \
+    && useradd --system --gid context-invariant --home-dir /nonexistent context-invariant
 
-USER contextos
+USER context-invariant
 
-ENTRYPOINT ["contextos"]
+ENTRYPOINT ["context-invariant"]
 CMD ["--help"]

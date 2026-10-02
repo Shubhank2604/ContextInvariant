@@ -7,21 +7,21 @@ from pathlib import Path
 
 import pytest
 
-from contextos.errors import (
+from context_invariant.errors import (
     ContextItemNotFoundError,
     CorruptedStoreError,
     DuplicateContextItemError,
     UnknownDependencyReference,
 )
-from contextos.lifecycle import LifecycleManager, LifecyclePolicy
-from contextos.models import (
+from context_invariant.lifecycle import LifecycleManager, LifecyclePolicy
+from context_invariant.models import (
     ContextEdge,
     ContextItem,
     ContextType,
     DependencyRelation,
     LifecycleTier,
 )
-from contextos.store import ContextStore, InMemoryContextStore, SQLiteContextStore
+from context_invariant.store import ContextStore, InMemoryContextStore, SQLiteContextStore
 
 
 def make_item(

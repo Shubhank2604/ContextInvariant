@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
-from contextos.benchmarks.positional import (
+from context_invariant.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from context_invariant.benchmarks.positional import (
     REQUIRED_CONTEXT_LENGTHS,
     aggregate_positional_performance,
     aggregate_positional_predictions,
@@ -16,13 +16,13 @@ from contextos.benchmarks.positional import (
     run_positional_benchmark,
     write_positional_run_artifact,
 )
-from contextos.benchmarks.positional_models import (
+from context_invariant.benchmarks.positional_models import (
     EvidencePosition,
     PositionalPrediction,
     PositionalStrategy,
 )
-from contextos.providers import DeterministicRetrievalProvider
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.providers import DeterministicRetrievalProvider
+from context_invariant.tokenization import TiktokenTokenizer
 
 
 def test_canonical_positional_grid_is_reproducible_and_complete() -> None:
@@ -71,17 +71,17 @@ def test_optimized_layouts_move_middle_evidence_to_the_front() -> None:
         tokenizer=tokenizer,
         distractor_count=distractor_count,
     )
-    contextos_prompt, _, contextos_fraction = construct_positional_prompt(
+    context_invariant_prompt, _, context_invariant_fraction = construct_positional_prompt(
         case,
-        strategy=PositionalStrategy.CONTEXTOS_POSITION_AWARE,
+        strategy=PositionalStrategy.CONTEXT_INVARIANT_POSITION_AWARE,
         tokenizer=tokenizer,
         distractor_count=distractor_count,
     )
 
     assert original_fraction == pytest.approx(0.5, abs=0.02)
     assert relevance_fraction < 0.02
-    assert contextos_fraction < 0.02
-    assert relevance_prompt == contextos_prompt
+    assert context_invariant_fraction < 0.02
+    assert relevance_prompt == context_invariant_prompt
 
 
 def test_offline_runner_exact_matches_and_enforces_provider_limit() -> None:

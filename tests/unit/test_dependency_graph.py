@@ -2,9 +2,9 @@
 
 import pytest
 
-from contextos.dependency import DependencyGraph
-from contextos.errors import InvalidScore, UnknownDependencyReference
-from contextos.models import ContextEdge, DependencyRelation
+from context_invariant.dependency import DependencyGraph
+from context_invariant.errors import InvalidScore, UnknownDependencyReference
+from context_invariant.models import ContextEdge, DependencyRelation
 
 
 def _edge(

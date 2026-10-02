@@ -36,8 +36,8 @@ jobs:
       - run: ruff format --check .
       - run: mypy
       - run: pytest
-      - run: contextos version
-      - run: contextos benchmark --profile quick
+      - run: context-invariant version
+      - run: context-invariant benchmark --profile quick
 
   windows:
     name: Windows / Python 3.13
@@ -53,9 +53,9 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[dev]"
       - run: pytest
-      - run: contextos --help
-      - run: contextos version
-      - run: contextos benchmark --profile quick
+      - run: context-invariant --help
+      - run: context-invariant version
+      - run: context-invariant benchmark --profile quick
 
   package:
     name: Wheel and sdist
@@ -75,15 +75,15 @@ jobs:
           python -m venv .venv-wheel
           .venv-wheel/bin/python -m pip install dist/*.whl
           .venv-wheel/bin/python -m pip check
-          .venv-wheel/bin/contextos version
-          .venv-wheel/bin/contextos benchmark --profile quick
+          .venv-wheel/bin/context-invariant version
+          .venv-wheel/bin/context-invariant benchmark --profile quick
       - name: Verify sdist installation
         run: |
           python -m venv .venv-sdist
           .venv-sdist/bin/python -m pip install dist/*.tar.gz
           .venv-sdist/bin/python -m pip check
-          .venv-sdist/bin/contextos version
-          .venv-sdist/bin/contextos benchmark --profile quick
+          .venv-sdist/bin/context-invariant version
+          .venv-sdist/bin/context-invariant benchmark --profile quick
 
   docker:
     name: Docker smoke test
@@ -92,6 +92,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - run: docker build --tag contextos:ci .
-      - run: docker run --rm contextos:ci version
-      - run: docker run --rm contextos:ci benchmark --profile quick
+      - run: docker build --tag context-invariant:ci .
+      - run: docker run --rm context-invariant:ci version
+      - run: docker run --rm context-invariant:ci benchmark --profile quick

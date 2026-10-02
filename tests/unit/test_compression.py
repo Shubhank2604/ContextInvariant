@@ -2,8 +2,8 @@
 
 from datetime import UTC, datetime
 
-from contextos.budget import AllocationPlan, CompressionRequest
-from contextos.compression import (
+from context_invariant.budget import AllocationPlan, CompressionRequest
+from context_invariant.compression import (
     CompressionExecutor,
     CompressionResult,
     ExtractiveCompressor,
@@ -11,10 +11,10 @@ from contextos.compression import (
     NoneCompressor,
     ToolOutputCompressor,
 )
-from contextos.config import OptimizationPolicy
-from contextos.models import ContextItem, ContextType
-from contextos.providers import MockLLMProvider
-from contextos.providers.base import ProviderResponse
+from context_invariant.config import OptimizationPolicy
+from context_invariant.models import ContextItem, ContextType
+from context_invariant.providers import MockLLMProvider
+from context_invariant.providers.base import ProviderResponse
 
 
 class WordTokenizer:

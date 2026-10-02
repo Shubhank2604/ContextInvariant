@@ -1,4 +1,4 @@
-"""ContextOS-Bench schema and canonical dataset tests."""
+"""ContextInvariant-Bench schema and canonical dataset tests."""
 
 from collections import Counter
 from pathlib import Path
@@ -6,17 +6,17 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from contextos.benchmarks import BenchmarkFamily, CaseConstruction, CaseOrigin
-from contextos.benchmarks.artifacts import load_dataset
-from contextos.benchmarks.dataset import build_contextos_bench_dataset
-from contextos.benchmarks.models import ContextOSBenchCase
+from context_invariant.benchmarks import BenchmarkFamily, CaseConstruction, CaseOrigin
+from context_invariant.benchmarks.artifacts import load_dataset
+from context_invariant.benchmarks.dataset import build_context_invariant_bench_dataset
+from context_invariant.benchmarks.models import ContextInvariantBenchCase
 
-DATASET_PATH = Path("benchmarks/datasets/contextos_bench.json")
+DATASET_PATH = Path("benchmarks/datasets/context_invariant_bench.json")
 
 
 def test_canonical_dataset_is_reproducible_and_has_fifty_base_cases() -> None:
     loaded = load_dataset(DATASET_PATH)
-    generated = build_contextos_bench_dataset()
+    generated = build_context_invariant_bench_dataset()
 
     assert loaded == generated
     assert len(loaded.cases) == 50
@@ -79,7 +79,7 @@ def test_every_case_contains_phase4a_adversarial_annotations() -> None:
 
 
 def test_generated_variant_requires_reproducibility_metadata() -> None:
-    base = build_contextos_bench_dataset().cases[0]
+    base = build_context_invariant_bench_dataset().cases[0]
     invalid = base.model_dump(mode="python")
     invalid.update(
         {
@@ -90,4 +90,4 @@ def test_generated_variant_requires_reproducibility_metadata() -> None:
     )
 
     with pytest.raises(ValidationError, match="base case ID and seed"):
-        ContextOSBenchCase.model_validate(invalid)
+        ContextInvariantBenchCase.model_validate(invalid)

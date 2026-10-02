@@ -1,11 +1,11 @@
 """End-to-end offline positional experiment acceptance test."""
 
-from contextos.benchmarks.positional import (
+from context_invariant.benchmarks.positional import (
     build_positional_dataset,
     run_positional_benchmark,
 )
-from contextos.providers import DeterministicRetrievalProvider
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.providers import DeterministicRetrievalProvider
+from context_invariant.tokenization import TiktokenTokenizer
 
 
 def test_positional_experiment_runs_every_layout_and_aggregation_cell() -> None:

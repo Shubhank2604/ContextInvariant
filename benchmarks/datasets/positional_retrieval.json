@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "name": "contextos-positional-retrieval",
+  "name": "context_invariant-positional-retrieval",
   "generator_version": "1.0.0",
   "generation_seed": 2409,
   "cases": [

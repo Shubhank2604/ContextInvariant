@@ -1,6 +1,6 @@
 # Architecture
 
-ContextOS sits between application state and an LLM provider. It accepts typed context items,
+ContextInvariant sits between application state and an LLM provider. It accepts typed context items,
 relations, and a token policy, then returns an `OptimizedContext` containing selected items,
 removed items, exact budget accounting, and a versioned decision trace. It does not call the
 downstream LLM during normal optimization.
@@ -32,7 +32,7 @@ The implemented order is:
 9. Assemble the complete result, patch constraint evidence into the trace, and optionally
    persist the original items and edges atomically.
 
-The convergence loop is bounded by the candidate count. ContextOS never drops a selected root
+The convergence loop is bounded by the candidate count. ContextInvariant never drops a selected root
 just to make its dependency closure fit.
 
 ## Stable optimization pipeline
@@ -200,7 +200,7 @@ The current trace schema is `phase5h-v2`. Each `ItemTrace` can record:
 - final token count and position;
 - conservative, evidence-backed counterfactual fields.
 
-Counterfactual values are `null` when the execution record cannot support them; ContextOS does
+Counterfactual values are `null` when the execution record cannot support them; ContextInvariant does
 not rerun stages to invent counterfactual evidence.
 
 ## Persistence

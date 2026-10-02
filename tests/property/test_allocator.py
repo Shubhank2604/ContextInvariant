@@ -6,11 +6,11 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from contextos.budget import TokenBudgetAllocator, validate_contextual_budget
-from contextos.config import OptimizationPolicy
-from contextos.errors import MandatoryContextOverflow
-from contextos.models import ContextItem, ContextType
-from contextos.scoring import ScoreBreakdown
+from context_invariant.budget import TokenBudgetAllocator, validate_contextual_budget
+from context_invariant.config import OptimizationPolicy
+from context_invariant.errors import MandatoryContextOverflow
+from context_invariant.models import ContextItem, ContextType
+from context_invariant.scoring import ScoreBreakdown
 
 
 def _item(item_id: str, tokens: int, *, mandatory: bool = False) -> ContextItem:

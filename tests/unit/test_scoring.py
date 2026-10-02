@@ -4,11 +4,11 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from contextos.config import DEFAULT_TYPE_PRIORITIES, OptimizationPolicy
-from contextos.embeddings import DeterministicEmbeddingProvider
-from contextos.errors import InvalidScore
-from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
-from contextos.scoring import (
+from context_invariant.config import DEFAULT_TYPE_PRIORITIES, OptimizationPolicy
+from context_invariant.embeddings import DeterministicEmbeddingProvider
+from context_invariant.errors import InvalidScore
+from context_invariant.models import ContextEdge, ContextItem, ContextType, DependencyRelation
+from context_invariant.scoring import (
     composite_scores,
     importance_scores,
     recency_scores,

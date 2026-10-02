@@ -8,9 +8,9 @@ from datetime import UTC, datetime, timedelta
 import numpy as np
 import pytest
 
-from contextos.dedup.semantic import semantic_deduplicate
-from contextos.embeddings.base import EmbeddingMatrix
-from contextos.models import ContextItem, ContextType
+from context_invariant.dedup.semantic import semantic_deduplicate
+from context_invariant.embeddings.base import EmbeddingMatrix
+from context_invariant.models import ContextItem, ContextType
 
 
 class ConstantProvider:

@@ -5,11 +5,11 @@ from pathlib import Path
 
 import pytest
 
-from contextos.benchmarks.artifacts import load_dataset, write_run_artifact
-from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
-from contextos.benchmarks.metrics import bootstrap_mean_ci, percentile
-from contextos.benchmarks.runner import run_contextos_bench
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.benchmarks.artifacts import load_dataset, write_run_artifact
+from context_invariant.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from context_invariant.benchmarks.metrics import bootstrap_mean_ci, percentile
+from context_invariant.benchmarks.runner import run_context_invariant_bench
+from context_invariant.tokenization import TiktokenTokenizer
 
 
 def test_percentile_interpolates_and_validates_inputs() -> None:
@@ -30,9 +30,9 @@ def test_bootstrap_interval_is_reproducible() -> None:
     assert 0.0 <= first.low <= first.high <= 1.0
 
 
-def test_runner_scores_full_reference_and_contextos_on_same_case() -> None:
-    dataset = load_dataset(Path("benchmarks/datasets/contextos_bench.json"))
-    run = run_contextos_bench(
+def test_runner_scores_full_reference_and_context_invariant_on_same_case() -> None:
+    dataset = load_dataset(Path("benchmarks/datasets/context_invariant_bench.json"))
+    run = run_context_invariant_bench(
         dataset,
         tokenizer=TiktokenTokenizer(),
         case_limit=1,
@@ -40,7 +40,7 @@ def test_runner_scores_full_reference_and_contextos_on_same_case() -> None:
     measurements = {measurement.strategy: measurement for measurement in run.measurements}
 
     assert set(measurements) == {
-        "contextos",
+        "context_invariant",
         "full_context",
         "last_n",
         "naive_extractive",
@@ -51,17 +51,20 @@ def test_runner_scores_full_reference_and_contextos_on_same_case() -> None:
     assert measurements["full_context"].task_specific_score == 1.0
     assert measurements["full_context"].quality_retention == 1.0
     assert measurements["full_context"].context_reduction == 0.0
-    assert measurements["contextos"].quality_retention is not None
-    assert measurements["contextos"].input_tokens <= measurements["contextos"].effective_budget
-    assert measurements["contextos"].selected_items
-    assert measurements["contextos"].decision_reasons
+    assert measurements["context_invariant"].quality_retention is not None
+    assert (
+        measurements["context_invariant"].input_tokens
+        <= measurements["context_invariant"].effective_budget
+    )
+    assert measurements["context_invariant"].selected_items
+    assert measurements["context_invariant"].decision_reasons
     assert len(run.paired_comparisons) == 27
     assert all(comparison.delta_ci95 is None for comparison in run.paired_comparisons)
 
 
 def test_run_artifacts_are_content_addressed_and_immutable(tmp_path: Path) -> None:
-    dataset = load_dataset(Path("benchmarks/datasets/contextos_bench.json"))
-    run = run_contextos_bench(
+    dataset = load_dataset(Path("benchmarks/datasets/context_invariant_bench.json"))
+    run = run_context_invariant_bench(
         dataset,
         tokenizer=TiktokenTokenizer(),
         case_limit=1,

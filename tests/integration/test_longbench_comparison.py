@@ -4,25 +4,25 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
-from contextos.benchmarks.constraint_models import ModelPricing
-from contextos.benchmarks.longbench import (
+from context_invariant.benchmarks.bundles import REQUIRED_BUNDLE_FILES
+from context_invariant.benchmarks.constraint_models import ModelPricing
+from context_invariant.benchmarks.longbench import (
     score_longbench_predictions,
     write_longbench_bundle,
 )
-from contextos.benchmarks.longbench_models import (
+from context_invariant.benchmarks.longbench_models import (
     LongBenchCase,
     LongBenchMetric,
     LongBenchProfile,
     PreparedLongBenchSubset,
 )
-from contextos.benchmarks.longbench_runner import (
+from context_invariant.benchmarks.longbench_runner import (
     chunk_longbench_context,
     phase5_longbench_strategies,
     resume_longbench_comparison,
     run_longbench_comparison,
 )
-from contextos.providers.base import ProviderResponse
+from context_invariant.providers.base import ProviderResponse
 
 
 class WordTokenizer:
@@ -105,7 +105,7 @@ def test_six_strategies_share_provider_model_cases_and_evaluator() -> None:
 
     assert provider.calls == 6
     assert {prediction.strategy for prediction in predictions} == {
-        "contextos",
+        "context_invariant",
         "full_context",
         "last_n",
         "naive_extractive",
@@ -130,15 +130,15 @@ def test_six_strategies_share_provider_model_cases_and_evaluator() -> None:
         (comparison.reference_strategy, comparison.candidate_strategy)
         for comparison in report.paired_comparisons
     } == {
-        ("full_context", "contextos"),
+        ("full_context", "context_invariant"),
         ("full_context", "last_n"),
         ("full_context", "naive_extractive"),
         ("full_context", "relevance_only"),
         ("full_context", "sliding_window"),
-        ("last_n", "contextos"),
-        ("naive_extractive", "contextos"),
-        ("relevance_only", "contextos"),
-        ("sliding_window", "contextos"),
+        ("last_n", "context_invariant"),
+        ("naive_extractive", "context_invariant"),
+        ("relevance_only", "context_invariant"),
+        ("sliding_window", "context_invariant"),
     }
     assert all(comparison.score_delta_ci95 is None for comparison in report.paired_comparisons)
     assert all(score.score == 1.0 for score in report.case_scores)

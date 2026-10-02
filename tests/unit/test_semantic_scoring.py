@@ -7,9 +7,9 @@ from datetime import UTC, datetime
 
 import numpy as np
 
-from contextos.embeddings.base import EmbeddingMatrix
-from contextos.models import ContextItem, ContextType
-from contextos.scoring import novelty_scores, relevance_scores
+from context_invariant.embeddings.base import EmbeddingMatrix
+from context_invariant.models import ContextItem, ContextType
+from context_invariant.scoring import novelty_scores, relevance_scores
 
 
 class OrderedProvider:

@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
     ("relative_path", "expected_output"),
     [
         ("examples/basic.py", "task-1"),
-        ("examples/coding_agent_context.py", "contextos_constraint_aware"),
+        ("examples/coding_agent_context.py", "context_invariant_constraint_aware"),
         ("examples/research_agent_context.py", "evidence"),
     ],
 )

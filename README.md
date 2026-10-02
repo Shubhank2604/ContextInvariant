@@ -1,12 +1,19 @@
-# ContextOS
+# ContextInvariant
 
-ContextOS is a model-agnostic Python runtime for constructing bounded LLM context while
+**Constraint-Preserving Context Construction for Stateful LLM Agents**
+
+ContextInvariant is a model-agnostic Python runtime for constructing bounded LLM context while
 preserving explicit semantic, relational, and state-consistency constraints.
 
 **Status:** v0.5.0 Research Preview. The runtime and evidence are suitable for reproducible
 experimentation, not a claim of production readiness or universal long-context improvement.
 
-## Why ContextOS exists
+The project was previously developed as ContextOS. The Python distribution is
+`context-invariant`, the import package is `context_invariant`, and the command is
+`context-invariant`. The retained evaluation artifacts keep their original names and source
+commits; see [Naming and evidence provenance](docs/naming-migration.md).
+
+## Why ContextInvariant exists
 
 Long-running agents accumulate more state than can safely fit in every model call. Recency,
 semantic relevance, sliding windows, and generic summarization help reduce tokens, but they can
@@ -18,7 +25,7 @@ discard information that is structurally mandatory:
 - current values that supersede stale values;
 - conflicting records that require an explicit resolution.
 
-A conventional selector asks, “What is most relevant?” ContextOS additionally asks, “Which
+A conventional selector asks, “What is most relevant?” ContextInvariant additionally asks, “Which
 context states are legal under the declared preservation constraints, and which valid state
 provides the most utility within the available budget?”
 
@@ -77,11 +84,11 @@ See [Architecture](docs/architecture.md) for the component contracts and compati
 
 ## Installation
 
-ContextOS requires Python 3.11 or newer.
+ContextInvariant requires Python 3.11 or newer.
 
 ```bash
-git clone https://github.com/Shubhank2604/ContextOS.git
-cd ContextOS
+git clone https://github.com/Shubhank2604/ContextInvariant.git
+cd ContextInvariant
 python -m venv .venv
 ```
 
@@ -112,7 +119,7 @@ This complete example uses only the base installation and the deterministic embe
 ```python
 from datetime import UTC, datetime
 
-from contextos import ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
+from context_invariant import ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
 
 timestamp = datetime(2026, 1, 1, tzinfo=UTC)
 item = ContextItem(
@@ -147,7 +154,7 @@ relevance scores.
 ```python
 from datetime import UTC, datetime
 
-from contextos import (
+from context_invariant import (
     ConstraintPolicy,
     ContextEdge,
     ContextItem,
@@ -210,7 +217,7 @@ result = ContextOptimizer(
 selected_ids = {item.id for item in result.selected_items}
 assert selected_ids == {"task", "current"}
 print(sorted(selected_ids))
-print(result.trace.strategy)  # contextos_constraint_aware
+print(result.trace.strategy)  # context_invariant_constraint_aware
 ```
 
 More complete offline examples are available under [examples](examples/).
@@ -218,17 +225,17 @@ More complete offline examples are available under [examples](examples/).
 ## CLI
 
 ```bash
-contextos --help
-contextos version
-contextos inspect --input examples/data/coding_context.json
-contextos optimize --input examples/data/coding_context.json --task "Fix authentication timeout" --budget 100 --trace-json out/trace.json
-contextos benchmark --profile quick
+context-invariant --help
+context-invariant version
+context-invariant inspect --input examples/data/coding_context.json
+context-invariant optimize --input examples/data/coding_context.json --task "Fix authentication timeout" --budget 100 --trace-json out/trace.json
+context-invariant benchmark --profile quick
 ```
 
 Constraint-aware CLI optimization accepts a JSON `ConstraintPolicy` through
-`--constraint-policy`. Use `contextos optimize --help` and `contextos benchmark --help` for the
-complete command surface. The installed version command is `contextos version`—there is no
-`contextos --version` alias in v0.5.0.
+`--constraint-policy`. Use `context-invariant optimize --help` and `context-invariant benchmark --help` for the
+complete command surface. The installed version command is `context-invariant version`—there is no
+`context-invariant --version` alias in v0.5.0.
 
 ## Research results
 
@@ -245,7 +252,7 @@ budget.
 | Successful constrained executions | 90/90 | 80/90 | 10 explicit infeasibilities |
 
 All 80 feasible Full Phase 5 executions preserved their required values. The remaining ten
-were multi-hop cases whose protected closure could not fit; ContextOS returned explicit
+were multi-hop cases whose protected closure could not fit; ContextInvariant returned explicit
 overflow instead of corrupted or constraint-violating context. These are controlled results,
 not held-out or production estimates.
 
@@ -283,9 +290,9 @@ ruff check .
 ruff format --check .
 mypy
 pytest
-contextos benchmark --profile quick
-contextos benchmark constraints --output-directory out/constraints
-contextos benchmark phase5-ablation --output-directory out/phase5-ablation
+context-invariant benchmark --profile quick
+context-invariant benchmark constraints --output-directory out/constraints
+context-invariant benchmark phase5-ablation --output-directory out/phase5-ablation
 ```
 
 LongBench preparation requires the `benchmark` extra and downloads the pinned external data.
@@ -312,7 +319,7 @@ Detailed commands and artifact rules are in [Benchmarking](benchmarks/README.md)
 - The positional benchmark was non-discriminating.
 - Controlled p95 optimizer latency is approximately 4–6 ms, while LongBench p95 is
   approximately 188–325 ms; no universal sub-10-ms claim is valid.
-- ContextOS constructs model input. It does not verify model answers, prevent prompt injection,
+- ContextInvariant constructs model input. It does not verify model answers, prevent prompt injection,
   or guarantee downstream instruction following.
 
 ## Development
@@ -331,5 +338,5 @@ runtime is preserved in Git history; release cleanup does not modify its source 
 
 ## License
 
-ContextOS code and project-authored documentation are available under the [MIT License](LICENSE).
+ContextInvariant code and project-authored documentation are available under the [MIT License](LICENSE).
 Retained third-party benchmark inputs keep their upstream licenses and attribution requirements.

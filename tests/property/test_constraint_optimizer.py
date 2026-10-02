@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from contextos import (
+from context_invariant import (
     ConstraintPolicy,
     ContextEdge,
     ContextItem,
@@ -16,7 +16,7 @@ from contextos import (
     DependencyRelation,
     OptimizationPolicy,
 )
-from contextos.errors import RequiredContextOverflow
+from context_invariant.errors import RequiredContextOverflow
 
 _NOW = datetime(2026, 10, 1, tzinfo=UTC)
 

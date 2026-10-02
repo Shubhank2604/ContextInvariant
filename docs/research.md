@@ -1,6 +1,6 @@
 # Research foundation
 
-ContextOS tests the hypothesis that treating long context as structured runtime state can
+ContextInvariant tests the hypothesis that treating long context as structured runtime state can
 reduce critical-information and state-consistency failures under a token budget. The Phase 5
 formulation combines preservation contracts, directed hard relations, omission risk, validated
 transformations, and explicit infeasibility with the v0.4 scoring and allocation baseline.
@@ -13,7 +13,7 @@ versus frozen v0.4. Model-backed answer violations fall by 50.0% on GPT-5.4-mini
 GPT-5.4. Context reduction improves from 27.20% to 32.38%, and every feasible Phase 5 execution
 preserves its required values.
 
-The result is not evidence that ContextOS is a universal context compressor. Ten multi-hop
+The result is not evidence that ContextInvariant is a universal context compressor. Ten multi-hop
 cases are explicitly infeasible at the 80% budget, the benchmark co-evolved with the algorithm,
 and external task behavior is mixed.
 

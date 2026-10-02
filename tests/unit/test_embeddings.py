@@ -8,13 +8,13 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from contextos.embeddings import (
+from context_invariant.embeddings import (
     CachedEmbeddingProvider,
     DeterministicEmbeddingProvider,
     SentenceTransformerEmbeddingProvider,
 )
-from contextos.embeddings.base import EmbeddingMatrix, validate_embedding_matrix
-from contextos.errors import EmbeddingProviderError, InvalidEmbeddingOutput
+from context_invariant.embeddings.base import EmbeddingMatrix, validate_embedding_matrix
+from context_invariant.errors import EmbeddingProviderError, InvalidEmbeddingOutput
 
 
 class CountingProvider:
@@ -71,7 +71,9 @@ def test_sentence_transformer_is_lazy_and_unavailable_provider_is_typed(
     def unavailable(_: str) -> object:
         raise ImportError("not installed")
 
-    monkeypatch.setattr("contextos.embeddings.sentence_transformer.import_module", unavailable)
+    monkeypatch.setattr(
+        "context_invariant.embeddings.sentence_transformer.import_module", unavailable
+    )
     with pytest.raises(EmbeddingProviderError, match="unavailable"):
         provider.embed(["text"])
 
@@ -102,7 +104,9 @@ def test_sentence_transformer_uses_configured_model_and_batches(
             return np.ones((len(sentences), 3), dtype=np.float64)
 
     module = SimpleNamespace(SentenceTransformer=FakeModel)
-    monkeypatch.setattr("contextos.embeddings.sentence_transformer.import_module", lambda _: module)
+    monkeypatch.setattr(
+        "context_invariant.embeddings.sentence_transformer.import_module", lambda _: module
+    )
     provider = SentenceTransformerEmbeddingProvider("configured/model")
     assert provider.embed(["one", "two"]).shape == (2, 3)
     assert provider.embed(["three"]).shape == (1, 3)
@@ -118,7 +122,9 @@ def test_sentence_transformer_wraps_encode_failure(monkeypatch: pytest.MonkeyPat
             raise RuntimeError("provider details")
 
     module = SimpleNamespace(SentenceTransformer=FailingModel)
-    monkeypatch.setattr("contextos.embeddings.sentence_transformer.import_module", lambda _: module)
+    monkeypatch.setattr(
+        "context_invariant.embeddings.sentence_transformer.import_module", lambda _: module
+    )
     provider = SentenceTransformerEmbeddingProvider("configured/model")
     with pytest.raises(EmbeddingProviderError, match="embedding failed"):
         provider.embed(["text"])

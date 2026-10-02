@@ -4,14 +4,14 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from contextos.errors import InvalidScore
-from contextos.layout import (
+from context_invariant.errors import InvalidScore
+from context_invariant.layout import (
     OriginalOrderLayout,
     PositionAwareLayout,
     RelevanceDescendingLayout,
 )
-from contextos.models import ContextItem, ContextType
-from contextos.scoring import ScoreBreakdown
+from context_invariant.models import ContextItem, ContextType
+from context_invariant.scoring import ScoreBreakdown
 
 LayoutInputs = tuple[list[ContextItem], dict[str, ScoreBreakdown], dict[str, int]]
 

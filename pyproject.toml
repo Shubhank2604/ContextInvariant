@@ -3,9 +3,9 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "contextos-runtime"
+name = "context-invariant"
 version = "0.5.0"
-description = "A model-agnostic runtime for constructing LLM context under a token budget."
+description = "Constraint-preserving context construction for stateful LLM agents."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -48,26 +48,26 @@ dev = [
 ]
 
 [project.scripts]
-contextos = "contextos.cli:app"
+context-invariant = "context_invariant.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/Shubhank2604/ContextOS"
-Repository = "https://github.com/Shubhank2604/ContextOS"
-Issues = "https://github.com/Shubhank2604/ContextOS/issues"
+Homepage = "https://github.com/Shubhank2604/ContextInvariant"
+Repository = "https://github.com/Shubhank2604/ContextInvariant"
+Issues = "https://github.com/Shubhank2604/ContextInvariant/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-contextos = ["py.typed"]
+context_invariant = ["py.typed"]
 
 [tool.pytest.ini_options]
-addopts = "--strict-config --strict-markers --basetemp=.pytest-tmp --cov=contextos --cov-report=term-missing --cov-fail-under=85"
+addopts = "--strict-config --strict-markers --basetemp=.pytest-tmp --cov=context_invariant --cov-report=term-missing --cov-fail-under=85"
 testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["contextos"]
+source = ["context_invariant"]
 
 [tool.coverage.report]
 exclude_also = [
@@ -91,5 +91,5 @@ extend-exclude = ["ContextOS_MASTER_BUILD_PROMPT.md", "MASTER_BUILD_SPEC.md"]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
-"src/contextos/models.py" = ["UP042"]
+"src/context_invariant/models.py" = ["UP042"]
 "tests/**" = ["S101"]

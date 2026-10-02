@@ -6,13 +6,13 @@ from datetime import UTC, datetime
 
 import pytest
 
-from contextos import ContextOptimizer
-from contextos.budget import TokenBudgetAllocator
-from contextos.config import OptimizationPolicy
-from contextos.contracts import PreservationContract, RetentionPolicy
-from contextos.errors import InvalidScore
-from contextos.models import ContextEdge, ContextItem, ContextType, DependencyRelation
-from contextos.scoring import ScoreBreakdown, assess_context_risk, composite_scores
+from context_invariant import ContextOptimizer
+from context_invariant.budget import TokenBudgetAllocator
+from context_invariant.config import OptimizationPolicy
+from context_invariant.contracts import PreservationContract, RetentionPolicy
+from context_invariant.errors import InvalidScore
+from context_invariant.models import ContextEdge, ContextItem, ContextType, DependencyRelation
+from context_invariant.scoring import ScoreBreakdown, assess_context_risk, composite_scores
 
 _NOW = datetime(2026, 9, 13, tzinfo=UTC)
 

@@ -43,8 +43,8 @@
   },
   {
     "id": "changed-path",
-    "left": "Load settings from /etc/contextos/dev.json.",
-    "right": "Load settings from /etc/contextos/prod.json.",
+    "left": "Load settings from /etc/context_invariant/dev.json.",
+    "right": "Load settings from /etc/context_invariant/prod.json.",
     "context_type": "task_state",
     "should_deduplicate": false
   },

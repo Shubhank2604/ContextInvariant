@@ -6,12 +6,12 @@ from datetime import UTC, datetime
 
 import pytest
 
-from contextos import ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
-from contextos.budget import AllocationPlan, CompressionRequest
-from contextos.compression import CompressionExecutor, CompressionResult
-from contextos.contracts import PreservationContract, RetentionPolicy
-from contextos.errors import RequiredContextOverflow
-from contextos.validation import ContractValidationEngine
+from context_invariant import ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
+from context_invariant.budget import AllocationPlan, CompressionRequest
+from context_invariant.compression import CompressionExecutor, CompressionResult
+from context_invariant.contracts import PreservationContract, RetentionPolicy
+from context_invariant.errors import RequiredContextOverflow
+from context_invariant.validation import ContractValidationEngine
 
 
 class WordTokenizer:

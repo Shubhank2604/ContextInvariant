@@ -5,8 +5,8 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
-from contextos.errors import DuplicateContextItemError
-from contextos.models import (
+from context_invariant.errors import DuplicateContextItemError
+from context_invariant.models import (
     DEFAULT_IMPORTANCE_BY_TYPE,
     ContextEdge,
     ContextItem,

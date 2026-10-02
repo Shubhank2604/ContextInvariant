@@ -9,7 +9,7 @@ import pytest
 from numpy.typing import NDArray
 from pydantic import ValidationError
 
-from contextos import (
+from context_invariant import (
     ConflictOverride,
     ConflictPolicy,
     ConstraintPolicy,
@@ -21,16 +21,16 @@ from contextos import (
     OptimizationPolicy,
     ValidatedRepresentation,
 )
-from contextos.compression import CompressionExecutor, CompressionResult
-from contextos.errors import (
+from context_invariant.compression import CompressionExecutor, CompressionResult
+from context_invariant.errors import (
     EmbeddingProviderError,
     MandatoryContextOverflow,
     RequiredContextOverflow,
     UnknownDependencyReference,
     UnresolvedConflict,
 )
-from contextos.models import DependencyRelation
-from contextos.store import InMemoryContextStore, SQLiteContextStore
+from context_invariant.models import DependencyRelation
+from context_invariant.store import InMemoryContextStore, SQLiteContextStore
 
 
 class WordTokenizer:
@@ -320,7 +320,7 @@ def test_public_optimizer_enforces_constraints_only_when_explicitly_enabled() ->
     assert enforced.constraint_resolution is not None
     assert set(enforced.constraint_resolution.selected_item_ids) == {"task", "current"}
     assert enforced.constraint_resolution.removed_superseded_item_ids == ("obsolete",)
-    assert enforced.trace.strategy == "contextos_constraint_aware"
+    assert enforced.trace.strategy == "context_invariant_constraint_aware"
     assert enforced.trace.optimization_passes == 1
     assert enforced.trace.constraint_policy == ConstraintPolicy.enforced()
     assert [trace.item_id for trace in enforced.trace.items] == [

@@ -1,7 +1,12 @@
 # Retained benchmark evidence
 
 Generated benchmark outputs are ignored by default. The six directories allowlisted in
-`.gitignore` are the reviewed evidence set for the ContextOS v0.5.0 research preview.
+`.gitignore` are the reviewed evidence set for the ContextInvariant v0.5.0 research preview.
+
+These experiments were executed under the former project name ContextOS. Their contents,
+including strategy IDs and `contextos_version`, remain unchanged after the identity migration.
+See [Naming and evidence provenance](../../docs/naming-migration.md) for the mapping to the
+current package and the distinction between historical evidence and new runtime outputs.
 
 Each retained directory is an immutable seven-file bundle containing:
 

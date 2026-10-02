@@ -5,22 +5,22 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
-from contextos.budget import (
+from context_invariant.budget import (
     AllocationPlan,
     CompressionRequest,
     DirectSelection,
     TokenBudgetAllocator,
     validate_contextual_budget,
 )
-from contextos.config import OptimizationPolicy
-from contextos.errors import (
+from context_invariant.config import OptimizationPolicy
+from context_invariant.errors import (
     AllocationError,
     ContextualBudgetInfeasible,
     InvalidScore,
     MandatoryContextOverflow,
 )
-from contextos.models import ContextItem, ContextType
-from contextos.scoring import ScoreBreakdown
+from context_invariant.models import ContextItem, ContextType
+from context_invariant.scoring import ScoreBreakdown
 
 
 def _item(

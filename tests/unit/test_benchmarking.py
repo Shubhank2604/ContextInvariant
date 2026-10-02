@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from contextos.benchmarking import run_deduplication_benchmark, run_quick_baseline_benchmark
-from contextos.tokenization import TiktokenTokenizer
+from context_invariant.benchmarking import run_deduplication_benchmark, run_quick_baseline_benchmark
+from context_invariant.tokenization import TiktokenTokenizer
 
 
 def test_quick_benchmark_is_deterministic() -> None:

@@ -6,7 +6,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from contextos import (
+from context_invariant import (
     ConflictPolicy,
     ContextConstraintGraph,
     ContextEdge,
@@ -17,7 +17,7 @@ from contextos import (
     RetentionPolicy,
     ValidatedRepresentation,
 )
-from contextos.errors import (
+from context_invariant.errors import (
     ConstraintUnsatisfiable,
     RequiredContextOverflow,
     UnknownDependencyReference,
