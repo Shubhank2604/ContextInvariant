@@ -8,10 +8,18 @@ import numpy as np
 import pytest
 from numpy.typing import NDArray
 
-from contextos import ContextEdge, ContextItem, ContextOptimizer, ContextType, OptimizationPolicy
-from contextos.errors import EmbeddingProviderError, MandatoryContextOverflow
+from contextos import (
+    ConflictPolicy,
+    ConstraintPolicy,
+    ContextEdge,
+    ContextItem,
+    ContextOptimizer,
+    ContextType,
+    OptimizationPolicy,
+)
+from contextos.errors import EmbeddingProviderError, MandatoryContextOverflow, UnresolvedConflict
 from contextos.models import DependencyRelation
-from contextos.store import SQLiteContextStore
+from contextos.store import InMemoryContextStore, SQLiteContextStore
 
 
 class WordTokenizer:
@@ -221,3 +229,111 @@ def test_repeated_numeric_different_items_are_not_semantically_collapsed() -> No
     )
 
     assert {item.id for item in result.selected_items} == {"timeout-30", "timeout-60"}
+
+
+def test_public_optimizer_enforces_constraints_only_when_explicitly_enabled() -> None:
+    task = make_item(
+        "task",
+        "execute using current state",
+        ContextType.USER_MESSAGE,
+        0,
+        mandatory=True,
+    )
+    obsolete = make_item("obsolete", "obsolete state", ContextType.TASK_STATE, 1)
+    current = make_item("current", "authoritative current state", ContextType.TASK_STATE, 2)
+    edges = [
+        ContextEdge(
+            source_id="task",
+            target_id="current",
+            relation=DependencyRelation.REQUIRES,
+            weight=1.0,
+        ),
+        ContextEdge(
+            source_id="current",
+            target_id="obsolete",
+            relation=DependencyRelation.SUPERSEDES,
+            weight=1.0,
+        ),
+    ]
+    items = [task, obsolete, current]
+    legacy_policy = policy(9).model_copy(
+        update={"semantic_dedup_enabled": False, "compression_enabled": False}
+    )
+    constrained_policy = legacy_policy.model_copy(update={"max_input_tokens": 7})
+    store = InMemoryContextStore()
+
+    default_result = ContextOptimizer(tokenizer=WordTokenizer(), edges=edges).optimize(
+        "execute", items, legacy_policy
+    )
+    explicitly_disabled = ContextOptimizer(
+        tokenizer=WordTokenizer(),
+        edges=edges,
+        constraint_policy=ConstraintPolicy(),
+    ).optimize("execute", items, legacy_policy)
+    enforced = ContextOptimizer(
+        tokenizer=WordTokenizer(),
+        edges=edges,
+        store=store,
+        constraint_policy=ConstraintPolicy.enforced(),
+    ).optimize("execute", items, constrained_policy)
+
+    assert [item.id for item in default_result.selected_items] == [
+        item.id for item in explicitly_disabled.selected_items
+    ]
+    assert {item.id for item in default_result.selected_items} == {
+        "task",
+        "obsolete",
+        "current",
+    }
+    assert {item.id for item in enforced.selected_items} == {"task", "current"}
+    assert {item.id for item in enforced.removed_items} == {"obsolete"}
+    assert enforced.constraint_resolution is not None
+    assert set(enforced.constraint_resolution.selected_item_ids) == {"task", "current"}
+    assert enforced.constraint_resolution.removed_superseded_item_ids == ("obsolete",)
+    assert enforced.trace.constraint_policy == ConstraintPolicy.enforced()
+    assert [trace.item_id for trace in enforced.trace.items] == [
+        "task",
+        "obsolete",
+        "current",
+    ]
+    obsolete_trace = next(trace for trace in enforced.trace.items if trace.item_id == "obsolete")
+    assert obsolete_trace.decision_reason == "removed_by_supersession_constraint"
+    assert all(trace.constraint_resolution_applied for trace in enforced.trace.items)
+    assert [item.id for item in store.list_items()] == ["current", "obsolete", "task"]
+    assert store.load_item("obsolete").token_count == 2
+    assert {
+        (edge.source_id, edge.target_id, edge.relation) for edge in store.load_dependencies()
+    } == {(edge.source_id, edge.target_id, edge.relation) for edge in edges}
+    assert items[0].token_count is None
+    assert items[1].token_count is None
+    assert items[2].token_count is None
+
+
+def test_public_optimizer_exposes_explicit_unresolved_conflict_policy() -> None:
+    left = make_item("left", "left", ContextType.TASK_STATE, 0, mandatory=True)
+    right = make_item("right", "right", ContextType.TASK_STATE, 0)
+    edge = ContextEdge(
+        source_id="left",
+        target_id="right",
+        relation=DependencyRelation.CONTRADICTS,
+        weight=1.0,
+    )
+
+    with pytest.raises(UnresolvedConflict):
+        ContextOptimizer(
+            tokenizer=WordTokenizer(),
+            edges=[edge],
+            constraint_policy=ConstraintPolicy.enforced(),
+        ).optimize("resolve", [left, right], policy(2))
+
+    retain_both = ConstraintPolicy.enforced(conflict_policy=ConflictPolicy.RETAIN_BOTH)
+    result = ContextOptimizer(
+        tokenizer=WordTokenizer(),
+        edges=[edge],
+        constraint_policy=retain_both,
+    ).optimize("resolve", [left, right], policy(2))
+
+    assert {item.id for item in result.selected_items} == {"left", "right"}
+    assert result.constraint_resolution is not None
+    assert result.constraint_resolution.unresolved_conflicts == (("left", "right"),)
+    assert ConstraintPolicy.model_validate_json(retain_both.model_dump_json()) == retain_both

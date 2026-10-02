@@ -16,6 +16,30 @@ class ConflictPolicy(StrEnum):
     RETAIN_BOTH = "retain_both"
 
 
+class ConstraintPolicy(BaseModel):
+    """Serializable opt-in policy for directed hard-constraint enforcement."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    enabled: bool = False
+    conflict_policy: ConflictPolicy = ConflictPolicy.ERROR
+    retain_superseded: bool = False
+
+    @classmethod
+    def enforced(
+        cls,
+        *,
+        conflict_policy: ConflictPolicy = ConflictPolicy.ERROR,
+        retain_superseded: bool = False,
+    ) -> ConstraintPolicy:
+        """Return an enabled policy with explicit conflict semantics."""
+        return cls(
+            enabled=True,
+            conflict_policy=conflict_policy,
+            retain_superseded=retain_superseded,
+        )
+
+
 class ValidatedRepresentation(BaseModel):
     """Caller attestation that one selected item represents another item safely."""
 

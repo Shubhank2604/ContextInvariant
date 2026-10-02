@@ -11,6 +11,7 @@ from contextos.budget import AllocationPlan
 from contextos.config import OptimizationPolicy
 from contextos.constraints import (
     ConflictPolicy,
+    ConstraintPolicy,
     ConstraintResolution,
     ContextConstraintGraph,
     ValidatedRepresentation,
@@ -40,6 +41,7 @@ __all__ = [
     "AllocationPlan",
     "ConflictPolicy",
     "ConflictTraceStatus",
+    "ConstraintPolicy",
     "ConstraintResolution",
     "ConstraintTraceEvidence",
     "ConstraintTraceIndex",

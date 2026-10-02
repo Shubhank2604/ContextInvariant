@@ -58,13 +58,13 @@ from contextos.compression import (
     ToolOutputCompressor,
 )
 from contextos.config import OptimizationPolicy
-from contextos.constraints import ConstraintResolution, ContextConstraintGraph
+from contextos.constraints import ConstraintPolicy
 from contextos.contracts import PreservationContract, RetentionPolicy
 from contextos.embeddings import DeterministicEmbeddingProvider
 from contextos.models import ContextItem, ContextType, DependencyRelation
 from contextos.optimizer import ContextOptimizer
 from contextos.tokenization import Tokenizer
-from contextos.trace import ConstraintTraceIndex, OptimizedContext
+from contextos.trace import OptimizedContext
 
 BUDGET_RATIOS: tuple[float, ...] = (0.25, 0.35, 0.50, 0.65, 0.80, 1.00)
 
@@ -257,60 +257,6 @@ def _with_contracts(case: ConstraintBenchmarkCase) -> list[ContextItem]:
     return items
 
 
-def _tokenized(items: Sequence[ContextItem], tokenizer: Tokenizer) -> list[ContextItem]:
-    tokenized: list[ContextItem] = []
-    for item in items:
-        copied = item.model_copy(deep=True)
-        copied.token_count = tokenizer.count_tokens(copied.content)
-        tokenized.append(copied)
-    return tokenized
-
-
-def _force_required(items: Sequence[ContextItem], item_ids: set[str]) -> list[ContextItem]:
-    prepared: list[ContextItem] = []
-    for item in items:
-        copied = item.model_copy(deep=True)
-        if item.id in item_ids:
-            copied.evictable = False
-            copied.mandatory = True
-        prepared.append(copied)
-    return prepared
-
-
-def _patch_constraint_trace(
-    result: OptimizedContext,
-    *,
-    original_items: Sequence[ContextItem],
-    case: ConstraintBenchmarkCase,
-    resolution: ConstraintResolution,
-) -> OptimizedContext:
-    index = ConstraintTraceIndex(
-        original_items,
-        case.edges,
-        selected_item_ids=tuple(item.id for item in result.selected_items),
-        resolution=resolution,
-    )
-    traces = []
-    for trace in result.trace.items:
-        evidence = index.for_item(trace.item_id)
-        traces.append(
-            trace.model_copy(
-                update={
-                    "hard_constraints_triggered": list(evidence.hard_constraints_triggered),
-                    "required_by": list(evidence.required_by),
-                    "dependency_closure": list(evidence.dependency_closure),
-                    "superseded_items": list(evidence.superseded_items),
-                    "conflict_status": evidence.conflict_status,
-                    "constraint_resolution_applied": True,
-                    "would_have_been_removed_without_constraints": (
-                        evidence.would_have_been_removed_without_constraints
-                    ),
-                }
-            )
-        )
-    return result.model_copy(update={"trace": result.trace.model_copy(update={"items": traces})})
-
-
 class Phase5BenchmarkStrategy:
     """Execute one cumulative Phase 5 research variant."""
 
@@ -352,103 +298,12 @@ class Phase5BenchmarkStrategy:
                 edges=case.edges,
                 compression_executor=legacy,
             ).optimize(case.task, items, policy)
-        return self._optimize_with_constraints(
-            case,
-            tokenizer,
-            items=items,
-            policy=policy,
+        return ContextOptimizer(
+            tokenizer=tokenizer,
+            edges=case.edges,
             compression_executor=legacy,
-            trace_constraints=self._variant is Phase5Variant.FULL,
-        )
-
-    @staticmethod
-    def _optimize_with_constraints(
-        case: ConstraintBenchmarkCase,
-        tokenizer: Tokenizer,
-        *,
-        items: Sequence[ContextItem],
-        policy: OptimizationPolicy,
-        compression_executor: FrozenV040CompressionExecutor | None,
-        trace_constraints: bool,
-    ) -> OptimizedContext:
-        tokenized = _tokenized(items, tokenizer)
-        by_id = {item.id: item for item in tokenized}
-        graph = ContextConstraintGraph(tokenized, case.edges)
-        legal_universe = graph.resolve(tuple(by_id))
-        legal_ids = set(legal_universe.selected_item_ids)
-        candidates = [item for item in tokenized if item.id in legal_ids]
-        candidate_edges = [
-            edge
-            for edge in case.edges
-            if edge.source_id in legal_ids and edge.target_id in legal_ids
-        ]
-        forced: set[str] = set()
-        first_resolution: ConstraintResolution | None = None
-        final_resolution: ConstraintResolution | None = None
-        result: OptimizedContext | None = None
-        for _ in range(len(candidates) + 1):
-            prepared = _force_required(candidates, forced)
-            result = ContextOptimizer(
-                tokenizer=tokenizer,
-                edges=candidate_edges,
-                compression_executor=compression_executor,
-            ).optimize(case.task, prepared, policy)
-            resolution = graph.resolve(tuple(item.id for item in result.selected_items))
-            final_resolution = resolution
-            if first_resolution is None:
-                first_resolution = resolution
-            additions = set(resolution.selected_item_ids) - {
-                item.id for item in result.selected_items
-            }
-            if not additions:
-                break
-            forced.update(additions)
-        else:
-            raise AssertionError("constraint-enforced optimization did not converge")
-        assert result is not None and first_resolution is not None and final_resolution is not None
-        trace_resolution = final_resolution.model_copy(
-            update={"added_required_item_ids": first_resolution.added_required_item_ids}
-        )
-
-        full_original_tokens = sum(item.token_count or 0 for item in tokenized)
-        filtered_out = [item for item in tokenized if item.id not in legal_ids]
-        selected_ids = {item.id for item in result.selected_items}
-        removed = [item for item in tokenized if item.id not in selected_ids]
-        reduction = (
-            0.0
-            if full_original_tokens == 0
-            else (full_original_tokens - result.final_token_count) / full_original_tokens
-        )
-        updated_trace = result.trace.model_copy(
-            update={
-                "original_tokens": full_original_tokens,
-                "reduction_ratio": max(0.0, min(reduction, 1.0)),
-                "removed_count": len(removed),
-                "warnings": sorted(
-                    set(result.trace.warnings)
-                    | ({"hard_constraints_filtered_items"} if filtered_out else set())
-                ),
-            }
-        )
-        result = result.model_copy(
-            update={
-                "original_token_count": full_original_tokens,
-                "removed_items": removed,
-                "trace": updated_trace,
-                "metadata": {
-                    **result.metadata,
-                    "constraint_resolution": trace_resolution.model_dump(mode="json"),
-                },
-            }
-        )
-        if trace_constraints:
-            result = _patch_constraint_trace(
-                result,
-                original_items=tokenized,
-                case=case,
-                resolution=trace_resolution,
-            )
-        return result
+            constraint_policy=ConstraintPolicy.enforced(),
+        ).optimize(case.task, items, policy)
 
 
 def phase5_ablation_strategies() -> list[BenchmarkStrategy]:

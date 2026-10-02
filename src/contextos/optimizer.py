@@ -9,6 +9,7 @@ from typing import Protocol, TypeVar
 from contextos.budget import AllocationPlan, TokenBudgetAllocator, validate_contextual_budget
 from contextos.compression import CompressionExecution, CompressionExecutor
 from contextos.config import OptimizationPolicy
+from contextos.constraints import ConstraintPolicy, ConstraintResolution, ContextConstraintGraph
 from contextos.dedup import exact_deduplicate, semantic_deduplicate
 from contextos.dedup.base import DeduplicationResult, DuplicateMatch
 from contextos.dependency import DependencyGraph
@@ -70,6 +71,7 @@ class ContextOptimizer:
         layout: LayoutStrategy | None = None,
         store: ContextStore | None = None,
         compression_executor: CompressionExecutionEngine | None = None,
+        constraint_policy: ConstraintPolicy | None = None,
     ) -> None:
         self._tokenizer = tokenizer or TiktokenTokenizer()
         self._provider = embedding_provider or DeterministicEmbeddingProvider()
@@ -77,6 +79,7 @@ class ContextOptimizer:
         self._layout = layout
         self._store = store
         self._compression_executor = compression_executor or CompressionExecutor(self._tokenizer)
+        self._constraint_policy = constraint_policy or ConstraintPolicy()
 
     def optimize(
         self,
@@ -84,7 +87,18 @@ class ContextOptimizer:
         items: Sequence[ContextItem],
         policy: OptimizationPolicy,
     ) -> OptimizedContext:
-        """Execute every v0.3 stage in the documented order."""
+        """Construct context through the legacy or opt-in constraint-aware pipeline."""
+        if self._constraint_policy.enabled:
+            return self._optimize_with_constraints(task, items, policy)
+        return self._optimize_unconstrained(task, items, policy)
+
+    def _optimize_unconstrained(
+        self,
+        task: str,
+        items: Sequence[ContextItem],
+        policy: OptimizationPolicy,
+    ) -> OptimizedContext:
+        """Execute the backwards-compatible integrated optimization pipeline."""
         timings: dict[str, float] = {}
         warnings: list[str] = []
 
@@ -340,6 +354,213 @@ class ContextOptimizer:
             ),
             trace=trace,
             metadata={"layout": type(strategy).__name__},
+        )
+
+    def _optimize_with_constraints(
+        self,
+        task: str,
+        items: Sequence[ContextItem],
+        policy: OptimizationPolicy,
+    ) -> OptimizedContext:
+        """Enforce directed hard constraints around the stable optimization pipeline."""
+        tokenized = self._tokenize_items(items)
+        by_id = {item.id: item for item in tokenized}
+        graph = ContextConstraintGraph(tokenized, self._edges)
+        legal_universe = graph.resolve(
+            tuple(by_id),
+            conflict_policy=self._constraint_policy.conflict_policy,
+            retain_superseded=self._constraint_policy.retain_superseded,
+        )
+        legal_ids = set(legal_universe.selected_item_ids)
+        candidates = [item for item in tokenized if item.id in legal_ids]
+        candidate_edges = [
+            edge
+            for edge in self._edges
+            if edge.source_id in legal_ids and edge.target_id in legal_ids
+        ]
+        forced: set[str] = set()
+        first_resolution: ConstraintResolution | None = None
+        final_resolution: ConstraintResolution | None = None
+        result: OptimizedContext | None = None
+        for _ in range(len(candidates) + 1):
+            prepared = self._force_required(candidates, forced)
+            result = ContextOptimizer(
+                tokenizer=self._tokenizer,
+                embedding_provider=self._provider,
+                edges=candidate_edges,
+                layout=self._layout,
+                compression_executor=self._compression_executor,
+            ).optimize(task, prepared, policy)
+            resolution = graph.resolve(
+                tuple(item.id for item in result.selected_items),
+                conflict_policy=self._constraint_policy.conflict_policy,
+                retain_superseded=self._constraint_policy.retain_superseded,
+            )
+            final_resolution = resolution
+            if first_resolution is None:
+                first_resolution = resolution
+            additions = set(resolution.selected_item_ids) - {
+                item.id for item in result.selected_items
+            }
+            if not additions:
+                break
+            forced.update(additions)
+        else:
+            raise AssertionError("constraint-enforced optimization did not converge")
+        assert result is not None and first_resolution is not None and final_resolution is not None
+        trace_resolution = final_resolution.model_copy(
+            update={
+                "added_required_item_ids": first_resolution.added_required_item_ids,
+                "removed_superseded_item_ids": tuple(
+                    dict.fromkeys(
+                        (
+                            *legal_universe.removed_superseded_item_ids,
+                            *final_resolution.removed_superseded_item_ids,
+                        )
+                    )
+                ),
+                "removed_conflicting_item_ids": tuple(
+                    dict.fromkeys(
+                        (
+                            *legal_universe.removed_conflicting_item_ids,
+                            *final_resolution.removed_conflicting_item_ids,
+                        )
+                    )
+                ),
+            }
+        )
+
+        full_original_tokens = sum(item.token_count or 0 for item in tokenized)
+        filtered_out = [item for item in tokenized if item.id not in legal_ids]
+        selected_ids = {item.id for item in result.selected_items}
+        removed = [item for item in tokenized if item.id not in selected_ids]
+        reduction = (
+            0.0
+            if full_original_tokens == 0
+            else (full_original_tokens - result.final_token_count) / full_original_tokens
+        )
+        updated_trace = result.trace.model_copy(
+            update={
+                "constraint_policy": self._constraint_policy,
+                "original_tokens": full_original_tokens,
+                "reduction_ratio": max(0.0, min(reduction, 1.0)),
+                "removed_count": len(removed),
+                "warnings": sorted(
+                    set(result.trace.warnings)
+                    | ({"hard_constraints_filtered_items"} if filtered_out else set())
+                ),
+            }
+        )
+        result = result.model_copy(
+            update={
+                "original_token_count": full_original_tokens,
+                "removed_items": removed,
+                "trace": updated_trace,
+                "constraint_resolution": trace_resolution,
+                "metadata": {
+                    **result.metadata,
+                    "constraint_policy": self._constraint_policy.model_dump(mode="json"),
+                    "constraint_resolution": trace_resolution.model_dump(mode="json"),
+                },
+            }
+        )
+        result = self._patch_constraint_trace(
+            result,
+            original_items=tokenized,
+            resolution=trace_resolution,
+        )
+        if self._store is not None:
+            for item in tokenized:
+                self._store.save_item(item)
+            for edge in self._edges:
+                self._store.save_edge(edge)
+        return result
+
+    def _tokenize_items(self, items: Sequence[ContextItem]) -> list[ContextItem]:
+        validate_unique_item_ids(items)
+        tokenized: list[ContextItem] = []
+        for item in items:
+            copied = item.model_copy(deep=True)
+            copied.token_count = self._tokenizer.count_tokens(copied.content)
+            tokenized.append(copied)
+        return tokenized
+
+    @staticmethod
+    def _force_required(
+        items: Sequence[ContextItem],
+        item_ids: set[str],
+    ) -> list[ContextItem]:
+        prepared: list[ContextItem] = []
+        for item in items:
+            copied = item.model_copy(deep=True)
+            if item.id in item_ids:
+                copied.evictable = False
+                copied.mandatory = True
+            prepared.append(copied)
+        return prepared
+
+    def _patch_constraint_trace(
+        self,
+        result: OptimizedContext,
+        *,
+        original_items: Sequence[ContextItem],
+        resolution: ConstraintResolution,
+    ) -> OptimizedContext:
+        index = ConstraintTraceIndex(
+            original_items,
+            self._edges,
+            selected_item_ids=tuple(item.id for item in result.selected_items),
+            resolution=resolution,
+        )
+        traces_by_id: dict[str, ItemTrace] = {}
+        for trace in result.trace.items:
+            evidence = index.for_item(trace.item_id)
+            traces_by_id[trace.item_id] = trace.model_copy(
+                update={
+                    "hard_constraints_triggered": list(evidence.hard_constraints_triggered),
+                    "required_by": list(evidence.required_by),
+                    "dependency_closure": list(evidence.dependency_closure),
+                    "superseded_items": list(evidence.superseded_items),
+                    "conflict_status": evidence.conflict_status,
+                    "constraint_resolution_applied": True,
+                    "would_have_been_removed_without_constraints": (
+                        evidence.would_have_been_removed_without_constraints
+                    ),
+                }
+            )
+
+        removed_superseded = set(resolution.removed_superseded_item_ids)
+        removed_conflicting = set(resolution.removed_conflicting_item_ids)
+        for item in original_items:
+            if item.id in traces_by_id:
+                continue
+            evidence = index.for_item(item.id)
+            if item.id in removed_superseded:
+                reason = "removed_by_supersession_constraint"
+            elif item.id in removed_conflicting:
+                reason = "removed_by_conflict_constraint"
+            else:
+                reason = "removed_by_hard_constraint"
+            traces_by_id[item.id] = ItemTrace(
+                item_id=item.id,
+                initial_token_count=item.token_count or 0,
+                preservation_contract=item.contract,
+                hard_constraints_triggered=list(evidence.hard_constraints_triggered),
+                required_by=list(evidence.required_by),
+                dependency_closure=list(evidence.dependency_closure),
+                superseded_items=list(evidence.superseded_items),
+                conflict_status=evidence.conflict_status,
+                constraint_resolution_applied=True,
+                would_have_been_removed_without_constraints=(
+                    evidence.would_have_been_removed_without_constraints
+                ),
+                decision=OptimizationDecision.REMOVED,
+                decision_reason=reason,
+                final_token_count=0,
+            )
+        traces = [traces_by_id[item.id] for item in original_items]
+        return result.model_copy(
+            update={"trace": result.trace.model_copy(update={"items": traces})}
         )
 
     @staticmethod

@@ -10,7 +10,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 from contextos.config import OptimizationPolicy
-from contextos.constraints import ConstraintResolution
+from contextos.constraints import ConstraintPolicy, ConstraintResolution
 from contextos.contracts import PreservationContract
 from contextos.errors import UnknownDependencyReference
 from contextos.models import (
@@ -300,6 +300,7 @@ class OptimizationTrace(BaseModel):
     schema_version: str = "phase5h-v1"
     strategy: str
     policy: OptimizationPolicy
+    constraint_policy: ConstraintPolicy | None = None
     effective_budget: int = Field(gt=0)
     mandatory_tokens: int = Field(ge=0)
     optional_budget: int = Field(ge=0)
@@ -335,4 +336,5 @@ class OptimizedContext(BaseModel):
     final_token_count: int = Field(ge=0)
     budget_allocation: BudgetAllocation
     trace: OptimizationTrace
+    constraint_resolution: ConstraintResolution | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
