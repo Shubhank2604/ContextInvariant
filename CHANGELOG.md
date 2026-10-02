@@ -1,75 +1,87 @@
 # Changelog
 
-All notable changes to ContextOS are documented in this file.
-
-The project follows [Semantic Versioning](https://semver.org/).
+All notable changes to ContextOS are documented in this file. The project follows
+[Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [0.5.0] - 2026-10-02
+
 ### Added
 
-- Phase 5H versioned constraint-aware traces with preservation contracts, activated hard-relation evidence, directed closure, supersession and conflict state, risk-adjusted allocation values, flattened validator/fallback outcomes, and conservative counterfactuals.
+- Opt-in preservation contracts for retention, numeric, date, identifier, citation, negation,
+  and structured-key requirements.
+- Directed hard-constraint resolution for `REQUIRES`, `SUPERSEDES`, `CONTRADICTS`, and
+  `DERIVED_FROM`, including cycle-safe closure, explicit conflict policy, caller overrides,
+  validated representations, and typed infeasibility.
+- Type-aware transformations for code, structured state, evidence, conversation, and tool
+  output, with deterministic contract validation and bounded safe fallback.
+- Optional omission- and transformation-risk-aware allocation while keeping required content
+  outside numeric ranking.
+- Versioned constraint-aware traces containing closure, conflict, risk, validation, fallback,
+  representation, and conservative counterfactual evidence.
+- A 90-case constraint-sensitive development benchmark, six-budget feasibility sweep,
+  cumulative ablations, deterministic model-answer scoring, and model-backed provider runner.
+- Direct Full Context/frozen-v0.4/Full-Phase-5 LongBench comparison with request pacing, bounded
+  retry, provenance-checked resume, cost telemetry, and explicit context-overflow status.
+- Frozen runtime-parity fixture, public constraint-policy controls, atomic persistence hardening,
+  and inline typing marker.
+- Six reviewed immutable research-evidence bundles, third-party dataset notices, and a complete
+  research-readiness report.
+- Executable offline coding/research examples and README snippet integration tests.
 
-- Phase 5G opt-in omission-risk-aware allocation with deterministic feature groups, transformation-risk penalties, auditable action values, two bounded policy coefficients, and an explicit ablation switch.
+### Changed
 
-- Phase 5F deterministic contract validators, validated transformation fallbacks, explicit required-context overflow, dependency-reference checks, and per-attempt validator outcomes in optimization traces.
+- Package version advanced to `0.5.0` and public documentation consolidated around the README,
+  architecture, benchmarking, research, limitations, and evidence ledger.
+- Release automation now includes Linux 3.11-3.13, Windows, wheel/sdist installation, and Docker
+  smoke-test jobs while keeping paid benchmarks manual-only.
 
-- Phase 5E type-aware transformation routing with deterministic structured-data pruning, conservative code extraction, evidence-specific extraction, lossless system handling, and guarded contract-bearing content.
+### Fixed
 
-- Phase 5D directed hard-relation resolution with requirement closure, cycle groups, supersession filtering, explicit contradiction policy, validated representations, and typed unsatisfiable, overflow, and unresolved-conflict failures.
+- Preserved token-limited provider responses, separated answer targets from selection
+  constraints, and made provider pacing patches portable.
+- Hardened graph interfaces, dependency-reference validation, constraint telemetry, idempotent
+  LongBench resume, and item/edge persistence atomicity.
 
-- Phase 5C preservation contracts for explicit retention, numeric, date, identifier, citation, negation, and structured-key requirements while retaining legacy item compatibility.
+## [0.4.0] - 2026-09-12
 
-- Phase 5B ContextOS-Bench Constraints with 90 deterministic cases across nine preservation categories, unchanged v0.4 baselines, seven constraint-specific metrics, frozen baseline provenance, CLI execution, and immutable artifacts.
+### Added
 
-- Phase 4J/4K/4L documentation hardening: local v0.4.0 benchmark report, explicit resume-evidence ledger, limitations, and release-gate language.
-
-- Phase 4H performance telemetry for optimizer wall time, p50/p95/total latency, embedding and compression stages, provider latency, TTFT, token/cache usage, positional provider summaries, and native process peak-memory provenance.
-- A standard-library performance probe that keeps wall-clock timings representative while explicitly labeling process-lifetime memory observations as non-attributable to individual strategies.
-- Phase 4G paired statistical reporting with seeded 1,000-resample bootstrap 95% confidence intervals for sufficiently large ContextOS-Bench and per-dataset LongBench samples.
-- Direct ContextOS-versus-baseline deltas, explicit paired sample counts, deterministic seeds, and artifact metadata documenting interval thresholds and the real-model repetition policy.
-- Explicit no-interval rationale for undersized positional cells and the 10-case deduplication development fixture, plus same-provider/model/decoding guidance for empirical claims.
-- Phase 4F immutable seven-file benchmark bundles containing configuration, environment provenance, raw cases, raw predictions, JSON/CSV metrics, and a derived Markdown report.
-- Shared Git SHA, Python/OS, dependency-version, embedding-model, and optional LLM provider/model capture across ContextOS-Bench, ablations, deduplication, positional retrieval, and LongBench.
-- Phase 4E six-variant ContextOS ablation runner covering semantic deduplication, recency, dependency scoring, compression, and position-aware layout, with per-case raw measurements, bootstrap intervals, explicit policy overrides, and deltas against full ContextOS.
-- `contextos benchmark ablation` and an explicit semantic-deduplication runtime switch for controlled single-component experiments.
-- Phase 4D Relevance Only and Naive Extractive baselines with deterministic budget selection, full optimization traces, public SDK/CLI access, and the shared six-strategy benchmark protocol.
-- Six-strategy ContextOS-Bench execution and same-provider/model LongBench comparison preparation with raw status, token, latency, selection, task-score, and quality-retention fields.
-- Explicit `contextos benchmark longbench run` support for one temperature-zero OpenAI configuration across every case and strategy; failed or infeasible comparisons remain raw and unscored.
-- Phase 4C pinned LongBench subset configuration for HotpotQA, 2WikiMQA, PassageRetrieval-en, and RepoBench-P, with deterministic quick/standard/full profiles and preserved source IDs.
-- Lazy explicit Hugging Face preparation, validated local external-data manifests, LongBench-compatible QA F1/retrieval/code metrics, and complete ID-keyed prediction scoring.
-- `contextos benchmark longbench prepare` and `contextos benchmark longbench score`; normal CI remains offline and never downloads external datasets.
-- Phase 4B controlled positional retrieval across 4K, 8K, 16K, and 32K token buckets; five evidence positions; and original, relevance-descending, and ContextOS position-aware layouts.
-- Deterministic exact-match evaluation, positional gap and variance reporting, token and provider-latency measurements, raw immutable artifacts, and an offline-safe positional CLI.
-- Explicit optional OpenAI positional runs with recorded model and context limits; paid provider runs remain opt-in and outside normal CI.
-- Phase 4A ContextOS-Bench schema and deterministic generator with 50 templated base cases across coding, research, and support/operations scenarios.
-- Exact required-fact annotations covering dates, identifiers, changed-number and negation traps, supersession, contradictions, recent noise, and one-/two-hop dependencies.
-- Shared Full Context, Last-N, Sliding Window, and ContextOS benchmark runner with raw task, CIR, token, compression, and latency measurements.
-- Deterministic bootstrap confidence intervals and content-addressed local benchmark artifacts.
-- `contextos benchmark run` and aggregate-aware `contextos benchmark compare` commands.
+- ContextOS-Bench with 50 deterministic coding, research, and support/operations cases and
+  annotated critical-information requirements.
+- Controlled 4K-32K positional retrieval, a pinned four-task LongBench subset, and deterministic
+  LongBench-compatible evaluators.
+- Relevance Only and Naive Extractive baselines alongside Full Context, Last-N, Sliding Window,
+  and ContextOS.
+- Six-variant component ablation, deterministic paired bootstrap intervals, and performance
+  telemetry for optimizer, embedding, compression, provider, tokens, and process memory.
+- Immutable seven-file experiment bundles with source revision, environment, configuration, raw
+  cases, predictions, JSON/CSV metrics, and derived reports.
+- Public benchmark, limitations, evidence, and v0.4.0 result documentation.
 
 ## [0.3.0] - 2026-08-31
 
 ### Added
 
 - Configurable semantic deduplication threshold with a conservative default of `0.92`.
-- Deterministic and optional sentence-transformer embedding providers with normalized-content caching.
-- Mandatory-aware exact and semantic deduplication with numeric, date, identifier, path, URL, code, and negation safety guards.
+- Deterministic and optional sentence-transformer embedding providers with normalized-content
+  caching.
+- Mandatory-aware exact and semantic deduplication with numeric, date, identifier, path, URL,
+  code, and negation safety guards.
 - Provider-driven relevance and novelty scoring.
-- Labeled deduplication fixture metrics and `contextos benchmark dedup`.
-- Complete serializable optimization-policy fields, normalized weights, and quality/balanced/economy presets.
-- Deterministic importance, exponential-recency, type-priority, dependency-propagation, and composite scoring.
-- Typed dependency edges with bounded cycle-safe traversal and explicit unknown-reference failures.
-- Contextual mandatory/minimum budget validation with distinct typed failures.
-- Deterministic class-floor, class-maximum, value-density, and compression-reservation allocation plans.
-- Explicit allocator/compressor handoff models with complete candidate partition and budget invariants.
+- Complete serializable optimization policies with quality, balanced, and economy presets.
+- Importance, recency, type-priority, dependency-propagation, and composite scoring.
+- Typed dependency edges with bounded cycle-safe traversal and unknown-reference failures.
+- Deterministic class-floor, class-maximum, value-density, and compression-reservation allocation.
 - Safe extractive, tool-output, no-op, and optional LLM-summary compression contracts.
-- Deterministic returned-reservation reuse after failed or under-target compression.
 - Original-order, relevance-descending, and position-aware layout strategies.
-- Versioned SQLite persistence, dependency edges, migrations, and lifecycle transitions.
-- The authoritative integrated `ContextOptimizer` pipeline with complete per-item traces.
-- Public optimizer CLI, input inspection, store statistics, and benchmark comparison commands.
-- ContextOS-Bench schemas, initial deduplication/allocation/regression fixtures, and a quick runner that invokes both baseline and ContextOS strategies.
+- Versioned SQLite persistence, migrations, lifecycle transitions, and the integrated
+  `ContextOptimizer` pipeline with per-item traces.
+- Public optimizer CLI, input inspection, store statistics, benchmark comparison, and initial
+  regression fixtures.
 
 ## [0.2.0] - 2026-08-30
 
@@ -92,5 +104,6 @@ The project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
-- Bound NumPy below 2.5 so Python 3.11-targeted mypy checks do not parse Python 3.12-only NumPy stubs.
-- Updated GitHub's checkout and Python setup actions to their Node.js 24 releases.
+- Bound NumPy below 2.5 so Python 3.11-targeted mypy checks do not parse Python 3.12-only NumPy
+  stubs.
+- Updated GitHub checkout and Python setup actions to their Node.js 24 releases.

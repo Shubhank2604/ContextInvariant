@@ -1,10 +1,10 @@
-name: LongBench comparison (manual)
+name: Phase 5 LongBench comparison (manual)
 
 on:
   workflow_dispatch:
     inputs:
       model:
-        description: OpenAI model identifier
+        description: Explicit OpenAI model identifier
         required: true
         type: string
       profile:
@@ -26,6 +26,16 @@ on:
         required: true
         default: "32768"
         type: string
+      minimum_request_interval_seconds:
+        description: Minimum delay between provider calls
+        required: true
+        default: "1.5"
+        type: string
+      provider_max_retries:
+        description: Maximum retries for transient provider failures
+        required: true
+        default: "6"
+        type: string
 
 permissions:
   contents: read
@@ -33,6 +43,7 @@ permissions:
 jobs:
   longbench-comparison:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -42,23 +53,28 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[benchmark,openai]"
       - name: Prepare pinned external subset
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: >-
           contextos benchmark longbench prepare
+          --config benchmarks/config/longbench_subset.json
           --profile "${{ inputs.profile }}"
           --output benchmark-output/prepared.json
       - name: Run explicitly requested paid-provider comparison
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: >-
-          contextos benchmark longbench run
+          contextos benchmark longbench phase5-run
           --prepared benchmark-output/prepared.json
           --output benchmark-output/results
           --model "${{ inputs.model }}"
           --context-budget-tokens "${{ inputs.context_budget_tokens }}"
           --max-context-tokens "${{ inputs.max_context_tokens }}"
+          --minimum-request-interval-seconds "${{ inputs.minimum_request_interval_seconds }}"
+          --provider-max-retries "${{ inputs.provider_max_retries }}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: longbench-${{ github.run_id }}
+          name: phase5-longbench-${{ github.run_id }}
           path: benchmark-output/
           if-no-files-found: warn
