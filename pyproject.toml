@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "contextos-runtime"
-version = "0.3.0"
+version = "0.5.0"
 description = "A model-agnostic runtime for constructing LLM context under a token budget."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -39,6 +39,9 @@ contextos = "contextos.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+contextos = ["py.typed"]
 
 [tool.pytest.ini_options]
 addopts = "--strict-config --strict-markers --basetemp=.pytest-tmp --cov=contextos --cov-report=term-missing --cov-fail-under=85"

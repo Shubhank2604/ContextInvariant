@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
+from contextos import __version__
 from contextos.benchmarks.bundles import REQUIRED_BUNDLE_FILES
 from contextos.benchmarks.longbench_models import (
     LongBenchCase,
@@ -31,7 +32,7 @@ def test_cli_help() -> None:
 def test_cli_version() -> None:
     result = runner.invoke(app, ["version"])
     assert result.exit_code == 0
-    assert result.stdout.strip() == "0.3.0"
+    assert result.stdout.strip() == __version__
 
 
 def write_input(path: Path) -> None:

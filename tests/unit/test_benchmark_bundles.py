@@ -21,7 +21,7 @@ def environment(recorded_at: datetime = RECORDED_AT) -> BenchmarkEnvironment:
     return BenchmarkEnvironment(
         recorded_at_utc=recorded_at,
         python_version="3.13.0",
-        contextos_version="0.3.0",
+        contextos_version="fixture-version",
         git_sha="abc123",
         operating_system="fixture-os",
         dependency_versions={"pydantic": "2.0"},
