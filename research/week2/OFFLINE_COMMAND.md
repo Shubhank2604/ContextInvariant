@@ -46,6 +46,10 @@ modules against their fixed revision. It also freezes all current source modules
 pyproject.toml, the original lock, analysis plan and dependency constraints, plus the
 installed transitive runtime/research dependency versions and Python version.
 
+Use a full Git checkout, or fetch the recorded method/evaluator/execution revisions
+before preflight. The Linux and Windows test jobs fetch full history so those checks
+also run in CI. Missing Git objects are rejected rather than treated as verified.
+
 Source-file hashes use LF-normalized bytes, matching Git's source convention. Data,
 key, seal and freeze-file hashes cover exact bytes. `configuration_sha256` and canonical
 data hashes use SHA-256 of UTF-8 JSON with sorted keys and compact separators, wrapped
