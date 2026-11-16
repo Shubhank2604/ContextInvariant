@@ -1,0 +1,661 @@
+{
+  "evaluation_count": 180,
+  "families": {
+    "coding_agent": {
+      "cells": [
+        {
+          "budget_percentage": 65,
+          "family": "coding_agent",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 38,
+          "mean_valid_context_tokens": 38,
+          "mean_valid_useful_recall": 0.75,
+          "method": "context_invariant_full",
+          "no_context": 2,
+          "no_context_reasons": {
+            "budget_infeasible": 1,
+            "selection_failure": 1
+          },
+          "outcome_classes": {
+            "avoidable_selection_failure": 1,
+            "certified_infeasibility": 1,
+            "valid_context": 8
+          },
+          "total": 10,
+          "valid_context": 8,
+          "valid_context_token_total": 304
+        },
+        {
+          "budget_percentage": 65,
+          "family": "coding_agent",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 19.88888888888889,
+          "mean_valid_context_tokens": 19.88888888888889,
+          "mean_valid_useful_recall": 0.4,
+          "method": "metadata_matched",
+          "no_context": 1,
+          "no_context_reasons": {
+            "budget_infeasible": 1
+          },
+          "outcome_classes": {
+            "certified_infeasibility": 1,
+            "valid_context": 9
+          },
+          "total": 10,
+          "valid_context": 9,
+          "valid_context_token_total": 179
+        },
+        {
+          "budget_percentage": 80,
+          "family": "coding_agent",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 38,
+          "mean_valid_context_tokens": 38,
+          "mean_valid_useful_recall": 0.75,
+          "method": "context_invariant_full",
+          "no_context": 2,
+          "no_context_reasons": {
+            "budget_infeasible": 1,
+            "selection_failure": 1
+          },
+          "outcome_classes": {
+            "avoidable_selection_failure": 1,
+            "certified_infeasibility": 1,
+            "valid_context": 8
+          },
+          "total": 10,
+          "valid_context": 8,
+          "valid_context_token_total": 304
+        },
+        {
+          "budget_percentage": 80,
+          "family": "coding_agent",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 19.88888888888889,
+          "mean_valid_context_tokens": 19.88888888888889,
+          "mean_valid_useful_recall": 0.4,
+          "method": "metadata_matched",
+          "no_context": 1,
+          "no_context_reasons": {
+            "budget_infeasible": 1
+          },
+          "outcome_classes": {
+            "certified_infeasibility": 1,
+            "valid_context": 9
+          },
+          "total": 10,
+          "valid_context": 9,
+          "valid_context_token_total": 179
+        },
+        {
+          "budget_percentage": 100,
+          "family": "coding_agent",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 95.5,
+          "mean_valid_context_tokens": 95.5,
+          "mean_valid_useful_recall": 0.8,
+          "method": "context_invariant_full",
+          "no_context": 0,
+          "no_context_reasons": {},
+          "outcome_classes": {
+            "valid_context": 10
+          },
+          "total": 10,
+          "valid_context": 10,
+          "valid_context_token_total": 955
+        },
+        {
+          "budget_percentage": 100,
+          "family": "coding_agent",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 102,
+          "mean_valid_context_tokens": 102,
+          "mean_valid_useful_recall": 1.0,
+          "method": "metadata_matched",
+          "no_context": 0,
+          "no_context_reasons": {},
+          "outcome_classes": {
+            "valid_context": 10
+          },
+          "total": 10,
+          "valid_context": 10,
+          "valid_context_token_total": 1020
+        }
+      ],
+      "evaluation_count": 60,
+      "matched_valid": [
+        {
+          "budget_percentage": 65,
+          "context_token_totals": {
+            "context_invariant_full": 304,
+            "metadata_matched": 149
+          },
+          "matched_valid_annotated_case_count": 4,
+          "matched_valid_case_count": 8,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.75,
+            "metadata_matched": 0.25
+          }
+        },
+        {
+          "budget_percentage": 80,
+          "context_token_totals": {
+            "context_invariant_full": 304,
+            "metadata_matched": 149
+          },
+          "matched_valid_annotated_case_count": 4,
+          "matched_valid_case_count": 8,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.75,
+            "metadata_matched": 0.25
+          }
+        },
+        {
+          "budget_percentage": 100,
+          "context_token_totals": {
+            "context_invariant_full": 955,
+            "metadata_matched": 1020
+          },
+          "matched_valid_annotated_case_count": 5,
+          "matched_valid_case_count": 10,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.8,
+            "metadata_matched": 1.0
+          }
+        }
+      ]
+    },
+    "evidence_backed_analysis": {
+      "cells": [
+        {
+          "budget_percentage": 65,
+          "family": "evidence_backed_analysis",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 38,
+          "mean_valid_context_tokens": 38,
+          "mean_valid_useful_recall": 0.75,
+          "method": "context_invariant_full",
+          "no_context": 2,
+          "no_context_reasons": {
+            "budget_infeasible": 1,
+            "selection_failure": 1
+          },
+          "outcome_classes": {
+            "avoidable_selection_failure": 1,
+            "certified_infeasibility": 1,
+            "valid_context": 8
+          },
+          "total": 10,
+          "valid_context": 8,
+          "valid_context_token_total": 304
+        },
+        {
+          "budget_percentage": 65,
+          "family": "evidence_backed_analysis",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 19.88888888888889,
+          "mean_valid_context_tokens": 19.88888888888889,
+          "mean_valid_useful_recall": 0.4,
+          "method": "metadata_matched",
+          "no_context": 1,
+          "no_context_reasons": {
+            "budget_infeasible": 1
+          },
+          "outcome_classes": {
+            "certified_infeasibility": 1,
+            "valid_context": 9
+          },
+          "total": 10,
+          "valid_context": 9,
+          "valid_context_token_total": 179
+        },
+        {
+          "budget_percentage": 80,
+          "family": "evidence_backed_analysis",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 38,
+          "mean_valid_context_tokens": 38,
+          "mean_valid_useful_recall": 0.75,
+          "method": "context_invariant_full",
+          "no_context": 2,
+          "no_context_reasons": {
+            "budget_infeasible": 1,
+            "selection_failure": 1
+          },
+          "outcome_classes": {
+            "avoidable_selection_failure": 1,
+            "certified_infeasibility": 1,
+            "valid_context": 8
+          },
+          "total": 10,
+          "valid_context": 8,
+          "valid_context_token_total": 304
+        },
+        {
+          "budget_percentage": 80,
+          "family": "evidence_backed_analysis",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 19.88888888888889,
+          "mean_valid_context_tokens": 19.88888888888889,
+          "mean_valid_useful_recall": 0.4,
+          "method": "metadata_matched",
+          "no_context": 1,
+          "no_context_reasons": {
+            "budget_infeasible": 1
+          },
+          "outcome_classes": {
+            "certified_infeasibility": 1,
+            "valid_context": 9
+          },
+          "total": 10,
+          "valid_context": 9,
+          "valid_context_token_total": 179
+        },
+        {
+          "budget_percentage": 100,
+          "family": "evidence_backed_analysis",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 95.5,
+          "mean_valid_context_tokens": 95.5,
+          "mean_valid_useful_recall": 0.8,
+          "method": "context_invariant_full",
+          "no_context": 0,
+          "no_context_reasons": {},
+          "outcome_classes": {
+            "valid_context": 10
+          },
+          "total": 10,
+          "valid_context": 10,
+          "valid_context_token_total": 955
+        },
+        {
+          "budget_percentage": 100,
+          "family": "evidence_backed_analysis",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 102,
+          "mean_valid_context_tokens": 102,
+          "mean_valid_useful_recall": 1.0,
+          "method": "metadata_matched",
+          "no_context": 0,
+          "no_context_reasons": {},
+          "outcome_classes": {
+            "valid_context": 10
+          },
+          "total": 10,
+          "valid_context": 10,
+          "valid_context_token_total": 1020
+        }
+      ],
+      "evaluation_count": 60,
+      "matched_valid": [
+        {
+          "budget_percentage": 65,
+          "context_token_totals": {
+            "context_invariant_full": 304,
+            "metadata_matched": 149
+          },
+          "matched_valid_annotated_case_count": 4,
+          "matched_valid_case_count": 8,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.75,
+            "metadata_matched": 0.25
+          }
+        },
+        {
+          "budget_percentage": 80,
+          "context_token_totals": {
+            "context_invariant_full": 304,
+            "metadata_matched": 149
+          },
+          "matched_valid_annotated_case_count": 4,
+          "matched_valid_case_count": 8,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.75,
+            "metadata_matched": 0.25
+          }
+        },
+        {
+          "budget_percentage": 100,
+          "context_token_totals": {
+            "context_invariant_full": 955,
+            "metadata_matched": 1020
+          },
+          "matched_valid_annotated_case_count": 5,
+          "matched_valid_case_count": 10,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.8,
+            "metadata_matched": 1.0
+          }
+        }
+      ]
+    },
+    "operations": {
+      "cells": [
+        {
+          "budget_percentage": 65,
+          "family": "operations",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 38,
+          "mean_valid_context_tokens": 38,
+          "mean_valid_useful_recall": 0.75,
+          "method": "context_invariant_full",
+          "no_context": 2,
+          "no_context_reasons": {
+            "budget_infeasible": 1,
+            "selection_failure": 1
+          },
+          "outcome_classes": {
+            "avoidable_selection_failure": 1,
+            "certified_infeasibility": 1,
+            "valid_context": 8
+          },
+          "total": 10,
+          "valid_context": 8,
+          "valid_context_token_total": 304
+        },
+        {
+          "budget_percentage": 65,
+          "family": "operations",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 19.88888888888889,
+          "mean_valid_context_tokens": 19.88888888888889,
+          "mean_valid_useful_recall": 0.4,
+          "method": "metadata_matched",
+          "no_context": 1,
+          "no_context_reasons": {
+            "budget_infeasible": 1
+          },
+          "outcome_classes": {
+            "certified_infeasibility": 1,
+            "valid_context": 9
+          },
+          "total": 10,
+          "valid_context": 9,
+          "valid_context_token_total": 179
+        },
+        {
+          "budget_percentage": 80,
+          "family": "operations",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 38,
+          "mean_valid_context_tokens": 38,
+          "mean_valid_useful_recall": 0.75,
+          "method": "context_invariant_full",
+          "no_context": 2,
+          "no_context_reasons": {
+            "budget_infeasible": 1,
+            "selection_failure": 1
+          },
+          "outcome_classes": {
+            "avoidable_selection_failure": 1,
+            "certified_infeasibility": 1,
+            "valid_context": 8
+          },
+          "total": 10,
+          "valid_context": 8,
+          "valid_context_token_total": 304
+        },
+        {
+          "budget_percentage": 80,
+          "family": "operations",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 19.88888888888889,
+          "mean_valid_context_tokens": 19.88888888888889,
+          "mean_valid_useful_recall": 0.4,
+          "method": "metadata_matched",
+          "no_context": 1,
+          "no_context_reasons": {
+            "budget_infeasible": 1
+          },
+          "outcome_classes": {
+            "certified_infeasibility": 1,
+            "valid_context": 9
+          },
+          "total": 10,
+          "valid_context": 9,
+          "valid_context_token_total": 179
+        },
+        {
+          "budget_percentage": 100,
+          "family": "operations",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 95.5,
+          "mean_valid_context_tokens": 95.5,
+          "mean_valid_useful_recall": 0.8,
+          "method": "context_invariant_full",
+          "no_context": 0,
+          "no_context_reasons": {},
+          "outcome_classes": {
+            "valid_context": 10
+          },
+          "total": 10,
+          "valid_context": 10,
+          "valid_context_token_total": 955
+        },
+        {
+          "budget_percentage": 100,
+          "family": "operations",
+          "invalid_context": 0,
+          "mean_returned_context_tokens": 102,
+          "mean_valid_context_tokens": 102,
+          "mean_valid_useful_recall": 1.0,
+          "method": "metadata_matched",
+          "no_context": 0,
+          "no_context_reasons": {},
+          "outcome_classes": {
+            "valid_context": 10
+          },
+          "total": 10,
+          "valid_context": 10,
+          "valid_context_token_total": 1020
+        }
+      ],
+      "evaluation_count": 60,
+      "matched_valid": [
+        {
+          "budget_percentage": 65,
+          "context_token_totals": {
+            "context_invariant_full": 304,
+            "metadata_matched": 149
+          },
+          "matched_valid_annotated_case_count": 4,
+          "matched_valid_case_count": 8,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.75,
+            "metadata_matched": 0.25
+          }
+        },
+        {
+          "budget_percentage": 80,
+          "context_token_totals": {
+            "context_invariant_full": 304,
+            "metadata_matched": 149
+          },
+          "matched_valid_annotated_case_count": 4,
+          "matched_valid_case_count": 8,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.75,
+            "metadata_matched": 0.25
+          }
+        },
+        {
+          "budget_percentage": 100,
+          "context_token_totals": {
+            "context_invariant_full": 955,
+            "metadata_matched": 1020
+          },
+          "matched_valid_annotated_case_count": 5,
+          "matched_valid_case_count": 10,
+          "mean_useful_recall": {
+            "context_invariant_full": 0.8,
+            "metadata_matched": 1.0
+          }
+        }
+      ]
+    }
+  },
+  "overall": {
+    "cells": [
+      {
+        "budget_percentage": 65,
+        "family": "all",
+        "invalid_context": 0,
+        "mean_returned_context_tokens": 38,
+        "mean_valid_context_tokens": 38,
+        "mean_valid_useful_recall": 0.75,
+        "method": "context_invariant_full",
+        "no_context": 6,
+        "no_context_reasons": {
+          "budget_infeasible": 3,
+          "selection_failure": 3
+        },
+        "outcome_classes": {
+          "avoidable_selection_failure": 3,
+          "certified_infeasibility": 3,
+          "valid_context": 24
+        },
+        "total": 30,
+        "valid_context": 24,
+        "valid_context_token_total": 912
+      },
+      {
+        "budget_percentage": 65,
+        "family": "all",
+        "invalid_context": 0,
+        "mean_returned_context_tokens": 19.88888888888889,
+        "mean_valid_context_tokens": 19.88888888888889,
+        "mean_valid_useful_recall": 0.4,
+        "method": "metadata_matched",
+        "no_context": 3,
+        "no_context_reasons": {
+          "budget_infeasible": 3
+        },
+        "outcome_classes": {
+          "certified_infeasibility": 3,
+          "valid_context": 27
+        },
+        "total": 30,
+        "valid_context": 27,
+        "valid_context_token_total": 537
+      },
+      {
+        "budget_percentage": 80,
+        "family": "all",
+        "invalid_context": 0,
+        "mean_returned_context_tokens": 38,
+        "mean_valid_context_tokens": 38,
+        "mean_valid_useful_recall": 0.75,
+        "method": "context_invariant_full",
+        "no_context": 6,
+        "no_context_reasons": {
+          "budget_infeasible": 3,
+          "selection_failure": 3
+        },
+        "outcome_classes": {
+          "avoidable_selection_failure": 3,
+          "certified_infeasibility": 3,
+          "valid_context": 24
+        },
+        "total": 30,
+        "valid_context": 24,
+        "valid_context_token_total": 912
+      },
+      {
+        "budget_percentage": 80,
+        "family": "all",
+        "invalid_context": 0,
+        "mean_returned_context_tokens": 19.88888888888889,
+        "mean_valid_context_tokens": 19.88888888888889,
+        "mean_valid_useful_recall": 0.4,
+        "method": "metadata_matched",
+        "no_context": 3,
+        "no_context_reasons": {
+          "budget_infeasible": 3
+        },
+        "outcome_classes": {
+          "certified_infeasibility": 3,
+          "valid_context": 27
+        },
+        "total": 30,
+        "valid_context": 27,
+        "valid_context_token_total": 537
+      },
+      {
+        "budget_percentage": 100,
+        "family": "all",
+        "invalid_context": 0,
+        "mean_returned_context_tokens": 95.5,
+        "mean_valid_context_tokens": 95.5,
+        "mean_valid_useful_recall": 0.8,
+        "method": "context_invariant_full",
+        "no_context": 0,
+        "no_context_reasons": {},
+        "outcome_classes": {
+          "valid_context": 30
+        },
+        "total": 30,
+        "valid_context": 30,
+        "valid_context_token_total": 2865
+      },
+      {
+        "budget_percentage": 100,
+        "family": "all",
+        "invalid_context": 0,
+        "mean_returned_context_tokens": 102,
+        "mean_valid_context_tokens": 102,
+        "mean_valid_useful_recall": 1.0,
+        "method": "metadata_matched",
+        "no_context": 0,
+        "no_context_reasons": {},
+        "outcome_classes": {
+          "valid_context": 30
+        },
+        "total": 30,
+        "valid_context": 30,
+        "valid_context_token_total": 3060
+      }
+    ],
+    "evaluation_count": 180,
+    "matched_valid": [
+      {
+        "budget_percentage": 65,
+        "context_token_totals": {
+          "context_invariant_full": 912,
+          "metadata_matched": 447
+        },
+        "matched_valid_annotated_case_count": 12,
+        "matched_valid_case_count": 24,
+        "mean_useful_recall": {
+          "context_invariant_full": 0.75,
+          "metadata_matched": 0.25
+        }
+      },
+      {
+        "budget_percentage": 80,
+        "context_token_totals": {
+          "context_invariant_full": 912,
+          "metadata_matched": 447
+        },
+        "matched_valid_annotated_case_count": 12,
+        "matched_valid_case_count": 24,
+        "mean_useful_recall": {
+          "context_invariant_full": 0.75,
+          "metadata_matched": 0.25
+        }
+      },
+      {
+        "budget_percentage": 100,
+        "context_token_totals": {
+          "context_invariant_full": 2865,
+          "metadata_matched": 3060
+        },
+        "matched_valid_annotated_case_count": 15,
+        "matched_valid_case_count": 30,
+        "mean_useful_recall": {
+          "context_invariant_full": 0.8,
+          "metadata_matched": 1.0
+        }
+      }
+    ]
+  }
+}

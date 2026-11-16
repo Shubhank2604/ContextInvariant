@@ -4,6 +4,10 @@ Starting point: `51bb4f0794c49702078821d301f821597a8e22ee`.
 Validation fix revision: `809843ed2fe41006d86359cbf1de4798792b4aec`.
 Branch: `research/week2-validation-preflight`.
 
+The separate [offline evaluation command](OFFLINE_COMMAND.md) now implements the locked
+180-evaluation grid, authenticated steward preflight and read-only result audit. Its
+[synthetic dry-run report](SYNTHETIC_RUN.md) includes exact commands and retained outputs.
+
 Two validation defects reported after Week 1 are fixed:
 
 - A checklist could forbid a legal optional record without either selector receiving

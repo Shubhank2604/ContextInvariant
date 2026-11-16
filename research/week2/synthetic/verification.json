@@ -1,0 +1,63 @@
+{
+  "execution_source_commit": "9cb0ab019bcdd13978a1fb671195ef645a7f8a09",
+  "synthetic_audit": {
+    "audit_version": "week2-offline-v1",
+    "mode": "synthetic_development",
+    "seal_verified": false,
+    "checked_evaluations": 180,
+    "status": "passed",
+    "selectors_rerun": false,
+    "outcome_counts": {
+      "valid_context": 162,
+      "avoidable_selection_failure": 6,
+      "certified_infeasibility": 12
+    }
+  },
+  "week1_audits": [
+    {
+      "audit_version": "week2-preflight-v1",
+      "bundle": "20261116T051053.178379Z-metadata-matched-pilot-development",
+      "execution_commit": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+      "checked_evaluations": 60,
+      "shared_input_identity": "passed",
+      "raw_text_and_token_recheck": "passed",
+      "no_output_accounting": "passed",
+      "infeasibility_certificates": "passed",
+      "verbatim_baseline": "passed",
+      "aggregate_recomputation": "passed",
+      "saved_replay_prompts": "not_applicable"
+    },
+    {
+      "audit_version": "week2-preflight-v1",
+      "bundle": "20261116T051053.904393Z-week1-replay-development",
+      "execution_commit": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+      "checked_evaluations": 8,
+      "shared_input_identity": "passed",
+      "raw_text_and_token_recheck": "passed",
+      "no_output_accounting": "passed",
+      "infeasibility_certificates": "passed",
+      "verbatim_baseline": "passed",
+      "aggregate_recomputation": "passed",
+      "saved_replay_prompts": "passed"
+    }
+  ],
+  "original_study_lock_signed": false,
+  "week1_evidence_and_runtime_modified": false,
+  "preliminary_final_selected_contexts_agree": true,
+  "final_cases_authored_opened_or_run": false,
+  "live_model_calls": 0,
+  "validation": {
+    "tests_passed": 459,
+    "coverage_percent": 89.69,
+    "new_tests_passed": 26,
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "mypy": "passed: 160 source files",
+    "commands": [
+      "python -m pytest --basetemp=.pytest-tmp-week2-offline-full -q --cov-report=term:skip-covered",
+      "ruff check .",
+      "ruff format --check .",
+      "python -m mypy"
+    ]
+  }
+}

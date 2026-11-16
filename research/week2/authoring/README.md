@@ -5,6 +5,11 @@ examples only. Keep final case text and answer keys outside the implementation t
 checkout and account access. Do not send final cases to the method developer for help
 with authoring, labeling, validation, or interpreting outcomes.
 
+For the executable 30-case format, source freeze, signed manifest schema and detached
+attestation verification, use the [offline command instructions](../OFFLINE_COMMAND.md).
+That format adds family, data_kind and origin outside selector inputs. The original
+templates below remain explanatory; neither a template nor a pending lock is a seal.
+
 ## Case construction
 
 Author 30 new cases: ten evolving coding-agent cases, ten operational tool-state cases,
