@@ -49,3 +49,43 @@ correction. The final steward must approve a fresh execution freeze before signi
 The authoring packet is ready for handoff; author/steward assignment remains pending.
 Independently authored or reviewed data are the next research milestone. No final
 cases were authored, opened or run, and no live model calls were made.
+
+## Rendered header follow-up
+
+Corrected source for the steward's new execution freeze:
+`3e4419a760ef71404f3c2bd0e718541ca3db3cf6`. This also checks every original
+record's rendered header, including ID and type, before either selector runs.
+The renderer and preflight share the header formatter, preserving exact prompt
+text. Header errors use case ID, zero-based record index and `field=header` rather
+than exposing a potentially restricted record ID. Tokenizer behavior is unchanged.
+
+The added regression puts `<|endoftext|>` in a required record ID in the last
+development case and updates shared references and the separate scoring key. It
+reproduces preflight acceptance on `b90b7cc`; with the correction, both preflight
+and run reject it before any selection or result-directory creation, with no ID
+text or exception-chain exposure.
+
+All 466 repository tests passed with 89.75% coverage. Ruff lint, formatting and
+strict mypy passed. Full-suite command:
+`& $studyPython -m pytest --basetemp=.pytest-tmp-week2-header-full -q --cov-report=term:skip-covered`.
+
+A fresh 180-row synthetic run and read-only audit passed. All predictions match the
+retained run after omitting only trace timings; metrics match byte for byte: 162
+valid, zero invalid, 12 certified infeasibilities and six avoidable refusals. Both
+original Week 1 audits pass (60 pilot and eight replay rows). The fresh local freeze
+and results are under ignored `out/week2-header-check/`; retained evidence, study
+lock and analysis plan remain untouched. No final cases or live models were used.
+
+```powershell
+& $studyPython -m context_invariant.benchmarks.week2 freeze --output out/week2-header-check/execution-freeze.json
+& $studyPython -m context_invariant.benchmarks.week2 run --synthetic --inputs research/week2/synthetic/cases.json --keys research/week2/synthetic/keys.json --freeze out/week2-header-check/execution-freeze.json --output-directory out/week2-header-check/results
+& $studyPython -m context_invariant.benchmarks.week2 audit --synthetic --inputs research/week2/synthetic/cases.json --keys research/week2/synthetic/keys.json --freeze out/week2-header-check/execution-freeze.json --bundle out/week2-header-check/results/20261116T171620.280884Z-week2-synthetic-dry-run-development
+```
+
+Use a new freeze filename and the newly printed bundle path for subsequent runs.
+Hand off the [authoring packet](authoring/README.md) now; the independent author or
+steward can work privately while arranging review. Before sealing, validate tasks,
+headers and content with the packet's private data-check instructions, then approve
+a fresh execution freeze from this corrected source (or a documentation-only
+descendant). Assignment and attestation remain pending; do not mark the study lock
+signed or provide final data to the implementation team.

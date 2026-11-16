@@ -50,10 +50,14 @@ Use a full Git checkout, or fetch the recorded method/evaluator/execution revisi
 before preflight. The Linux and Windows test jobs fetch full history so those checks
 also run in CI. Missing Git objects are rejected rather than treated as verified.
 
-Preflight tokenizes every task and every record's content, including optional records,
-before either selector can run. The existing tokenizer still rejects control markers
+Preflight tokenizes every task, every rendered record header (ID and type), and every
+record's content, including optional records, before either selector can run. Header
+formatting is shared with the prompt renderer. The existing tokenizer still rejects
+control markers
 such as literal `<|endoftext|>`. A rejection identifies `case_id`, `field`, and, for a
-record, `record_id`; it omits source content and the underlying tokenizer exception.
+record content, `record_id`; a header error uses zero-based `record_index` and
+`field=header` instead of echoing a potentially restricted record ID. Errors omit
+source content and the underlying tokenizer exception.
 The steward must resolve or document exclusions before signing, without choosing cases
 based on method outcomes. Data edits require new hashes and a new seal. This preflight
 fix changes the frozen source: create a fresh execution freeze from the corrected

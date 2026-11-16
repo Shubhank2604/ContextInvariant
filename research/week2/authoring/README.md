@@ -76,9 +76,12 @@ not use desired method outcomes to repair labels or select cases.
 Before signing, the steward may call `load_data(inputs_path.read_bytes(),
 keys_path.read_bytes(), mode="sealed_final")` from
 `context_invariant.benchmarks.week2.preflight` in their isolated environment. This checks
-the 30-case structure, shared-rule correspondence and tokenizability of every task and
-record, without running either selector or requiring a seal. It is a data check, not
-signed preflight or attestation. Tokenization errors report case/record/field IDs only;
+the 30-case structure, shared-rule correspondence and tokenizability of every task,
+rendered record header (ID and type), and record content, without running either
+selector or requiring a seal. It is a data check, not signed preflight or attestation.
+Header tokenization errors report case ID, zero-based record index and `field=header`,
+without echoing the offending ID. Other tokenization errors report case/record/field
+IDs only;
 keep all validation output in the steward's restricted environment. Resolve or document
 exclusions before signing; do not alter tokenizer behavior or silently sanitize traces.
 Use a new execution freeze from the corrected committed source, then sign and run the
