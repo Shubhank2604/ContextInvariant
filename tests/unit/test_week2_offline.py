@@ -361,3 +361,67 @@ def test_actual_selector_calls_share_records_policy_and_tokenizer_without_keys(
         assert len(rows) == 2
     assert len(observed) == 6
     assert all(observed[index] == observed[index + 1] for index in range(0, 6, 2))
+
+
+@pytest.mark.parametrize("field", ["task", "record"])
+@pytest.mark.parametrize("entry_point", ["preflight", "run", "cli"])
+def test_last_case_tokenization_failure_is_private_and_precedes_all_selection(
+    development: tuple[Path, Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    entry_point: str,
+) -> None:
+    inputs, keys, freeze, _ = copy_fixture(development, tmp_path)
+    cases = json.loads(inputs.read_bytes())
+    case = cases[-1]
+    restricted = "PRIVATE_TRACE_TEXT_DO_NOT_PRINT_712"
+    marker = "<|endoftext|>"
+    if field == "task":
+        case["inputs"]["task"] += f" {restricted} {marker}"
+    else:
+        case["inputs"]["items"][-1]["content"] += f" {restricted} {marker}"
+    inputs.write_bytes(json_bytes(cases))
+    output = tmp_path / "must-not-be-created"
+    monkeypatch.setattr(
+        week1, "execute_method", lambda *args, **kwargs: pytest.fail("selection preceded preflight")
+    )
+    if entry_point == "cli":
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "context_invariant.benchmarks.week2",
+                "preflight",
+                "--synthetic",
+                "--inputs",
+                str(inputs),
+                "--keys",
+                str(keys),
+                "--freeze",
+                str(freeze),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 2
+        message = result.stderr
+        assert not result.stdout
+        assert "Traceback" not in message
+    else:
+        with pytest.raises(ValueError, match="cannot be tokenized") as error:
+            if entry_point == "preflight":
+                preflight(inputs, keys, freeze, mode="synthetic_development")
+            else:
+                run_evaluation(inputs, keys, freeze, output, mode="synthetic_development")
+        message = str(error.value)
+        assert error.value.__suppress_context__
+    assert case["id"] in message
+    if field == "task":
+        assert "field=task" in message
+    else:
+        assert "field=content" in message
+        assert case["inputs"]["items"][-1]["id"] in message
+    assert restricted not in message and marker not in message
+    assert not output.exists()

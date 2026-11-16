@@ -8,6 +8,7 @@ import json
 import subprocess
 import sys
 from collections import Counter
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,8 @@ from context_invariant.benchmarks.week2.models import (
     Seal,
     Week2Case,
 )
+from context_invariant.errors import TokenizerError
+from context_invariant.tokenization import TiktokenTokenizer
 
 ROOT = Path(__file__).resolve().parents[4]
 LOCK_PATH = "research/week2/study-lock.json"
@@ -254,7 +257,26 @@ def load_data(
         if not case.inputs.items or not case.inputs.task.strip():
             raise ValueError("cases require nonempty tasks and records")
         validate_labels(case.inputs, labels[case.id])
+    validate_tokenization(cases)
     return cases, labels
+
+
+def validate_tokenization(cases: Sequence[Week2Case]) -> None:
+    """Reject untokenizable fields before selection, without exposing their contents."""
+    tokenizer = TiktokenTokenizer()
+    for case in cases:
+        fields = [("field=task", case.inputs.task)]
+        fields.extend(
+            (f"record_id={json.dumps(item.id)} field=content", item.content)
+            for item in case.inputs.items
+        )
+        for field, content in fields:
+            try:
+                tokenizer.count_tokens(content)
+            except TokenizerError:
+                raise ValueError(
+                    f"case_id={json.dumps(case.id)} {field} cannot be tokenized"
+                ) from None
 
 
 def preflight(
