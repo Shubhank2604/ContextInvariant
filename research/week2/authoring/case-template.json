@@ -1,0 +1,26 @@
+{
+  "id": "__TEMPLATE_ONLY__",
+  "inputs": {
+    "task": "REPLACE_WITH_A_NEW_REALISTIC_TASK",
+    "items": [
+      {
+        "id": "policy",
+        "content": "REPLACE_WITH_APPLICATION_REQUIREMENT",
+        "type": "system_instruction",
+        "created_at": "2026-11-16T00:00:00Z",
+        "updated_at": "2026-11-16T00:00:00Z",
+        "compressible": false,
+        "contract": {"retention": "required"}
+      },
+      {
+        "id": "evidence",
+        "content": "REPLACE_WITH_REAL_SOURCE_TEXT",
+        "type": "retrieved_document",
+        "created_at": "2026-11-16T00:00:00Z",
+        "updated_at": "2026-11-16T00:00:00Z"
+      }
+    ],
+    "edges": [],
+    "constraint_policy": {"enabled": true}
+  }
+}

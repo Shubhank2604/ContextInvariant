@@ -1,0 +1,92 @@
+{
+  "validation_source_commit": "809843ed2fe41006d86359cbf1de4798792b4aec",
+  "original_week1_commit": "51bb4f0794c49702078821d301f821597a8e22ee",
+  "unchanged_week1_files_checked": 31,
+  "week1_artifacts_regenerated": false,
+  "original_week1_file_sha256": {
+    "research/week1/README.md": "1d1ee0cf7f634829567dbfa63ed4f100e9e83a29eae0f9d33817794d0eefa588",
+    "research/week1/environment-requirements.txt": "8e33bb113df783b09672a24ff0bc54ced46c5447bac4b8a335db5305763648ea",
+    "research/week1/evidence/20261116T051053.178379Z-metadata-matched-pilot-development/cases.jsonl": "eba7a1563b8e551cc87aecd1fa41291386da3430b8c25f2fe4c92f7451dc24e6",
+    "research/week1/evidence/20261116T051053.178379Z-metadata-matched-pilot-development/config.json": "4a997d75aff4a0777214109b1627bdfc0120076e9af26ed7dc6d3f088309cb42",
+    "research/week1/evidence/20261116T051053.178379Z-metadata-matched-pilot-development/environment.json": "573d7109002f37d7b3d55b973d18cca3df09a5f3fce129b78a6ca1051ba6f4cf",
+    "research/week1/evidence/20261116T051053.178379Z-metadata-matched-pilot-development/metrics.csv": "aab4609f528c2ae2fc27d48b00afbb728d0b9151a9dd91c5f6b423b28083c5e6",
+    "research/week1/evidence/20261116T051053.178379Z-metadata-matched-pilot-development/metrics.json": "a87eb4d28c8277b0c284a1cf8021ca5e0e7bd44594affef3d513a063d5900b45",
+    "research/week1/evidence/20261116T051053.178379Z-metadata-matched-pilot-development/predictions.jsonl": "1e2afc84e984c6be54cc5f7a969f6971cf58db288e6f842a825382e21ed6a4ac",
+    "research/week1/evidence/20261116T051053.178379Z-metadata-matched-pilot-development/report.md": "a7f8f9cc56bda88c6f1977acaf4f51ab17aecb13a0ee469fc7d707ee6c05f5d3",
+    "research/week1/evidence/20261116T051053.904393Z-week1-replay-development/cases.jsonl": "d94b8b6c53fe7890394fa1723932a5e91ceac99b96f249d5074b2f5bc3252851",
+    "research/week1/evidence/20261116T051053.904393Z-week1-replay-development/config.json": "27ceaf28222b5c1e07f575a85a1e74a9f215e8bbb9af6713ac9a6e50d379e0aa",
+    "research/week1/evidence/20261116T051053.904393Z-week1-replay-development/environment.json": "40ba14065244b5390074bcd7e96beb880a9b48c15f9b2b3d057120760bc29990",
+    "research/week1/evidence/20261116T051053.904393Z-week1-replay-development/metrics.csv": "afbda31582140b1922ec486fcdf424c79da86b1533d449dc30213ad9604dcbeb",
+    "research/week1/evidence/20261116T051053.904393Z-week1-replay-development/metrics.json": "8096a7e818a1d0bcccf19abf97337cd947db408240122a69d4546379f0e00484",
+    "research/week1/evidence/20261116T051053.904393Z-week1-replay-development/predictions.jsonl": "68ef3f74f4bf84bb22fd724bc6380c1ee121026cd36582fadb3586d0c5414596",
+    "research/week1/evidence/20261116T051053.904393Z-week1-replay-development/report.md": "a938d86bd51e8819e9b6fba47f8e85396001b49aa319203a30194fe1d249421d",
+    "research/week1/inputs/checklists.json": "94629f208d30147f8f3f2b54800f0093d35de7bdaf7e1023244ddfa36ea3c209",
+    "research/week1/inputs/pilot.json": "b67c2ad4264c1cde2b79dc92edc86932731c5a917ff76e1f8c2c7a6d7eddee18",
+    "research/week1/inputs/replay-checklists.json": "395ea24e0e1b1c50c94846830b57f320f4b65f1c874244991e866e24cc47b9c1",
+    "research/week1/inputs/replay.json": "c3ee8fa325959c7aa849b3b2808afe077240b05c374d38b0d10e80847a42b92f",
+    "research/week1/inputs/task-test-capture.json": "5bfb2ca3d30c52e19fe3237ad3ea91df1731c2b82b5bb85cb104e155647f576e",
+    "research/week1/manual-audit.md": "f6f2ba2e15f035edc728f29dd63d10d751250f566ac145b620b3314bd254941e",
+    "research/week1/protocol.md": "734921f17c79d0464cbebf529600cec3eaf2982ff3b43c2faaa297077c447b2e",
+    "research/week1/report.md": "6e5eff0e6264740aef7b31f3c3130df042dcfabec56954373a2e1c12689d6c7a",
+    "research/week1/verification.json": "82018e50208fa76b65eb86bd2713cfab81aaf7e84ab8443f317b43de6e46e4cc",
+    "research/week1/week2-plan.md": "d0c66eeff43052596b3d4f80a4a56d45b30b137b6bd28c49c7ae427309966c22",
+    "research/week1/workflow/README.md": "283856790a84d5ad43ec09faa06d407a83fe9dc8f610db7e928620a18565877e",
+    "research/week1/workflow/task/check_task.py": "4f2d4b9efbd770e7944b50e783c835a78440e4329340396d67c1b44add19c91f",
+    "research/week1/workflow/task/oracle.json": "4752069b5a3cd79c5e5a364feb09f3f00f3cbf97cd7b9acb4bd5e61376e6c539",
+    "research/week1/workflow/task/reference_retry.py": "e9c249c5217e10a85f8492ad3be87aa30f082bc857509da36d4ea80aa994aee9",
+    "research/week1/workflow/task/retry.py": "39909d3028ddbf6cbf519de6edad1052a0175c3327a41b4db6118f95c9715d59"
+  },
+  "audits": [
+    {
+      "audit_version": "week2-preflight-v1",
+      "bundle": "20261116T051053.178379Z-metadata-matched-pilot-development",
+      "execution_commit": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+      "checked_evaluations": 60,
+      "shared_input_identity": "passed",
+      "raw_text_and_token_recheck": "passed",
+      "no_output_accounting": "passed",
+      "infeasibility_certificates": "passed",
+      "verbatim_baseline": "passed",
+      "aggregate_recomputation": "passed",
+      "saved_replay_prompts": "not_applicable"
+    },
+    {
+      "audit_version": "week2-preflight-v1",
+      "bundle": "20261116T051053.904393Z-week1-replay-development",
+      "execution_commit": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+      "checked_evaluations": 8,
+      "shared_input_identity": "passed",
+      "raw_text_and_token_recheck": "passed",
+      "no_output_accounting": "passed",
+      "infeasibility_certificates": "passed",
+      "verbatim_baseline": "passed",
+      "aggregate_recomputation": "passed",
+      "saved_replay_prompts": "passed"
+    }
+  ],
+  "regression_reproduction": {
+    "before_fix": "18 failed, 2 passed (includes new audit-result-field assertion)",
+    "after_fix": "36 Week 1 / Week 2 focused tests passed"
+  },
+  "validation": {
+    "full_suite_passed": 433,
+    "coverage_percent": 90.71,
+    "focused_tests_passed": 36,
+    "lint": "passed",
+    "format": "passed",
+    "strict_mypy": "passed: 152 source files",
+    "commands": [
+      "python -m pytest -o addopts= --no-cov tests/unit/test_week1_study.py tests/unit/test_week2_preflight.py --basetemp=.pytest-tmp-week2-preflight-focused -q",
+      "python -m pytest --basetemp=.pytest-tmp-week2-preflight-full -q --cov-report=term:skip-covered",
+      "ruff check .",
+      "ruff format --check .",
+      "mypy"
+    ]
+  },
+  "authoring_packet_validation": {
+    "template_input_and_checklist": "passed",
+    "week1_development_example_count": 3,
+    "independent_author_assignment": "pending",
+    "final_cases_authored_or_opened": false
+  }
+}

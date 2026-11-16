@@ -1,0 +1,16 @@
+{
+  "purpose": "REPLACE_WITH_THE_CASE_PURPOSE_WITHOUT_A_DESIRED_WINNER",
+  "required": "REPLACE_WITH_INPUT_DECLARED_REQUIREMENTS",
+  "optional": "REPLACE_WITH_OPTIONAL_EVIDENCE_AND_ITS_ROLE",
+  "failure": "REPLACE_WITH_RULE_GROUNDED_INVALIDITY_CRITERIA",
+  "required_ids": ["policy"],
+  "forbidden_ids": [],
+  "required_spans": [
+    {"item_id": "policy", "text": "REPLACE_WITH_APPLICATION_REQUIREMENT"}
+  ],
+  "conditional_spans": [],
+  "useful_spans": [
+    {"item_id": "evidence", "text": "REPLACE_WITH_REAL_SOURCE_TEXT"}
+  ],
+  "development_only": true
+}
