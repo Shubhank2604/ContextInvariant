@@ -13,6 +13,7 @@ from context_invariant.scoring import relevance_scores
 from context_invariant.tokenization import Tokenizer
 from context_invariant.trace import (
     BudgetAllocation,
+    ConstraintTraceIndex,
     ItemTrace,
     OptimizationDecision,
     OptimizationTrace,
@@ -95,6 +96,15 @@ class MetadataMatchedSelector:
         original_tokens = sum(item.token_count or 0 for item in items)
         used = tokens(selected)
         mandatory_tokens = sum(item.token_count or 0 for item in items if item.mandatory)
+        resolution = graph.resolve(
+            tuple(selected),
+            conflict_policy=rules.conflict_policy,
+            conflict_winners=rules.conflict_winners,
+            retain_superseded=rules.retain_superseded,
+        )
+        evidence = ConstraintTraceIndex(
+            items, inputs.edges, selected_item_ids=tuple(selected), resolution=resolution
+        )
         trace = OptimizationTrace(
             strategy=self.name,
             policy=policy,
@@ -114,6 +124,11 @@ class MetadataMatchedSelector:
                     item_id=item.id,
                     initial_token_count=item.token_count or 0,
                     relevance_score=scores.get(item.id),
+                    preservation_contract=item.contract,
+                    constraint_resolution_applied=True,
+                    required_by=list(evidence.for_item(item.id).required_by),
+                    dependency_closure=list(evidence.for_item(item.id).dependency_closure),
+                    conflict_status=evidence.for_item(item.id).conflict_status,
                     decision=(
                         OptimizationDecision.RETAINED
                         if item.id in selected

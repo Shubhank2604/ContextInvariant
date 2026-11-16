@@ -103,3 +103,19 @@ model success. Live smoke is optional and omitted absent established model acces
 Week 2 will freeze a separately authored/reviewed held-out set and labels before any
 final evaluation or further implementation tuning. Record a targeted ablation only
 after the pilot identifies a concrete mechanism.
+
+## Instrumentation amendment after preliminary pilot
+
+Before retaining the final pilot, add pass observation through a layout delegate that
+calls the unchanged default PositionAwareLayout. This records actual pre-closure passes
+when the optimizer subsequently raises; it never reruns selection or treats a partial
+pass as returned context. Add canonical JSON hashes and explicit LF serialization so
+input identity survives Windows/POSIX line-ending differences. Enrich baseline trace
+metadata with the hard constraints it actually enforced. These changes do not alter
+selection, cases, labels, budgets, or outcomes. The preliminary run is retained locally
+under `out/week1-preliminary/`; the final report identifies the authoritative rerun.
+
+Repeated padding in diagnostic boundary fixtures can produce artificial semantic
+duplicates. Keep those observations; final held-out authors must use varied natural
+content except for separately reported tokenizer-boundary probes. Do not claim the
+pilot establishes compression efficiency or semantic quality on a real workload.

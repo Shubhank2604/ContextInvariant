@@ -304,10 +304,12 @@ if __name__ == "__main__":
     (ROOT / "pilot.json").write_text(
         json.dumps([case.model_dump(mode="json") for case in cases], indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     (ROOT / "checklists.json").write_text(
         json.dumps({key: value.model_dump(mode="json") for key, value in labels.items()}, indent=2)
         + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     print(f"Authored {len(cases)} development cases and separate checklists in {ROOT}")

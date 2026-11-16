@@ -7,7 +7,7 @@ import hashlib
 import json
 import subprocess
 from collections import Counter
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from statistics import mean
@@ -33,9 +33,38 @@ from context_invariant.benchmarks.week1.models import (
     study_policy,
 )
 from context_invariant.embeddings import DeterministicEmbeddingProvider
+from context_invariant.layout import PositionAwareLayout
+from context_invariant.models import ContextItem
+from context_invariant.scoring import ScoreBreakdown
 from context_invariant.tokenization import TiktokenTokenizer, Tokenizer
 
 METHODS = ("context_invariant_full", "metadata_matched")
+
+
+class SelectionObserver:
+    """Observe existing layout passes without re-executing or changing selection."""
+
+    def __init__(self) -> None:
+        self.passes: list[dict[str, Any]] = []
+
+    def arrange(
+        self,
+        items: Sequence[ContextItem],
+        *,
+        scores: Mapping[str, ScoreBreakdown],
+        original_positions: Mapping[str, int],
+    ) -> list[ContextItem]:
+        arranged = PositionAwareLayout().arrange(
+            items, scores=scores, original_positions=original_positions
+        )
+        self.passes.append(
+            {
+                "selected_ids": [item.id for item in arranged],
+                "selected_tokens": sum(item.token_count or 0 for item in arranged),
+                "scores": {key: value.model_dump(mode="json") for key, value in scores.items()},
+            }
+        )
+        return arranged
 
 
 def load_cases(dataset: Path, checklists: Path) -> tuple[list[StudyCase], dict[str, Checklist]]:
@@ -97,6 +126,7 @@ def execute_method(
     tokenizer: Tokenizer,
 ) -> dict[str, Any]:
     certificate = required_certificate(inputs, policy, tokenizer)
+    observer = SelectionObserver()
     try:
         if method == "context_invariant_full":
             result = ContextOptimizer(
@@ -104,6 +134,7 @@ def execute_method(
                 edges=inputs.edges,
                 constraint_policy=inputs.constraint_policy,
                 embedding_provider=DeterministicEmbeddingProvider(),
+                layout=observer,
             ).optimize(inputs.task, inputs.items, policy)
         elif method == "metadata_matched":
             result = MetadataMatchedSelector().optimize(inputs, policy, tokenizer)
@@ -115,7 +146,7 @@ def execute_method(
             **evaluate_failure(error, certificate),
             "selected_items": None,
             "trace": None,
-            "method_metadata": None,
+            "method_metadata": {"preclosure_passes": observer.passes},
             "context_reduction": None,
         }
     evaluation = evaluate_output(inputs, checklist, result.selected_items, policy, tokenizer)
@@ -130,7 +161,7 @@ def execute_method(
         "failure_reason": None,
         "selected_items": [item.model_dump(mode="json") for item in result.selected_items],
         "trace": result.trace.model_dump(mode="json"),
-        "method_metadata": result.metadata,
+        "method_metadata": {**result.metadata, "preclosure_passes": observer.passes},
         "context_reduction": 1 - actual_tokens / original_tokens if original_tokens else 0.0,
     }
 
@@ -195,6 +226,11 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
                 if other["case_id"] == row["case_id"]
             )
         }
+        annotated = {
+            row["case_id"]
+            for row in group
+            if row["case_id"] in matched and row.get("useful_spans_total", 0) > 0
+        }
         paired.append(
             {
                 "budget_percentage": percentage,
@@ -205,6 +241,17 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
                         for row in group
                         if row["case_id"] in matched and row["method"] == method
                     )
+                    for method in METHODS
+                },
+                "matched_valid_annotated_case_count": len(annotated),
+                "mean_useful_recall": {
+                    method: mean(
+                        row["useful_recall"]
+                        for row in group
+                        if row["case_id"] in annotated and row["method"] == method
+                    )
+                    if annotated
+                    else None
                     for method in METHODS
                 },
             }
@@ -284,8 +331,9 @@ def source_manifest(root: Path) -> dict[str, Any]:
     ).stdout.strip()
     hashes = {
         path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-        for folder in ("src", "scripts")
-        for path in sorted((root / folder).rglob("*.py"))
+        for folder in ("src", "scripts", "research/week1/workflow/task")
+        for pattern in ("*.py", "*.json")
+        for path in sorted((root / folder).rglob(pattern))
     }
     return {"execution_commit": revision, "study_source_status": status, "source_sha256": hashes}
 
@@ -318,6 +366,12 @@ def run_study(
         **source_manifest(root),
         "dataset_sha256": hashlib.sha256(dataset.read_bytes()).hexdigest(),
         "checklists_sha256": hashlib.sha256(checklists.read_bytes()).hexdigest(),
+        "canonical_dataset_sha256": content_hash(
+            {"cases": [case.model_dump(mode="json") for case in cases]}
+        ),
+        "canonical_checklists_sha256": content_hash(
+            {key: value.model_dump(mode="json") for key, value in labels.items()}
+        ),
         "budget_percentages": percentages,
         "budget_rounding": "floor(sum(original record tokens) * percentage / 100)",
         "tokenizer": "cl100k_base",

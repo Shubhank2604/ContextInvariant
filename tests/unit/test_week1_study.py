@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import json
+import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -11,6 +14,7 @@ from context_invariant import (
     ConstraintPolicy,
     ContextEdge,
     ContextItem,
+    ContextOptimizer,
     ContextType,
     DependencyReferenceRequirement,
     DependencyRelation,
@@ -19,6 +23,7 @@ from context_invariant import (
     RetentionPolicy,
 )
 from context_invariant.benchmarks.bundles import load_benchmark_bundle
+from context_invariant.benchmarks.week1.audit import audit_bundle
 from context_invariant.benchmarks.week1.baseline import MetadataMatchedSelector
 from context_invariant.benchmarks.week1.evaluator import (
     evaluate_failure,
@@ -246,6 +251,13 @@ def test_prespecified_ten_case_pilot_writes_all_sixty_raw_evaluations(tmp_path: 
     assert len(bundle.predictions) == 60
     assert len(bundle.cases) == 10
     assert sum(cell["total"] for cell in bundle.metrics["cells"]) == 60
+    matched = bundle.metrics["matched_valid"][0]
+    assert matched["matched_valid_case_count"] == 8
+    assert matched["matched_valid_annotated_case_count"] == 4
+    assert matched["mean_useful_recall"] == {
+        "context_invariant_full": 0.75,
+        "metadata_matched": 0.25,
+    }
     assert all(row["inputs_unchanged"] for row in bundle.predictions)
     assert (
         len(
@@ -265,9 +277,82 @@ def test_prespecified_ten_case_pilot_writes_all_sixty_raw_evaluations(tmp_path: 
         row["outcome"] == "valid_context" and row["context_tokens"] == 65 for row in boundary
     )
     assert any(row["failure_reason"] == "budget_infeasible" for row in bundle.predictions)
+    assert audit_bundle(path, dataset, labels_path)["checked_evaluations"] == 60
+    rows = bundle.predictions
+    rows[0]["context_tokens"] += 1
+    (path / "predictions.jsonl").write_text(
+        "\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="raw text"):
+        audit_bundle(path, dataset, labels_path)
 
 
 def test_budget_rounding_is_fixed_and_rejects_unspecified_budget() -> None:
     assert study_policy(101, 65).effective_budget == 65
     with pytest.raises(ValueError, match="65, 80, and 100"):
         study_policy(100, 50)
+
+
+def test_observing_layout_preserves_default_runtime_selection_and_records_failure_pass() -> None:
+    from context_invariant.benchmarks.week1.runner import execute_method
+    from context_invariant.tokenization import TiktokenTokenizer
+
+    cases, labels = load_cases(
+        ROOT / "research/week1/inputs/pilot.json",
+        ROOT / "research/week1/inputs/checklists.json",
+    )
+    tokenizer = TiktokenTokenizer()
+    for case_id in ("diagnostic-log", "optional-bundle"):
+        case = next(case for case in cases if case.id == case_id)
+        inputs = prepare_inputs(case.inputs, tokenizer)
+        policy = study_policy(sum(value.token_count or 0 for value in inputs.items), 65)
+        row = execute_method(inputs, labels[case.id], "context_invariant_full", policy, tokenizer)
+        if case_id == "optional-bundle":
+            assert row["failure_reason"] == "selection_failure"
+            assert "lead" in row["method_metadata"]["preclosure_passes"][0]["selected_ids"]
+            continue
+        plain = ContextOptimizer(
+            tokenizer=tokenizer, edges=inputs.edges, constraint_policy=inputs.constraint_policy
+        ).optimize(inputs.task, inputs.items, policy)
+        assert [(value.id, value.content) for value in plain.selected_items] == [
+            (value["id"], value["content"]) for value in row["selected_items"]
+        ]
+
+
+def test_replay_contains_active_state_earlier_evidence_and_visible_overflow(tmp_path: Path) -> None:
+    path = run_study(
+        ROOT / "research/week1/inputs/replay.json",
+        ROOT / "research/week1/inputs/replay-checklists.json",
+        tmp_path,
+        replay=True,
+    )
+    bundle = load_benchmark_bundle(path)
+    assert len(bundle.predictions) == 8
+    for row in bundle.predictions:
+        if row["case_id"] == "04-budget-stress-probe":
+            assert row["outcome"] == "no_context"
+            assert row["failure_reason"] == "budget_infeasible"
+            assert "model_prompt" not in row
+        else:
+            assert row["outcome"] == "valid_context"
+            assert "should_retry" in row["model_prompt"]
+            assert "earlier-test-result" in row["model_prompt"]
+            assert row["model_prompt_tokens"] > row["context_tokens"]
+            ids = {value["id"] for value in row["selected_items"]}
+            if row["case_id"] != "01-investigate":
+                assert "current-config" in ids and "old-config" not in ids
+
+
+@pytest.mark.parametrize(("candidate", "expected"), [("retry.py", 1), ("reference_retry.py", 0)])
+def test_coding_oracle_distinguishes_buggy_and_reference_patch(
+    candidate: str, expected: int
+) -> None:
+    task = ROOT / "research/week1/workflow/task"
+    result = subprocess.run(
+        [sys.executable, str(task / "check_task.py"), str(task / candidate)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == expected
+    assert '"tests": 12' in result.stdout
