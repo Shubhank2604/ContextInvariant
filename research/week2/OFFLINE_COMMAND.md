@@ -50,6 +50,15 @@ Use a full Git checkout, or fetch the recorded method/evaluator/execution revisi
 before preflight. The Linux and Windows test jobs fetch full history so those checks
 also run in CI. Missing Git objects are rejected rather than treated as verified.
 
+Preflight tokenizes every task and every record's content, including optional records,
+before either selector can run. The existing tokenizer still rejects control markers
+such as literal `<|endoftext|>`. A rejection identifies `case_id`, `field`, and, for a
+record, `record_id`; it omits source content and the underlying tokenizer exception.
+The steward must resolve or document exclusions before signing, without choosing cases
+based on method outcomes. Data edits require new hashes and a new seal. This preflight
+fix changes the frozen source: create a fresh execution freeze from the corrected
+committed checkout; retain the original synthetic freeze and evidence unchanged.
+
 Source-file hashes use LF-normalized bytes, matching Git's source convention. Data,
 key, seal and freeze-file hashes cover exact bytes. `configuration_sha256` and canonical
 data hashes use SHA-256 of UTF-8 JSON with sorted keys and compact separators, wrapped

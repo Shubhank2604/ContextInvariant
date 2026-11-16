@@ -73,10 +73,17 @@ provenance and behavioral test oracles. The same person may fill multiple roles 
 if that is disclosed; independent review is not independent authorship. Reviewers must
 not use desired method outcomes to repair labels or select cases.
 
-The steward may run `load_cases(inputs_path, checklists_path)` from the frozen validator
-in an isolated environment to check structure and shared-rule correspondence. Do not run
-either selector or send validation traces containing final text to the implementation
-team. Structural validation cannot replace human semantic review. Record every review
+Before signing, the steward may call `load_data(inputs_path.read_bytes(),
+keys_path.read_bytes(), mode="sealed_final")` from
+`context_invariant.benchmarks.week2.preflight` in their isolated environment. This checks
+the 30-case structure, shared-rule correspondence and tokenizability of every task and
+record, without running either selector or requiring a seal. It is a data check, not
+signed preflight or attestation. Tokenization errors report case/record/field IDs only;
+keep all validation output in the steward's restricted environment. Resolve or document
+exclusions before signing; do not alter tokenizer behavior or silently sanitize traces.
+Use a new execution freeze from the corrected committed source, then sign and run the
+full evidence-checking preflight described in the offline command instructions.
+Structural validation cannot replace human semantic review. Record every review
 disagreement, resolution, exclusion and case replacement before sealing. No invented
 author/reviewer identities, agreements, signatures or sample counts.
 
