@@ -1,0 +1,52 @@
+{
+  "audits": [
+    {
+      "bundle": "20261116T051053.178379Z-metadata-matched-pilot-development",
+      "execution_commit": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+      "checked_evaluations": 60,
+      "shared_input_identity": "passed",
+      "raw_text_and_token_recheck": "passed",
+      "no_output_accounting": "passed",
+      "infeasibility_certificates": "passed",
+      "verbatim_baseline": "passed",
+      "aggregate_recomputation": "passed"
+    },
+    {
+      "bundle": "20261116T051053.904393Z-week1-replay-development",
+      "execution_commit": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+      "checked_evaluations": 8,
+      "shared_input_identity": "passed",
+      "raw_text_and_token_recheck": "passed",
+      "no_output_accounting": "passed",
+      "infeasibility_certificates": "passed",
+      "verbatim_baseline": "passed",
+      "aggregate_recomputation": "passed"
+    }
+  ],
+  "unchanged_v050_evidence_trees": {
+    "benchmarks/results/20261002T010620.923753Z-constraint-model-full": "db05cbbde251e9e5044661dd7b8b3d4923a27bd2",
+    "benchmarks/results/20261002T011212.526789Z-constraint-model-full": "ec78d055b0258bee8ae6603b1a272b30034a07cd",
+    "benchmarks/results/20261002T012723.643351Z-constraint-model-full": "03dc7b320e8d43dc56f5dffdffc645ce65695330",
+    "benchmarks/results/20261002T021250.312800Z-comparison-standard": "38f7be9ed3915d09f552bb282c9bc17f06804434",
+    "benchmarks/results/20261002T032213.979841Z-layout-comparison-full": "a59cc5719890eb82847531ddb3ac67344d8e8302",
+    "benchmarks/results/20261002T032535.450250Z-phase5-ablation-full": "c1caff271cde634c2f45e7f634cb9eb3cac5927c"
+  },
+  "unchanged_parity_fixture_git_blob": "4488377dd0f18cb2e369c7c0d11e100bee612c1a",
+  "instrumentation_rerun_same_60_selections_and_outcomes": true,
+  "validation": {
+    "python": "3.13.9",
+    "full_suite_passed": 413,
+    "coverage_percent": 90.59,
+    "focused_tests_passed": 16,
+    "ruff_lint": "passed",
+    "ruff_format": "passed",
+    "mypy": "passed: 151 source files",
+    "commands": [
+      "python -m pytest -o addopts= --no-cov tests/unit/test_week1_study.py --basetemp=.pytest-tmp-week1-focused-7 -q",
+      "python -m pytest --basetemp=.pytest-tmp-week1-final -q --cov-report=term:skip-covered",
+      "ruff check .",
+      "ruff format --check .",
+      "mypy"
+    ]
+  }
+}

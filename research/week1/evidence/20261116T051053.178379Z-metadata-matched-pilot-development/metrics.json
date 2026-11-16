@@ -1,0 +1,134 @@
+{
+  "cells": [
+    {
+      "budget_percentage": 65,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 38,
+      "mean_valid_context_tokens": 38,
+      "mean_valid_useful_recall": 0.75,
+      "method": "context_invariant_full",
+      "no_context": 2,
+      "no_context_reasons": {
+        "budget_infeasible": 1,
+        "selection_failure": 1
+      },
+      "total": 10,
+      "valid_context": 8,
+      "valid_context_token_total": 304
+    },
+    {
+      "budget_percentage": 65,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 19.88888888888889,
+      "mean_valid_context_tokens": 19.88888888888889,
+      "mean_valid_useful_recall": 0.4,
+      "method": "metadata_matched",
+      "no_context": 1,
+      "no_context_reasons": {
+        "budget_infeasible": 1
+      },
+      "total": 10,
+      "valid_context": 9,
+      "valid_context_token_total": 179
+    },
+    {
+      "budget_percentage": 80,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 38,
+      "mean_valid_context_tokens": 38,
+      "mean_valid_useful_recall": 0.75,
+      "method": "context_invariant_full",
+      "no_context": 2,
+      "no_context_reasons": {
+        "budget_infeasible": 1,
+        "selection_failure": 1
+      },
+      "total": 10,
+      "valid_context": 8,
+      "valid_context_token_total": 304
+    },
+    {
+      "budget_percentage": 80,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 19.88888888888889,
+      "mean_valid_context_tokens": 19.88888888888889,
+      "mean_valid_useful_recall": 0.4,
+      "method": "metadata_matched",
+      "no_context": 1,
+      "no_context_reasons": {
+        "budget_infeasible": 1
+      },
+      "total": 10,
+      "valid_context": 9,
+      "valid_context_token_total": 179
+    },
+    {
+      "budget_percentage": 100,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 95.5,
+      "mean_valid_context_tokens": 95.5,
+      "mean_valid_useful_recall": 0.8,
+      "method": "context_invariant_full",
+      "no_context": 0,
+      "no_context_reasons": {},
+      "total": 10,
+      "valid_context": 10,
+      "valid_context_token_total": 955
+    },
+    {
+      "budget_percentage": 100,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 102,
+      "mean_valid_context_tokens": 102,
+      "mean_valid_useful_recall": 1.0,
+      "method": "metadata_matched",
+      "no_context": 0,
+      "no_context_reasons": {},
+      "total": 10,
+      "valid_context": 10,
+      "valid_context_token_total": 1020
+    }
+  ],
+  "evaluation_count": 60,
+  "matched_valid": [
+    {
+      "budget_percentage": 65,
+      "context_token_totals": {
+        "context_invariant_full": 304,
+        "metadata_matched": 149
+      },
+      "matched_valid_annotated_case_count": 4,
+      "matched_valid_case_count": 8,
+      "mean_useful_recall": {
+        "context_invariant_full": 0.75,
+        "metadata_matched": 0.25
+      }
+    },
+    {
+      "budget_percentage": 80,
+      "context_token_totals": {
+        "context_invariant_full": 304,
+        "metadata_matched": 149
+      },
+      "matched_valid_annotated_case_count": 4,
+      "matched_valid_case_count": 8,
+      "mean_useful_recall": {
+        "context_invariant_full": 0.75,
+        "metadata_matched": 0.25
+      }
+    },
+    {
+      "budget_percentage": 100,
+      "context_token_totals": {
+        "context_invariant_full": 955,
+        "metadata_matched": 1020
+      },
+      "matched_valid_annotated_case_count": 5,
+      "matched_valid_case_count": 10,
+      "mean_useful_recall": {
+        "context_invariant_full": 0.8,
+        "metadata_matched": 1.0
+      }
+    }
+  ]
+}
