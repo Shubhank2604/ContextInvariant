@@ -29,6 +29,12 @@ def validate_labels(inputs: StudyInputs, checklist: Checklist) -> None:
         raise ValueError("forbidden checklist IDs must exist")
     if set(checklist.forbidden_ids) & set(checklist.required_ids):
         raise ValueError("a required record cannot also be forbidden")
+    undeclared = set(checklist.forbidden_ids) - declared_exclusions(inputs)
+    if undeclared:
+        raise ValueError(
+            "forbidden checklist IDs must follow a declared exclusion supplied to both methods: "
+            + ", ".join(sorted(undeclared))
+        )
     for span in (*checklist.required_spans, *checklist.conditional_spans, *checklist.useful_spans):
         if span.item_id not in by_id or span.text not in by_id[span.item_id].content:
             raise ValueError("checklist spans must occur in their annotated source record")
@@ -54,6 +60,37 @@ def _authority(item: ContextItem) -> tuple[float, ...]:
     return (*values, item.updated_at.timestamp())
 
 
+def _conflict_winner(inputs: StudyInputs, left: str, right: str) -> str | None:
+    first, second = sorted((left, right))
+    override = inputs.constraint_policy.conflict_winners.get((first, second))
+    if override is not None:
+        return override
+    source = {item.id: item for item in inputs.items}
+    a, b = _authority(source[left]), _authority(source[right])
+    return left if a > b else right if b > a else None
+
+
+def declared_exclusions(inputs: StudyInputs) -> set[str]:
+    """Derive hard exclusions from shared rules, never from evaluation preferences.
+
+    A supersession target is excluded only if history retention is disabled. A
+    contradiction excludes its loser only when the supplied authority or override
+    chooses a winner. An unresolved tie does not license an evaluator-only choice.
+    """
+    excluded: set[str] = set()
+    for edge in inputs.edges:
+        if (
+            edge.relation is DependencyRelation.SUPERSEDES
+            and not inputs.constraint_policy.retain_superseded
+        ):
+            excluded.add(edge.target_id)
+        elif edge.relation is DependencyRelation.CONTRADICTS:
+            winner = _conflict_winner(inputs, edge.source_id, edge.target_id)
+            if winner is not None:
+                excluded.add(edge.target_id if winner == edge.source_id else edge.source_id)
+    return excluded
+
+
 def evaluate_output(
     inputs: StudyInputs,
     checklist: Checklist,
@@ -62,6 +99,7 @@ def evaluate_output(
     tokenizer: Tokenizer,
 ) -> dict[str, Any]:
     """Check actual returned text identically for both methods, without trusting traces."""
+    validate_labels(inputs, checklist)
     source = {item.id: item for item in inputs.items}
     chosen = {item.id: item for item in selected}
     issues: list[str] = []
@@ -73,9 +111,6 @@ def evaluate_output(
     for item_id in checklist.required_ids:
         if item_id not in chosen:
             issues.append(f"missing_required:{item_id}")
-    for item_id in checklist.forbidden_ids:
-        if item_id in chosen:
-            issues.append(f"forbidden_record:{item_id}")
     for edge in inputs.edges:
         if edge.relation is DependencyRelation.REQUIRES:
             if edge.source_id in chosen and edge.target_id not in chosen:
@@ -87,10 +122,7 @@ def evaluate_output(
             left, right = sorted((edge.source_id, edge.target_id))
             if not {left, right} & chosen.keys():
                 continue
-            winner = inputs.constraint_policy.conflict_winners.get((left, right))
-            if winner is None:
-                a, b = _authority(source[left]), _authority(source[right])
-                winner = left if a > b else right if b > a else None
+            winner = _conflict_winner(inputs, left, right)
             if winner is None:
                 if (
                     inputs.constraint_policy.conflict_policy is not ConflictPolicy.RETAIN_BOTH

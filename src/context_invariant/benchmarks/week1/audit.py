@@ -16,7 +16,7 @@ from context_invariant.benchmarks.week1.models import (
     prepare_inputs,
     study_policy,
 )
-from context_invariant.benchmarks.week1.runner import METHODS, load_cases, summarize
+from context_invariant.benchmarks.week1.runner import METHODS, load_cases, render_prompt, summarize
 from context_invariant.tokenization import TiktokenTokenizer
 
 
@@ -65,6 +65,8 @@ def audit_bundle(bundle_path: Path, inputs_path: Path, checklists_path: Path) ->
         ):
             raise ValueError("saved policy or effective budget is incorrect")
         if row["outcome"] == "no_context":
+            if "model_prompt" in row or "model_prompt_tokens" in row:
+                raise ValueError("a no-context outcome cannot contain saved prompt fields")
             if any(
                 row[field] is not None
                 for field in (
@@ -84,6 +86,16 @@ def audit_bundle(bundle_path: Path, inputs_path: Path, checklists_path: Path) ->
                 raise ValueError("unexpected execution error requires investigation")
         else:
             selected = [ContextItem.model_validate(item) for item in row["selected_items"]]
+            if bundle.config["replay"]:
+                expected_prompt = render_prompt(
+                    inputs, [item.model_dump(mode="json") for item in selected]
+                )
+                if row.get("model_prompt") != expected_prompt:
+                    raise ValueError("saved replay prompt does not match the saved selection")
+                expected_tokens = tokenizer.count_tokens(expected_prompt)
+                prompt_tokens = row.get("model_prompt_tokens")
+                if type(prompt_tokens) is not int or prompt_tokens != expected_tokens:
+                    raise ValueError("saved replay prompt token count is incorrect")
             evaluation = evaluate_output(
                 inputs, labels[row["case_id"]], selected, policy, tokenizer
             )
@@ -97,6 +109,7 @@ def audit_bundle(bundle_path: Path, inputs_path: Path, checklists_path: Path) ->
     if summarize(bundle.predictions) != bundle.metrics:
         raise ValueError("aggregate metrics do not match the raw evaluations")
     return {
+        "audit_version": "week2-preflight-v1",
         "bundle": bundle_path.name,
         "execution_commit": bundle.config["execution_commit"],
         "checked_evaluations": len(bundle.predictions),
@@ -106,6 +119,7 @@ def audit_bundle(bundle_path: Path, inputs_path: Path, checklists_path: Path) ->
         "infeasibility_certificates": "passed",
         "verbatim_baseline": "passed",
         "aggregate_recomputation": "passed",
+        "saved_replay_prompts": "passed" if bundle.config["replay"] else "not_applicable",
     }
 
 
