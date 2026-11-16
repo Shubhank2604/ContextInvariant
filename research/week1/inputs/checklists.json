@@ -1,0 +1,256 @@
+{
+  "simple-tie": {
+    "purpose": "Straightforward verbatim relevance case; methods should agree when space permits.",
+    "required": "Retain unchanged: policy",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "policy"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "policy",
+        "text": "Preserve approved release behavior."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [
+      {
+        "item_id": "release",
+        "text": "The approved release is ready for review."
+      }
+    ],
+    "development_only": true
+  },
+  "dependency-chain": {
+    "purpose": "Required transitive closure should survive regardless of relevance.",
+    "required": "Retain unchanged: decision, test, config",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "decision",
+      "test",
+      "config"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "decision",
+        "text": "Deploy only after the signed test result."
+      },
+      {
+        "item_id": "test",
+        "text": "The signed test uses config_C12."
+      },
+      {
+        "item_id": "config",
+        "text": "config_C12 disables destructive migration."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  },
+  "stale-state": {
+    "purpose": "Superseded state must not leak into the returned context.",
+    "required": "Retain unchanged: task, current",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "task",
+      "current"
+    ],
+    "forbidden_ids": [
+      "old"
+    ],
+    "required_spans": [
+      {
+        "item_id": "task",
+        "text": "Use the approved current timeout."
+      },
+      {
+        "item_id": "current",
+        "text": "The approved timeout is 30 seconds."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  },
+  "canonical-conflict": {
+    "purpose": "Both methods receive identical authority metadata; neither should keep the rumor.",
+    "required": "Retain unchanged: task, canonical",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "task",
+      "canonical"
+    ],
+    "forbidden_ids": [
+      "rumor"
+    ],
+    "required_spans": [
+      {
+        "item_id": "task",
+        "text": "Apply the canonical maintenance policy."
+      },
+      {
+        "item_id": "canonical",
+        "text": "Maintenance writes are disabled."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  },
+  "optional-bundle": {
+    "purpose": "An appealing optional lead has expensive support. Skip the whole bundle if it does not fit. A full-runtime refusal here is a selection failure, not global infeasibility.",
+    "required": "Retain unchanged: policy",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "policy"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "policy",
+        "text": "Preserve authentication behavior. padding padding padding padding padding"
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [
+      {
+        "item_id": "alternative",
+        "text": "A useful independent retry diagnosis."
+      }
+    ],
+    "development_only": true
+  },
+  "diagnostic-log": {
+    "purpose": "The full log may not fit; a verbatim diagnostic excerpt could retain useful evidence.",
+    "required": "Retain unchanged: policy",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "policy"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "policy",
+        "text": "Preserve the existing authentication interface."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [
+      {
+        "item_id": "log",
+        "text": "error E503 request_id=req_A17: retry needs jitter."
+      }
+    ],
+    "development_only": true
+  },
+  "qualifier-sensitive": {
+    "purpose": "Keeping 30 ms while dropping its warm-cache qualifier is invalid if the record survives.",
+    "required": "Retain unchanged: policy",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "policy"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "policy",
+        "text": "Do not generalize a qualified threshold."
+      }
+    ],
+    "conditional_spans": [
+      {
+        "item_id": "measurement",
+        "text": "This threshold applies only to warm-cache requests."
+      }
+    ],
+    "useful_spans": [
+      {
+        "item_id": "measurement",
+        "text": "The timeout threshold is 30 ms. This threshold applies only to warm-cache requests."
+      }
+    ],
+    "development_only": true
+  },
+  "exact-evidence": {
+    "purpose": "Exact values and citation must survive when the optional document is transformed.",
+    "required": "Retain unchanged: policy",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "policy"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "policy",
+        "text": "Keep exact evidence and its source attribution."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [
+      {
+        "item_id": "document",
+        "text": "DOC-Z9 sets limit 64 for tenant_B42; see https://example.org/policy."
+      }
+    ],
+    "development_only": true
+  },
+  "exact-boundary": {
+    "purpose": "Exactly 100 original tokens; required closure is exactly the 65-token budget.",
+    "required": "Retain unchanged: decision, state",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "decision",
+      "state"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "decision",
+        "text": "Keep the signed deployment decision. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding"
+      },
+      {
+        "item_id": "state",
+        "text": "The approved state supports the decision. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding"
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  },
+  "required-overflow": {
+    "purpose": "Exactly 100 original tokens; 90 required lossless tokens cannot fit at 65 or 80.",
+    "required": "Retain unchanged: decision, transcript",
+    "optional": "Other records are optional; useful spans are diagnostic, not hard labels.",
+    "failure": "Missing required record/support, stale/conflicting state, changed protected detail, failed declared literal preservation, or token overflow is invalid. Exceptions are no-context outcomes, classified by an independent lower bound.",
+    "required_ids": [
+      "decision",
+      "transcript"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "decision",
+        "text": "Keep this required operational decision. padding padding padding padding padding padding padding padding padding padding padding padding padding padding"
+      },
+      {
+        "item_id": "transcript",
+        "text": "The signed transcript is the declared supporting record. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding"
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  }
+}
