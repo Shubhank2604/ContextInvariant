@@ -1,0 +1,17 @@
+{
+  "context_invariant_version": "0.5.0",
+  "dependency_versions": {
+    "numpy": "2.3.2",
+    "pydantic": "2.11.7",
+    "tiktoken": "0.14.0",
+    "typer": "0.27.2"
+  },
+  "embedding_model": "context_invariant-deterministic-feature-hash-v1",
+  "embedding_provider": "DeterministicEmbeddingProvider",
+  "git_sha": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+  "llm_model": null,
+  "llm_provider": null,
+  "operating_system": "Windows-11-10.0.26300-SP0",
+  "python_version": "3.13.9",
+  "recorded_at_utc": "2026-11-16T05:10:53.178379Z"
+}

@@ -1,0 +1,966 @@
+[
+  {
+    "id": "01-investigate",
+    "inputs": {
+      "task": "Investigate the retry predicate using the first failing behavioral test.",
+      "items": [
+        {
+          "id": "original-request",
+          "content": "Fix should_retry without changing its signature. Retry only status 503; never retry 429.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "old-config",
+          "content": "{\"retry_limit\":1,\"retryable_status\":503}",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "source-code",
+          "content": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n",
+          "type": "code",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "earlier-test-result",
+          "content": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "background-tools",
+          "content": "formatter: source files already follow the project style conventions\ntype checker: function arguments and return values use declared types\ndependency inspector: local task has no third party runtime packages\nworkspace scanner: retry module and behavioral oracle are available\ntest collector: retry status and attempt limit checks are discovered\ndocumentation scanner: public retry interface must remain compatible\nenvironment probe: isolated interpreter started successfully\nbuild inspector: package metadata does not require modification\nsource scanner: changes can be limited to the retry predicate\nreview reminder: keep unrelated authentication behavior unchanged",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "original-request",
+          "target_id": "earlier-test-result",
+          "relation": "requires",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "02-config-changed",
+    "inputs": {
+      "task": "Patch should_retry for the updated configuration.",
+      "items": [
+        {
+          "id": "original-request",
+          "content": "Fix should_retry without changing its signature. Retry only status 503; never retry 429.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "old-config",
+          "content": "{\"retry_limit\":1,\"retryable_status\":503}",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "source-code",
+          "content": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n",
+          "type": "code",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "earlier-test-result",
+          "content": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "current-config",
+          "content": "{\"retry_limit\":2,\"retryable_status\":503,\"request_id\":\"req_A17\"}",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": true
+          }
+        },
+        {
+          "id": "followup",
+          "content": "The tool configuration changed. Apply the current limit and preserve the original request.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "background-tools",
+          "content": "formatter: source files already follow the project style conventions\ntype checker: function arguments and return values use declared types\ndependency inspector: local task has no third party runtime packages\nworkspace scanner: retry module and behavioral oracle are available\ntest collector: retry status and attempt limit checks are discovered\ndocumentation scanner: public retry interface must remain compatible\nenvironment probe: isolated interpreter started successfully\nbuild inspector: package metadata does not require modification\nsource scanner: changes can be limited to the retry predicate\nreview reminder: keep unrelated authentication behavior unchanged",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "followup",
+          "target_id": "original-request",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "followup",
+          "target_id": "current-config",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "original-request",
+          "target_id": "earlier-test-result",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "current-config",
+          "target_id": "old-config",
+          "relation": "supersedes",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "03-final-check",
+    "inputs": {
+      "task": "Return a compatible patch and run the complete behavioral oracle.",
+      "items": [
+        {
+          "id": "original-request",
+          "content": "Fix should_retry without changing its signature. Retry only status 503; never retry 429.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "old-config",
+          "content": "{\"retry_limit\":1,\"retryable_status\":503}",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "source-code",
+          "content": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n",
+          "type": "code",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "earlier-test-result",
+          "content": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "current-config",
+          "content": "{\"retry_limit\":2,\"retryable_status\":503,\"request_id\":\"req_A17\"}",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": true
+          }
+        },
+        {
+          "id": "followup",
+          "content": "The tool configuration changed. Apply the current limit and preserve the original request.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "background-tools",
+          "content": "formatter: source files already follow the project style conventions\ntype checker: function arguments and return values use declared types\ndependency inspector: local task has no third party runtime packages\nworkspace scanner: retry module and behavioral oracle are available\ntest collector: retry status and attempt limit checks are discovered\ndocumentation scanner: public retry interface must remain compatible\nenvironment probe: isolated interpreter started successfully\nbuild inspector: package metadata does not require modification\nsource scanner: changes can be limited to the retry predicate\nreview reminder: keep unrelated authentication behavior unchanged",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "final-request",
+          "content": "Finish the patch, retain the earlier failing test, and verify the original no-429 rule.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "followup",
+          "target_id": "original-request",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "followup",
+          "target_id": "current-config",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "original-request",
+          "target_id": "earlier-test-result",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "current-config",
+          "target_id": "old-config",
+          "relation": "supersedes",
+          "weight": 1.0
+        },
+        {
+          "source_id": "final-request",
+          "target_id": "earlier-test-result",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "final-request",
+          "target_id": "original-request",
+          "relation": "requires",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "04-budget-stress-probe",
+    "inputs": {
+      "task": "Preserve the final task and the complete signed test transcript before patching.",
+      "items": [
+        {
+          "id": "original-request",
+          "content": "Fix should_retry without changing its signature. Retry only status 503; never retry 429.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "old-config",
+          "content": "{\"retry_limit\":1,\"retryable_status\":503}",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "source-code",
+          "content": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n",
+          "type": "code",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "earlier-test-result",
+          "content": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "current-config",
+          "content": "{\"retry_limit\":2,\"retryable_status\":503,\"request_id\":\"req_A17\"}",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": true
+          }
+        },
+        {
+          "id": "followup",
+          "content": "The tool configuration changed. Apply the current limit and preserve the original request.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "final-request",
+          "content": "Finish the patch, retain the earlier failing test, and verify the original no-429 rule.",
+          "type": "user_message",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.7,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "lossless-test-transcript",
+          "content": "{\n  \"retry.py\": {\n    \"exit_code\": 1,\n    \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\",\n    \"stderr\": \"\"\n  },\n  \"reference_retry.py\": {\n    \"exit_code\": 0,\n    \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 12, \\\"failures\\\": []}\",\n    \"stderr\": \"\"\n  }\n}",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "followup",
+          "target_id": "original-request",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "followup",
+          "target_id": "current-config",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "original-request",
+          "target_id": "earlier-test-result",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "current-config",
+          "target_id": "old-config",
+          "relation": "supersedes",
+          "weight": 1.0
+        },
+        {
+          "source_id": "final-request",
+          "target_id": "earlier-test-result",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "final-request",
+          "target_id": "original-request",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "final-request",
+          "target_id": "lossless-test-transcript",
+          "relation": "requires",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  }
+]

@@ -1,0 +1,1114 @@
+[
+  {
+    "id": "simple-tie",
+    "inputs": {
+      "task": "Summarize the approved release policy.",
+      "items": [
+        {
+          "id": "policy",
+          "content": "Preserve approved release behavior.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "release",
+          "content": "The approved release is ready for review.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "noise",
+          "content": "The unrelated formatting job completed this morning.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "dependency-chain",
+    "inputs": {
+      "task": "Keep the deployment decision and its supporting test and configuration.",
+      "items": [
+        {
+          "id": "decision",
+          "content": "Deploy only after the signed test result.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "test",
+          "content": "The signed test uses config_C12.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "config",
+          "content": "config_C12 disables destructive migration.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "noise",
+          "content": "Unrelated formatter output. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "decision",
+          "target_id": "test",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "test",
+          "target_id": "config",
+          "relation": "requires",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "stale-state",
+    "inputs": {
+      "task": "Use the current authentication timeout.",
+      "items": [
+        {
+          "id": "task",
+          "content": "Use the approved current timeout.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "old",
+          "content": "The timeout was 15 seconds.",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "current",
+          "content": "The approved timeout is 30 seconds.",
+          "type": "task_state",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.9,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "noise",
+          "content": "Formatting output is unrelated. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "task",
+          "target_id": "current",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "current",
+          "target_id": "old",
+          "relation": "supersedes",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "canonical-conflict",
+    "inputs": {
+      "task": "Follow the canonical maintenance policy.",
+      "items": [
+        {
+          "id": "task",
+          "content": "Apply the canonical maintenance policy.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "canonical",
+          "content": "Maintenance writes are disabled.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": true
+          }
+        },
+        {
+          "id": "rumor",
+          "content": "Maintenance writes are enabled.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "noise",
+          "content": "Unrelated style output. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "task",
+          "target_id": "canonical",
+          "relation": "requires",
+          "weight": 1.0
+        },
+        {
+          "source_id": "canonical",
+          "target_id": "rumor",
+          "relation": "contradicts",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "optional-bundle",
+    "inputs": {
+      "task": "retry diagnostic",
+      "items": [
+        {
+          "id": "policy",
+          "content": "Preserve authentication behavior. padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "lead",
+          "content": "retry diagnostic padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "support",
+          "content": "Source telemetry supporting the lead. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "alternative",
+          "content": "A useful independent retry diagnosis. padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "lead",
+          "target_id": "support",
+          "relation": "requires",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "diagnostic-log",
+    "inputs": {
+      "task": "Diagnose retry failure for req_A17 and retain the error code.",
+      "items": [
+        {
+          "id": "policy",
+          "content": "Preserve the existing authentication interface.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "log",
+          "content": "background cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nerror E503 request_id=req_A17: retry needs jitter.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.",
+          "type": "tool_output",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.4,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": true,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": [
+          {
+            "item_id": "log",
+            "references": [
+              "req_A17"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "qualifier-sensitive",
+    "inputs": {
+      "task": "Review the timeout threshold.",
+      "items": [
+        {
+          "id": "policy",
+          "content": "Do not generalize a qualified threshold.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "measurement",
+          "content": "The timeout threshold is 30 ms. This threshold applies only to warm-cache requests. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions. Timeout threshold diagnostics remain unverified under current workload conditions.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": true,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": [
+          {
+            "item_id": "measurement",
+            "references": [
+              "This threshold applies only to warm-cache requests."
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "exact-evidence",
+    "inputs": {
+      "task": "Find the tenant limit and policy citation.",
+      "items": [
+        {
+          "id": "policy",
+          "content": "Keep exact evidence and its source attribution.",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "document",
+          "content": "DOC-Z9 sets limit 64 for tenant_B42; see https://example.org/policy. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures.",
+          "type": "retrieved_document",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": true,
+            "preserve_dates": false,
+            "preserve_identifiers": true,
+            "preserve_citations": true,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "exact-boundary",
+    "inputs": {
+      "task": "Keep the required decision and supporting state at the exact boundary.",
+      "items": [
+        {
+          "id": "decision",
+          "content": "Keep the signed deployment decision. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "state",
+          "content": "The approved state supports the decision. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "noise",
+          "content": "Unrelated commentary. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "decision",
+          "target_id": "state",
+          "relation": "requires",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  },
+  {
+    "id": "required-overflow",
+    "inputs": {
+      "task": "Retain the required decision and its lossless supporting transcript.",
+      "items": [
+        {
+          "id": "decision",
+          "content": "Keep this required operational decision. padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": true,
+          "compressible": true,
+          "evictable": false,
+          "contract": {
+            "retention": "required",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "transcript",
+          "content": "The signed transcript is the declared supporting record. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": true,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        },
+        {
+          "id": "noise",
+          "content": "Unrelated output. padding padding padding padding padding padding",
+          "type": "memory",
+          "source": null,
+          "created_at": "2026-11-15T00:00:00Z",
+          "updated_at": "2026-11-15T00:00:00Z",
+          "importance": 0.5,
+          "mandatory": false,
+          "compressible": false,
+          "evictable": true,
+          "contract": {
+            "retention": "optional",
+            "preserve_numbers": false,
+            "preserve_dates": false,
+            "preserve_identifiers": false,
+            "preserve_citations": false,
+            "preserve_negation": false,
+            "preserve_structure": false,
+            "required_keys": []
+          },
+          "lifecycle_tier": "hot",
+          "token_count": null,
+          "semantic_hash": null,
+          "metadata": {
+            "canonical": false
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source_id": "decision",
+          "target_id": "transcript",
+          "relation": "requires",
+          "weight": 1.0
+        }
+      ],
+      "constraint_policy": {
+        "enabled": true,
+        "conflict_policy": "error",
+        "retain_superseded": false,
+        "validated_representations": [],
+        "conflict_overrides": [],
+        "dependency_references": []
+      }
+    }
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {"arguments": {"status_code": 503, "attempts_made": 0}, "expected": true},
+  {"arguments": {"status_code": 503, "attempts_made": 1}, "expected": true},
+  {"arguments": {"status_code": 503, "attempts_made": 2}, "expected": false},
+  {"arguments": {"status_code": 503, "attempts_made": 3}, "expected": false},
+  {"arguments": {"status_code": 503, "attempts_made": -1}, "expected": false},
+  {"arguments": {"status_code": 429, "attempts_made": 0}, "expected": false},
+  {"arguments": {"status_code": 500, "attempts_made": 0}, "expected": false},
+  {"arguments": {"status_code": 200, "attempts_made": 0}, "expected": false},
+  {"arguments": {"status_code": 503, "attempts_made": 0, "retry_limit": 0}, "expected": false},
+  {"arguments": {"status_code": 503, "attempts_made": 0, "retry_limit": 1}, "expected": true},
+  {"arguments": {"status_code": 503, "attempts_made": 1, "retry_limit": 1}, "expected": false},
+  {"arguments": {"status_code": 503, "attempts_made": 2, "retry_limit": 3}, "expected": true}
+]

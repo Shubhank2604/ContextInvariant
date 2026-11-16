@@ -1,0 +1,1502 @@
+{
+  "budget_percentages": [
+    65,
+    80,
+    100
+  ],
+  "budget_rounding": "floor(sum(original record tokens) * percentage / 100)",
+  "canonical_checklists_sha256": "7eac371117fd070e751cf5785f5e5acae1fa0ef22eca2193b24a4a6281f5a483",
+  "canonical_dataset_sha256": "02d34e48e1b7351cbde8e4d611f22148c921f975a130320f9fa077f4f1c6a47e",
+  "checklists_sha256": "94629f208d30147f8f3f2b54800f0093d35de7bdaf7e1023244ddfa36ea3c209",
+  "dataset_sha256": "b67c2ad4264c1cde2b79dc92edc86932731c5a917ff76e1f8c2c7a6d7eddee18",
+  "development_only": true,
+  "disagreements": [
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "noise"
+          ],
+          "candidate": "noise",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 51,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "task",
+        "canonical"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 65,
+      "case_id": "canonical-conflict",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.51,
+            "compression_strategy": "extractive",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "extractive"
+            ],
+            "fallback_used": false,
+            "final_position": 2,
+            "final_representation_type": "extractive",
+            "final_token_count": 5,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.5,
+            "initial_token_count": 40,
+            "item_id": "noise",
+            "novelty_score": 0.5,
+            "omission_risk": 0.05,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": false,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "noise"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5,
+            "required_by": [],
+            "selection_value": 0.39583333333333337,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "extractive",
+                "strategy": "extractive",
+                "succeeded": true,
+                "validator_outcomes": [],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.25,
+            "transformed_selection_value": 0.39583333333333337,
+            "type_priority": 0.6,
+            "validator_results": [],
+            "validators_executed": [],
+            "value_density": 0.01979166666666667,
+            "would_have_been_compressed_without_contract": null,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "Unrelated style output.",
+          "item_id": "noise"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "task",
+        "canonical",
+        "noise"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "noise"
+          ],
+          "candidate": "noise",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 51,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "task",
+        "canonical"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 80,
+      "case_id": "canonical-conflict",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.51,
+            "compression_strategy": "extractive",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "extractive"
+            ],
+            "fallback_used": false,
+            "final_position": 2,
+            "final_representation_type": "extractive",
+            "final_token_count": 5,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.5,
+            "initial_token_count": 40,
+            "item_id": "noise",
+            "novelty_score": 0.5,
+            "omission_risk": 0.05,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": false,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "noise"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5,
+            "required_by": [],
+            "selection_value": 0.39583333333333337,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "extractive",
+                "strategy": "extractive",
+                "succeeded": true,
+                "validator_outcomes": [],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.25,
+            "transformed_selection_value": 0.39583333333333337,
+            "type_priority": 0.6,
+            "validator_results": [],
+            "validators_executed": [],
+            "value_density": 0.01979166666666667,
+            "would_have_been_compressed_without_contract": null,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "Unrelated style output.",
+          "item_id": "noise"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "task",
+        "canonical",
+        "noise"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "log"
+          ],
+          "candidate": "log",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 188,
+          "relevance": 0.5080605562548945
+        }
+      ],
+      "baseline_order": [
+        "policy"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 65,
+      "case_id": "diagnostic-log",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.5670151390637237,
+            "compression_strategy": "tool_output",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "tool_output"
+            ],
+            "fallback_used": false,
+            "final_position": 1,
+            "final_representation_type": "tool_excerpt",
+            "final_token_count": 90,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.4,
+            "initial_token_count": 181,
+            "item_id": "log",
+            "novelty_score": 1.0,
+            "omission_risk": 0.18333333333333332,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": true,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "log"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5080605562548945,
+            "required_by": [],
+            "selection_value": 0.448968171441992,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "tool_excerpt",
+                "strategy": "tool_output",
+                "succeeded": true,
+                "validator_outcomes": [
+                  {
+                    "passed": true,
+                    "validator": "IdentifierPreservationValidator",
+                    "violations": []
+                  },
+                  {
+                    "passed": true,
+                    "validator": "DependencyReferenceValidator",
+                    "violations": []
+                  }
+                ],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.36066666666666664,
+            "transformed_selection_value": 0.448968171441992,
+            "type_priority": 0.6,
+            "validator_results": [
+              {
+                "passed": true,
+                "validator": "IdentifierPreservationValidator",
+                "violations": []
+              },
+              {
+                "passed": true,
+                "validator": "DependencyReferenceValidator",
+                "violations": []
+              }
+            ],
+            "validators_executed": [
+              "IdentifierPreservationValidator",
+              "DependencyReferenceValidator"
+            ],
+            "value_density": 0.00493371616969222,
+            "would_have_been_compressed_without_contract": false,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "background cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nerror E503 request_id=req_A17: retry needs jitter.\nbackground cache warm operation completed successfully.",
+          "item_id": "log"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "useful_recall",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "policy",
+        "log"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "log"
+          ],
+          "candidate": "log",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 188,
+          "relevance": 0.5080605562548945
+        }
+      ],
+      "baseline_order": [
+        "policy"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 80,
+      "case_id": "diagnostic-log",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.5670151390637237,
+            "compression_strategy": "tool_output",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "tool_output"
+            ],
+            "fallback_used": false,
+            "final_position": 1,
+            "final_representation_type": "tool_excerpt",
+            "final_token_count": 90,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.4,
+            "initial_token_count": 181,
+            "item_id": "log",
+            "novelty_score": 1.0,
+            "omission_risk": 0.18333333333333332,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": true,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "log"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5080605562548945,
+            "required_by": [],
+            "selection_value": 0.448968171441992,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "tool_excerpt",
+                "strategy": "tool_output",
+                "succeeded": true,
+                "validator_outcomes": [
+                  {
+                    "passed": true,
+                    "validator": "IdentifierPreservationValidator",
+                    "violations": []
+                  },
+                  {
+                    "passed": true,
+                    "validator": "DependencyReferenceValidator",
+                    "violations": []
+                  }
+                ],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.36066666666666664,
+            "transformed_selection_value": 0.448968171441992,
+            "type_priority": 0.6,
+            "validator_results": [
+              {
+                "passed": true,
+                "validator": "IdentifierPreservationValidator",
+                "violations": []
+              },
+              {
+                "passed": true,
+                "validator": "DependencyReferenceValidator",
+                "violations": []
+              }
+            ],
+            "validators_executed": [
+              "IdentifierPreservationValidator",
+              "DependencyReferenceValidator"
+            ],
+            "value_density": 0.00493371616969222,
+            "would_have_been_compressed_without_contract": false,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "background cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nbackground cache warm operation completed successfully.\nerror E503 request_id=req_A17: retry needs jitter.\nbackground cache warm operation completed successfully.",
+          "item_id": "log"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "useful_recall",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "policy",
+        "log"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "noise"
+          ],
+          "candidate": "noise",
+          "decision": "accepted",
+          "proposed_total_tokens": 100,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "decision",
+        "state",
+        "noise"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 100,
+      "case_id": "exact-boundary",
+      "changed_records": [
+        {
+          "baseline_text": "Unrelated commentary. padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "full_decision": {
+            "composite_utility": null,
+            "compression_strategy": null,
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "removed",
+            "decision_reason": "semantic_duplicate_of_mandatory",
+            "dependency_closure": [],
+            "dependency_score": null,
+            "exact_duplicate_of": null,
+            "fallback_path": [],
+            "fallback_used": false,
+            "final_position": null,
+            "final_representation_type": null,
+            "final_token_count": 0,
+            "hard_constraints_triggered": [],
+            "importance_score": null,
+            "initial_token_count": 35,
+            "item_id": "noise",
+            "novelty_score": null,
+            "omission_risk": null,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": false,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [],
+            "recency_score": null,
+            "relevance_score": null,
+            "required_by": [],
+            "selection_value": null,
+            "semantic_duplicate_of": "state",
+            "semantic_similarity": 0.9953118537403229,
+            "superseded_items": [],
+            "transformation_attempted": false,
+            "transformation_attempts": [],
+            "transformation_risk": null,
+            "transformed_selection_value": null,
+            "type_priority": null,
+            "validator_results": [],
+            "validators_executed": [],
+            "value_density": null,
+            "would_have_been_compressed_without_contract": null,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": null,
+          "item_id": "noise"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "decision",
+        "state"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "document"
+          ],
+          "candidate": "document",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 126,
+          "relevance": 0.5108433341438726
+        }
+      ],
+      "baseline_order": [
+        "policy"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 65,
+      "case_id": "exact-evidence",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.5927108335359681,
+            "compression_strategy": "evidence_extractive",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "evidence_extractive"
+            ],
+            "fallback_used": false,
+            "final_position": 1,
+            "final_representation_type": "evidence_excerpt",
+            "final_token_count": 55,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.5,
+            "initial_token_count": 118,
+            "item_id": "document",
+            "novelty_score": 1.0,
+            "omission_risk": 0.2,
+            "preservation_contract": {
+              "preserve_citations": true,
+              "preserve_dates": false,
+              "preserve_identifiers": true,
+              "preserve_negation": false,
+              "preserve_numbers": true,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "document"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5108433341438726,
+            "required_by": [],
+            "selection_value": 0.4770416366422923,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "evidence_excerpt",
+                "strategy": "evidence_extractive",
+                "succeeded": true,
+                "validator_outcomes": [
+                  {
+                    "passed": true,
+                    "validator": "NumericPreservationValidator",
+                    "violations": []
+                  },
+                  {
+                    "passed": true,
+                    "validator": "IdentifierPreservationValidator",
+                    "violations": []
+                  },
+                  {
+                    "passed": true,
+                    "validator": "CitationPreservationValidator",
+                    "violations": []
+                  }
+                ],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.33478260869565213,
+            "transformed_selection_value": 0.4770416366422923,
+            "type_priority": 0.65,
+            "validator_results": [
+              {
+                "passed": true,
+                "validator": "NumericPreservationValidator",
+                "violations": []
+              },
+              {
+                "passed": true,
+                "validator": "IdentifierPreservationValidator",
+                "violations": []
+              },
+              {
+                "passed": true,
+                "validator": "CitationPreservationValidator",
+                "violations": []
+              }
+            ],
+            "validators_executed": [
+              "NumericPreservationValidator",
+              "IdentifierPreservationValidator",
+              "CitationPreservationValidator"
+            ],
+            "value_density": 0.00808545146851343,
+            "would_have_been_compressed_without_contract": false,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "DOC-Z9 sets limit 64 for tenant_B42; see https://example.org/policy. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures.",
+          "item_id": "document"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "useful_recall",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "policy",
+        "document"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "document"
+          ],
+          "candidate": "document",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 126,
+          "relevance": 0.5108433341438726
+        }
+      ],
+      "baseline_order": [
+        "policy"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 80,
+      "case_id": "exact-evidence",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.5927108335359681,
+            "compression_strategy": "evidence_extractive",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "evidence_extractive"
+            ],
+            "fallback_used": false,
+            "final_position": 1,
+            "final_representation_type": "evidence_excerpt",
+            "final_token_count": 55,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.5,
+            "initial_token_count": 118,
+            "item_id": "document",
+            "novelty_score": 1.0,
+            "omission_risk": 0.2,
+            "preservation_contract": {
+              "preserve_citations": true,
+              "preserve_dates": false,
+              "preserve_identifiers": true,
+              "preserve_negation": false,
+              "preserve_numbers": true,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "document"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5108433341438726,
+            "required_by": [],
+            "selection_value": 0.4770416366422923,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "evidence_excerpt",
+                "strategy": "evidence_extractive",
+                "succeeded": true,
+                "validator_outcomes": [
+                  {
+                    "passed": true,
+                    "validator": "NumericPreservationValidator",
+                    "violations": []
+                  },
+                  {
+                    "passed": true,
+                    "validator": "IdentifierPreservationValidator",
+                    "violations": []
+                  },
+                  {
+                    "passed": true,
+                    "validator": "CitationPreservationValidator",
+                    "violations": []
+                  }
+                ],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.33478260869565213,
+            "transformed_selection_value": 0.4770416366422923,
+            "type_priority": 0.65,
+            "validator_results": [
+              {
+                "passed": true,
+                "validator": "NumericPreservationValidator",
+                "violations": []
+              },
+              {
+                "passed": true,
+                "validator": "IdentifierPreservationValidator",
+                "violations": []
+              },
+              {
+                "passed": true,
+                "validator": "CitationPreservationValidator",
+                "violations": []
+              }
+            ],
+            "validators_executed": [
+              "NumericPreservationValidator",
+              "IdentifierPreservationValidator",
+              "CitationPreservationValidator"
+            ],
+            "value_density": 0.00808545146851343,
+            "would_have_been_compressed_without_contract": false,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "DOC-Z9 sets limit 64 for tenant_B42; see https://example.org/policy. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures. Background history describes unrelated maintenance procedures.",
+          "item_id": "document"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "useful_recall",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "policy",
+        "document"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "lead",
+            "support"
+          ],
+          "candidate": "lead",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 115,
+          "relevance": 0.7132007163556104
+        },
+        {
+          "bundle_ids": [
+            "alternative"
+          ],
+          "candidate": "alternative",
+          "decision": "accepted",
+          "proposed_total_tokens": 30,
+          "relevance": 0.5249377334026908
+        },
+        {
+          "bundle_ids": [
+            "support"
+          ],
+          "candidate": "support",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 130,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "policy",
+        "alternative"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 65,
+      "case_id": "optional-bundle",
+      "changed_records": [
+        {
+          "baseline_text": "A useful independent retry diagnosis. padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "full_decision": null,
+          "full_text": null,
+          "item_id": "alternative"
+        },
+        {
+          "baseline_text": "Preserve authentication behavior. padding padding padding padding padding",
+          "full_decision": null,
+          "full_text": null,
+          "item_id": "policy"
+        }
+      ],
+      "different_fields": [
+        "outcome",
+        "failure_reason",
+        "context_tokens",
+        "useful_recall",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": "constraint closure requires 110 tokens but the effective budget is 87: policy, support",
+      "full_order": [],
+      "full_outcome": "no_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "lead",
+            "support"
+          ],
+          "candidate": "lead",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 115,
+          "relevance": 0.7132007163556104
+        },
+        {
+          "bundle_ids": [
+            "alternative"
+          ],
+          "candidate": "alternative",
+          "decision": "accepted",
+          "proposed_total_tokens": 30,
+          "relevance": 0.5249377334026908
+        },
+        {
+          "bundle_ids": [
+            "support"
+          ],
+          "candidate": "support",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 130,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "policy",
+        "alternative"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 80,
+      "case_id": "optional-bundle",
+      "changed_records": [
+        {
+          "baseline_text": "A useful independent retry diagnosis. padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "full_decision": null,
+          "full_text": null,
+          "item_id": "alternative"
+        },
+        {
+          "baseline_text": "Preserve authentication behavior. padding padding padding padding padding",
+          "full_decision": null,
+          "full_text": null,
+          "item_id": "policy"
+        }
+      ],
+      "different_fields": [
+        "outcome",
+        "failure_reason",
+        "context_tokens",
+        "useful_recall",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": "constraint closure requires 110 tokens but the effective budget is 108: policy, support",
+      "full_order": [],
+      "full_outcome": "no_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "lead",
+            "support"
+          ],
+          "candidate": "lead",
+          "decision": "accepted",
+          "proposed_total_tokens": 115,
+          "relevance": 0.7132007163556104
+        },
+        {
+          "bundle_ids": [
+            "alternative"
+          ],
+          "candidate": "alternative",
+          "decision": "accepted",
+          "proposed_total_tokens": 135,
+          "relevance": 0.5249377334026908
+        }
+      ],
+      "baseline_order": [
+        "policy",
+        "lead",
+        "support",
+        "alternative"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 100,
+      "case_id": "optional-bundle",
+      "changed_records": [
+        {
+          "baseline_text": "A useful independent retry diagnosis. padding padding padding padding padding padding padding padding padding padding padding padding padding padding",
+          "full_decision": {
+            "composite_utility": null,
+            "compression_strategy": null,
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "removed",
+            "decision_reason": "semantic_duplicate_of_mandatory",
+            "dependency_closure": [],
+            "dependency_score": null,
+            "exact_duplicate_of": null,
+            "fallback_path": [],
+            "fallback_used": false,
+            "final_position": null,
+            "final_representation_type": null,
+            "final_token_count": 0,
+            "hard_constraints_triggered": [],
+            "importance_score": null,
+            "initial_token_count": 20,
+            "item_id": "alternative",
+            "novelty_score": null,
+            "omission_risk": null,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": false,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [],
+            "recency_score": null,
+            "relevance_score": null,
+            "required_by": [],
+            "selection_value": null,
+            "semantic_duplicate_of": "support",
+            "semantic_similarity": 0.9872045885003067,
+            "superseded_items": [],
+            "transformation_attempted": false,
+            "transformation_attempts": [],
+            "transformation_risk": null,
+            "transformed_selection_value": null,
+            "type_priority": null,
+            "validator_results": [],
+            "validators_executed": [],
+            "value_density": null,
+            "would_have_been_compressed_without_contract": null,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": null,
+          "item_id": "alternative"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "useful_recall",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "policy",
+        "support",
+        "lead"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "noise"
+          ],
+          "candidate": "noise",
+          "decision": "accepted",
+          "proposed_total_tokens": 100,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "decision",
+        "transcript",
+        "noise"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 100,
+      "case_id": "required-overflow",
+      "changed_records": [
+        {
+          "baseline_text": "Unrelated output. padding padding padding padding padding padding",
+          "full_decision": {
+            "composite_utility": null,
+            "compression_strategy": null,
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "removed",
+            "decision_reason": "semantic_duplicate_of_mandatory",
+            "dependency_closure": [],
+            "dependency_score": null,
+            "exact_duplicate_of": null,
+            "fallback_path": [],
+            "fallback_used": false,
+            "final_position": null,
+            "final_representation_type": null,
+            "final_token_count": 0,
+            "hard_constraints_triggered": [],
+            "importance_score": null,
+            "initial_token_count": 10,
+            "item_id": "noise",
+            "novelty_score": null,
+            "omission_risk": null,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": false,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [],
+            "recency_score": null,
+            "relevance_score": null,
+            "required_by": [],
+            "selection_value": null,
+            "semantic_duplicate_of": "transcript",
+            "semantic_similarity": 0.9720232713672863,
+            "superseded_items": [],
+            "transformation_attempted": false,
+            "transformation_attempts": [],
+            "transformation_risk": null,
+            "transformed_selection_value": null,
+            "type_priority": null,
+            "validator_results": [],
+            "validators_executed": [],
+            "value_density": null,
+            "would_have_been_compressed_without_contract": null,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": null,
+          "item_id": "noise"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "decision",
+        "transcript"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "noise"
+          ],
+          "candidate": "noise",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 59,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "task",
+        "current"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 65,
+      "case_id": "stale-state",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.5092354894969806,
+            "compression_strategy": "extractive",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "extractive"
+            ],
+            "fallback_used": false,
+            "final_position": 1,
+            "final_representation_type": "extractive",
+            "final_token_count": 5,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.5,
+            "initial_token_count": 45,
+            "item_id": "noise",
+            "novelty_score": 0.4949032633132042,
+            "omission_risk": 0.05,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": false,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "noise"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5,
+            "required_by": [],
+            "selection_value": 0.39519624124748387,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "extractive",
+                "strategy": "extractive",
+                "succeeded": true,
+                "validator_outcomes": [],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.25,
+            "transformed_selection_value": 0.39519624124748387,
+            "type_priority": 0.6,
+            "validator_results": [],
+            "validators_executed": [],
+            "value_density": 0.017182445271629734,
+            "would_have_been_compressed_without_contract": null,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "Formatting output is unrelated.",
+          "item_id": "noise"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "task",
+        "noise",
+        "current"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "noise"
+          ],
+          "candidate": "noise",
+          "decision": "skipped_bundle_over_budget",
+          "proposed_total_tokens": 59,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "task",
+        "current"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 80,
+      "case_id": "stale-state",
+      "changed_records": [
+        {
+          "baseline_text": null,
+          "full_decision": {
+            "composite_utility": 0.5092354894969806,
+            "compression_strategy": "extractive",
+            "conflict_status": "not_involved",
+            "constraint_resolution_applied": true,
+            "decision": "compressed",
+            "decision_reason": "compressed_to_fit_budget",
+            "dependency_closure": [],
+            "dependency_score": 0.0,
+            "exact_duplicate_of": null,
+            "fallback_path": [
+              "extractive"
+            ],
+            "fallback_used": false,
+            "final_position": 1,
+            "final_representation_type": "extractive",
+            "final_token_count": 5,
+            "hard_constraints_triggered": [],
+            "importance_score": 0.5,
+            "initial_token_count": 45,
+            "item_id": "noise",
+            "novelty_score": 0.4949032633132042,
+            "omission_risk": 0.05,
+            "preservation_contract": {
+              "preserve_citations": false,
+              "preserve_dates": false,
+              "preserve_identifiers": false,
+              "preserve_negation": false,
+              "preserve_numbers": false,
+              "preserve_structure": false,
+              "required_keys": [],
+              "retention": "optional"
+            },
+            "provenance": [
+              "noise"
+            ],
+            "recency_score": 1.0,
+            "relevance_score": 0.5,
+            "required_by": [],
+            "selection_value": 0.39519624124748387,
+            "semantic_duplicate_of": null,
+            "semantic_similarity": null,
+            "superseded_items": [],
+            "transformation_attempted": true,
+            "transformation_attempts": [
+              {
+                "failure_reason": null,
+                "representation_type": "extractive",
+                "strategy": "extractive",
+                "succeeded": true,
+                "validator_outcomes": [],
+                "violations": []
+              }
+            ],
+            "transformation_risk": 0.25,
+            "transformed_selection_value": 0.39519624124748387,
+            "type_priority": 0.6,
+            "validator_results": [],
+            "validators_executed": [],
+            "value_density": 0.017182445271629734,
+            "would_have_been_compressed_without_contract": null,
+            "would_have_been_removed_without_constraints": null
+          },
+          "full_text": "Formatting output is unrelated.",
+          "item_id": "noise"
+        }
+      ],
+      "different_fields": [
+        "context_tokens",
+        "selected_content",
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "task",
+        "noise",
+        "current"
+      ],
+      "full_outcome": "valid_context"
+    },
+    {
+      "baseline_bundle_decisions": [
+        {
+          "bundle_ids": [
+            "noise"
+          ],
+          "candidate": "noise",
+          "decision": "accepted",
+          "proposed_total_tokens": 59,
+          "relevance": 0.5
+        }
+      ],
+      "baseline_order": [
+        "task",
+        "current",
+        "noise"
+      ],
+      "baseline_outcome": "valid_context",
+      "budget_percentage": 100,
+      "case_id": "stale-state",
+      "changed_records": [],
+      "different_fields": [
+        "layout_or_selection_order"
+      ],
+      "full_failure": null,
+      "full_order": [
+        "task",
+        "noise",
+        "current"
+      ],
+      "full_outcome": "valid_context"
+    }
+  ],
+  "execution_commit": "d91cb078d4c803a68bc0d9b956122c92468e1688",
+  "methods": [
+    "context_invariant_full",
+    "metadata_matched"
+  ],
+  "protocol": "week1-metadata-matched-v1",
+  "replay": false,
+  "source_sha256": {
+    "research/week1/workflow/task/check_task.py": "4f2d4b9efbd770e7944b50e783c835a78440e4329340396d67c1b44add19c91f",
+    "research/week1/workflow/task/oracle.json": "4752069b5a3cd79c5e5a364feb09f3f00f3cbf97cd7b9acb4bd5e61376e6c539",
+    "research/week1/workflow/task/reference_retry.py": "e9c249c5217e10a85f8492ad3be87aa30f082bc857509da36d4ea80aa994aee9",
+    "research/week1/workflow/task/retry.py": "39909d3028ddbf6cbf519de6edad1052a0175c3327a41b4db6118f95c9715d59",
+    "scripts/build_week1_inputs.py": "6273109051285b9fa917064ba6c0d11ba63e58e1973ec9a3744e1ae0de1518d6",
+    "scripts/build_week1_replay.py": "ccb2eb285ca307d6b92fc68f0e0c0a727f747009a08e48de2eb905372eea599d",
+    "scripts/generate_phase5_runtime_parity.py": "c4f55f2a9c7629d2e1da637a57e4e51d712532b6c8ebe49018b3846382180825",
+    "src/context_invariant/__init__.py": "a2d4c7f7def0800a3b6da73eb9ce8c9937f0978e9cf9034153983797a384908f",
+    "src/context_invariant/baselines.py": "c85c91eb757452ba1a01fcc1a0892c798c3f1a9858f51814824d51c7c6f3c268",
+    "src/context_invariant/benchmarking.py": "a0aa5344460b017303636cacd96f073ee9b1ead13d450780b5b3b7b4fcf93bfa",
+    "src/context_invariant/benchmarks/__init__.py": "7991e158cd199d3ec667dcbb5a0a155b2d91cbcca82761d69bbb838b6129a8d0",
+    "src/context_invariant/benchmarks/artifacts.py": "5fa88d313493f054d4cfed1e18eadf5eccad82ae6c47df35b483881d5b9d9921",
+    "src/context_invariant/benchmarks/bundles.py": "ddc68a616f7d24e8ee8f5bd28882ed9acbfbaa9d9c1a2c61075a62106fcadf78",
+    "src/context_invariant/benchmarks/constraint_benchmark.py": "8025358d6a97eaa1b0dd15d28473094307754db09f9885fc5d1427a262dfb735",
+    "src/context_invariant/benchmarks/constraint_dataset.py": "a33584e12c342b0ce83194d857bbd6e37d453a21a7d086e241d5f99b5b4d8214",
+    "src/context_invariant/benchmarks/constraint_model.py": "9676f2214a2f87105958c7867612a7031fbf30f051d39cda20c5b3cdc0eb1960",
+    "src/context_invariant/benchmarks/constraint_models.py": "c606a6854da2a4302ee4f7c40b84a54c7242b583109e8b20663df851769ed6b6",
+    "src/context_invariant/benchmarks/dataset.py": "6be41ca75642af974691fc65acfa7da433c661a79b02d4ce439f99056d1d7ae7",
+    "src/context_invariant/benchmarks/longbench.py": "8ed3867744ef5d539c56c7e26e48e70a039cc1a63fb343cea3ead1cef06c02f5",
+    "src/context_invariant/benchmarks/longbench_models.py": "ac4c519061cc152e339f4c7ab8feb68534b9aae23baf94096283c19fa32f3bb8",
+    "src/context_invariant/benchmarks/longbench_runner.py": "cc8a72873cb8d381d74766d0cc704f6d281c5c5e1d7006549e2afeff6f5b5ac2",
+    "src/context_invariant/benchmarks/metrics.py": "2a1b7fa69f9ba483c39c6cb851df60d3832191a46807e5050b3669e11e019488",
+    "src/context_invariant/benchmarks/models.py": "eaaa83bd23b721d1b90ab83911ee8f0bd189c0d931b5c527aaa3bee3eff2ddab",
+    "src/context_invariant/benchmarks/performance.py": "25a4f870dd067642756522958d668d8a1cd4d6e300a1fc43bd0b7c7324f86b87",
+    "src/context_invariant/benchmarks/phase5_ablation.py": "011138d8f660c5278303b27bc20071f64ed69e5eea17a7131d392b2d41815bb1",
+    "src/context_invariant/benchmarks/positional.py": "675098d233c360de008f489212c9a08dea718b8ab6ce56303582c6b6599d2197",
+    "src/context_invariant/benchmarks/positional_models.py": "102e40c328067b1e3f390db83e543889c9cc863014ea1fb6d075cfe815378ab7",
+    "src/context_invariant/benchmarks/runner.py": "b55935f3c9b57164b4819d632aa0ecb0bea707f4e970b6025e62b064e0cefa53",
+    "src/context_invariant/benchmarks/week1/__init__.py": "8a878f516bcc096dab36728d6e2f8bf72b06443978599729ec05ef20b95e68f3",
+    "src/context_invariant/benchmarks/week1/audit.py": "c599ffa6f98dbaf3cb3ada2e109556386c14b2a267318ce8e30dd36fef3fd4b1",
+    "src/context_invariant/benchmarks/week1/baseline.py": "672b69779158d34a6d144ebd8f5a445effa92916f3773f0161b986e7faf9215a",
+    "src/context_invariant/benchmarks/week1/evaluator.py": "19a7b3a285d948fee421f2a4548a4906f74fcb8cd5dcb884cf12f2c05dea1e06",
+    "src/context_invariant/benchmarks/week1/models.py": "c432de23c9d2f294714639edb7b6dc6c07d467859af6dc2587001370f2b8692f",
+    "src/context_invariant/benchmarks/week1/runner.py": "c276890cb85fb395077781a09157562095c0b7b728dda2a6f56fb79bea24d765",
+    "src/context_invariant/budget/__init__.py": "60c83c771974df44ee235ac47f295ae6b5b6945d1cb5482ebb9a89758aae2b98",
+    "src/context_invariant/budget/allocator.py": "33d0197da0f44ee64a068250d88b21c129c45dd0e535f4b433f9f3d5e818e1aa",
+    "src/context_invariant/budget/models.py": "40e538ae42ae63eabdfc7b59594be0818a92e69ccdf6b50e77c0d4b3feca5c12",
+    "src/context_invariant/cli.py": "703bc927f6068dd5961650e7fbac559d367a0f0797d7ed641f7259601bf9ad25",
+    "src/context_invariant/compression/__init__.py": "ac5b79e48e42919b8042b5da10048a81da8a5c299f93f5c584d686753647d0b5",
+    "src/context_invariant/compression/base.py": "d2cdad39ba33f57b2142fc2bc557d5ad826816d4b630e986b2ed26c6f5321963",
+    "src/context_invariant/compression/code.py": "461fd739c5967f57fa8ed1c56be52279766c10e502c75d21f7f267b61fd7b3c9",
+    "src/context_invariant/compression/evidence.py": "aa2ae8247244a0965b023b03c8705b2c637f2626d4d5a46adce69984f80c48ed",
+    "src/context_invariant/compression/executor.py": "09fb66579e284eb09267910171630bc63f806a8b23532c60af877c84605ae94c",
+    "src/context_invariant/compression/extractive.py": "629d33151640086d9c35975812dec1d736580364b20b2eb068d127fceb7760b9",
+    "src/context_invariant/compression/llm_summary.py": "ced54ae2267b34301fd5ede4e56df4a28550dc7433be943731ea89ed0ab6704e",
+    "src/context_invariant/compression/none.py": "c1a79e12add63b10422cf014a06b960d4a4845f1ecd7755f08b4863a8b1de6f2",
+    "src/context_invariant/compression/structured.py": "7a84d63b19d8a2e739011765bcdd3ed281f7b016eece8340affd6da85a6d8b33",
+    "src/context_invariant/compression/tool_output.py": "8866eed77b44b58f9a6c31ab8efbd63a47a6fe448429c13328d2ddc863bcc2b4",
+    "src/context_invariant/compression/type_aware.py": "03ef6809cbd9f968faa4d5de0fb2a6fb161fd87099081f9d117cb355fb05b97e",
+    "src/context_invariant/config.py": "db31c8c3f25c29d5d3e01ebca274316565ae005901e52e3d48985399f46bd5d4",
+    "src/context_invariant/constraints/__init__.py": "3580e5a14274f35665d1bb355270b6a22d319fdc08899e00eff60f533900939c",
+    "src/context_invariant/constraints/models.py": "bc25d9df5e1b3ea216a4799472abb4a0499ac7d73263b1810797ff74097201d3",
+    "src/context_invariant/constraints/resolver.py": "d0850596fd3a09655c63f6f932eb39b07dfe617e1239b8609fb877b8ca55b4f1",
+    "src/context_invariant/contracts/__init__.py": "d14d23a69ca1fec7ec20f23e87c9e183e49b97798bed5fd60e0b25d3fcab1758",
+    "src/context_invariant/contracts/models.py": "45ffb0900c00454c911d7201e58a5b8e240ad24c2acee95a31ca3eaba98473ab",
+    "src/context_invariant/dedup/__init__.py": "7b50b8a7cebb81b9777d06b61af22279f7119d59adf63e55ff2d543b2529cb0d",
+    "src/context_invariant/dedup/base.py": "ccd4159862094bf6e8b7106bb277bdb72debe676ecc1af74b4f125275c41ed76",
+    "src/context_invariant/dedup/exact.py": "903eb89c37c1f548086d4f2cee155a4b6f5683d89e614454fb0eb7d28a00383d",
+    "src/context_invariant/dedup/metrics.py": "89e781dd87a1c5e944ccf395cd0d6d4bc91d452ec6d1f91f59a899f59f394010",
+    "src/context_invariant/dedup/safety.py": "7c840cf8dec36646af6a5c88b8782ad1d38895ce90cb9376edc92ab8e7962163",
+    "src/context_invariant/dedup/semantic.py": "df8d2be6f73c63c5704b5deaa81a773d9fc2b667d0fca0dc6a3ba3ee7d210e91",
+    "src/context_invariant/dependency/__init__.py": "53acdbefab6775918715d0041a2624645f955e7decbf1e31e10fdb77c38b8551",
+    "src/context_invariant/dependency/graph.py": "af53d297c551932180214f324f86fc42ee59ffe22d35c06a3c79c707eaaa1fa0",
+    "src/context_invariant/embeddings/__init__.py": "74f798d36d7cfe1538b50704e819653e1abc3cd5eef73323b255c42bd10769f6",
+    "src/context_invariant/embeddings/base.py": "f3c2917ec4b71c341653cc6ea43aace9ae436e4f58e54b3c79cdbcdb803d3e02",
+    "src/context_invariant/embeddings/cache.py": "62fda1b793f137d1f1b7db0a0e76dd169794eafada7ffb5cfd758840c584fd27",
+    "src/context_invariant/embeddings/deterministic.py": "e58a993b91bcf497447d4207b5dda147d7a59b85229a47e0f9601349a418f9ec",
+    "src/context_invariant/embeddings/sentence_transformer.py": "fbe5cf50f42274276fecb6c595266118650ba16225cd07d863862bb2838da8d9",
+    "src/context_invariant/errors.py": "1187f89b8a5e5d1158556eb705a48f8712a91fda383c7f59ff616d9ae4accddb",
+    "src/context_invariant/layout/__init__.py": "1837a44a74374e774d8bb940d083e097473ebb5b64073e2528e722862d44beab",
+    "src/context_invariant/layout/base.py": "5473c2b1a4b8eeae9bdf9d74cfb5a2d0b51b38d92f1d03f7e8fb46dfcfc94c9a",
+    "src/context_invariant/layout/strategies.py": "59414c9eb6c9e74b16d541633a792264f63d14a1a2bae8654cf7857a78bc098d",
+    "src/context_invariant/lifecycle.py": "18649431c068752b38d51f1f0372f0714dd14538b7760a7c402ef60f6efd7c85",
+    "src/context_invariant/models.py": "f7de64493a7ac00a28ec3af5504a5d4f9bfff6fa7718f540e3d0afa75e9d4d9a",
+    "src/context_invariant/optimizer.py": "9a86a7c18121e00e6ddacc97167d3e493fa4f9309a5f12f61c47b590dfa58b3e",
+    "src/context_invariant/providers/__init__.py": "057a580a3e900a73cc7c350853b9a71315f8e4edcfe5836fe02fe6bfbd281bbf",
+    "src/context_invariant/providers/base.py": "f32adf5730b5752afa80bfe1e839931a162f450dd2e4a0e4210ad9a5ce292b55",
+    "src/context_invariant/providers/deterministic_retrieval.py": "5f34c965ae660723b776b502b617ea6d7e75160a5baebbdba09c339e9408bbd9",
+    "src/context_invariant/providers/mock.py": "7cfd6756272edc5dc2a0c4e78d6406e6f38cb4dea95fc4fc2221bf6b09229fd7",
+    "src/context_invariant/providers/openai.py": "48c14a3217ffcb9f3897944cd9d4560216a2ffaf8409642c6ce1e3e964f82251",
+    "src/context_invariant/scoring/__init__.py": "81f2535a1189f2158b4c06e793e06e1d465e59f647a208c4ca66793be9127ee8",
+    "src/context_invariant/scoring/composite.py": "f8b5ffe1cc6456a132709d338480c02d2fd79880b3e9d4013b8bfe811e97306d",
+    "src/context_invariant/scoring/importance.py": "d70b4c421fa041d0c157275542b034eb973545a60134d5836687e1c9c172516e",
+    "src/context_invariant/scoring/novelty.py": "b1ab627421dc61eb702465c127f7a2e9d3e88015735cf3772eb693e80e27f5c0",
+    "src/context_invariant/scoring/pipeline.py": "6fb3c53f4b8656e864c5d438c910a0f48cb7c216b25284f299de7cc0c954669f",
+    "src/context_invariant/scoring/recency.py": "5709d32ed51819deef6b776e03bce514a18cdaf83bf3165d0cc6597dcc569c21",
+    "src/context_invariant/scoring/relevance.py": "8b9b83445f99845b90d4ffb440280173d4d7ef25847912180d19d99d69574167",
+    "src/context_invariant/scoring/risk.py": "ce5872ad187dcfdb232c03d2f650e3cdb24ca6e73c46609b59c1a7a709dd7457",
+    "src/context_invariant/scoring/type_priority.py": "d920eb58209bc316f54e6632663dba048f05e99e068606fecbf423d71d990262",
+    "src/context_invariant/store/__init__.py": "2a82d0eb03a38fa0b34d63196e6b5ae1ee8f2c58b1fa8745619859892a1e7d7b",
+    "src/context_invariant/store/base.py": "6d9733b9abe50ded6ceb9e77c3acf8cebe8f7dedda83b176b3cad4f47ac37a1f",
+    "src/context_invariant/store/memory.py": "a3e485dbfe2e0e7eb4b0f6a72b394240f14e8ecf7942818a6f55b582a9eea4c7",
+    "src/context_invariant/store/sqlite.py": "efed541939f01b9e45b5bc60ac5cefc9cd0c469502bc1ba47a66caa432a1d3cb",
+    "src/context_invariant/tokenization/__init__.py": "b276ccc3d38d4922489cdb4446480747239c0542efc4866f4e60581b505ec520",
+    "src/context_invariant/tokenization/base.py": "c2c0282f95224bb5e5bdccbad371e82ddad6028f90d3a36bb5f8c28f0de13527",
+    "src/context_invariant/tokenization/tiktoken_tokenizer.py": "c81813142239b5d7cc90a2698aadef8572ad05b69bcb851a0250e6d661400ad9",
+    "src/context_invariant/trace.py": "5ab23077c93e9220e10005c96bc2f012d0906602118dc2d6ce40de869dcb04bf",
+    "src/context_invariant/validation/__init__.py": "ee0b095508898bcbdd7056609f45b277e7352a56ca34aebff0529f039b34a207",
+    "src/context_invariant/validation/engine.py": "23de6141fa6afa895509dc646557b897fd8faeb9add2f8016cb1775357d27a36",
+    "src/context_invariant/validation/models.py": "8cac81158d47006d1612bc61766fdd95519e520b352375b789947a4a287b4f68",
+    "src/context_invariant/validation/validators.py": "b173390beb8221d92a398b6735196a551992ab367f47968824f5c05f3044d778"
+  },
+  "starting_commit": "00a54b559f55a29bcdc61fc1663fa322d90fa466",
+  "study_source_status": "",
+  "tokenizer": "cl100k_base"
+}

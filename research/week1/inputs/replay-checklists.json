@@ -1,0 +1,169 @@
+{
+  "01-investigate": {
+    "purpose": "Scripted checkpoint of one testable retry task; not a live model trajectory.",
+    "required": "Retain unchanged: original-request, source-code, earlier-test-result",
+    "optional": "Unrelated tooling and unreferenced state are optional.",
+    "failure": "Missing request, active state, or supporting earlier test evidence; stale config; changed protected text; or budget overflow. A returned incomplete context is invalid.",
+    "required_ids": [
+      "original-request",
+      "source-code",
+      "earlier-test-result"
+    ],
+    "forbidden_ids": [],
+    "required_spans": [
+      {
+        "item_id": "original-request",
+        "text": "Fix should_retry without changing its signature. Retry only status 503; never retry 429."
+      },
+      {
+        "item_id": "source-code",
+        "text": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n"
+      },
+      {
+        "item_id": "earlier-test-result",
+        "text": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}"
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  },
+  "02-config-changed": {
+    "purpose": "Scripted checkpoint of one testable retry task; not a live model trajectory.",
+    "required": "Retain unchanged: original-request, source-code, earlier-test-result, current-config, followup",
+    "optional": "Unrelated tooling and unreferenced state are optional.",
+    "failure": "Missing request, active state, or supporting earlier test evidence; stale config; changed protected text; or budget overflow. A returned incomplete context is invalid.",
+    "required_ids": [
+      "original-request",
+      "source-code",
+      "earlier-test-result",
+      "current-config",
+      "followup"
+    ],
+    "forbidden_ids": [
+      "old-config"
+    ],
+    "required_spans": [
+      {
+        "item_id": "original-request",
+        "text": "Fix should_retry without changing its signature. Retry only status 503; never retry 429."
+      },
+      {
+        "item_id": "source-code",
+        "text": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n"
+      },
+      {
+        "item_id": "earlier-test-result",
+        "text": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}"
+      },
+      {
+        "item_id": "current-config",
+        "text": "{\"retry_limit\":2,\"retryable_status\":503,\"request_id\":\"req_A17\"}"
+      },
+      {
+        "item_id": "followup",
+        "text": "The tool configuration changed. Apply the current limit and preserve the original request."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  },
+  "03-final-check": {
+    "purpose": "Scripted checkpoint of one testable retry task; not a live model trajectory.",
+    "required": "Retain unchanged: original-request, source-code, earlier-test-result, current-config, followup, final-request",
+    "optional": "Unrelated tooling and unreferenced state are optional.",
+    "failure": "Missing request, active state, or supporting earlier test evidence; stale config; changed protected text; or budget overflow. A returned incomplete context is invalid.",
+    "required_ids": [
+      "original-request",
+      "source-code",
+      "earlier-test-result",
+      "current-config",
+      "followup",
+      "final-request"
+    ],
+    "forbidden_ids": [
+      "old-config"
+    ],
+    "required_spans": [
+      {
+        "item_id": "original-request",
+        "text": "Fix should_retry without changing its signature. Retry only status 503; never retry 429."
+      },
+      {
+        "item_id": "source-code",
+        "text": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n"
+      },
+      {
+        "item_id": "earlier-test-result",
+        "text": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}"
+      },
+      {
+        "item_id": "current-config",
+        "text": "{\"retry_limit\":2,\"retryable_status\":503,\"request_id\":\"req_A17\"}"
+      },
+      {
+        "item_id": "followup",
+        "text": "The tool configuration changed. Apply the current limit and preserve the original request."
+      },
+      {
+        "item_id": "final-request",
+        "text": "Finish the patch, retain the earlier failing test, and verify the original no-429 rule."
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  },
+  "04-budget-stress-probe": {
+    "purpose": "Scripted checkpoint of one testable retry task; not a live model trajectory.",
+    "required": "Retain unchanged: original-request, source-code, earlier-test-result, current-config, followup, final-request, lossless-test-transcript",
+    "optional": "Unrelated tooling and unreferenced state are optional.",
+    "failure": "Missing request, active state, or supporting earlier test evidence; stale config; changed protected text; or budget overflow. A returned incomplete context is invalid.",
+    "required_ids": [
+      "original-request",
+      "source-code",
+      "earlier-test-result",
+      "current-config",
+      "followup",
+      "final-request",
+      "lossless-test-transcript"
+    ],
+    "forbidden_ids": [
+      "old-config"
+    ],
+    "required_spans": [
+      {
+        "item_id": "original-request",
+        "text": "Fix should_retry without changing its signature. Retry only status 503; never retry 429."
+      },
+      {
+        "item_id": "source-code",
+        "text": "\"\"\"Small replay task: fix retry filtering and honor the supplied attempt limit.\"\"\"\n\n\ndef should_retry(status_code: int, attempts_made: int, retry_limit: int = 2) -> bool:\n    return status_code >= 500 and attempts_made < 1\n"
+      },
+      {
+        "item_id": "earlier-test-result",
+        "text": "{\"exit_code\": 1, \"stderr\": \"\", \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\"}"
+      },
+      {
+        "item_id": "current-config",
+        "text": "{\"retry_limit\":2,\"retryable_status\":503,\"request_id\":\"req_A17\"}"
+      },
+      {
+        "item_id": "followup",
+        "text": "The tool configuration changed. Apply the current limit and preserve the original request."
+      },
+      {
+        "item_id": "final-request",
+        "text": "Finish the patch, retain the earlier failing test, and verify the original no-429 rule."
+      },
+      {
+        "item_id": "lossless-test-transcript",
+        "text": "{\n  \"retry.py\": {\n    \"exit_code\": 1,\n    \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 7, \\\"failures\\\": [{\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 1}, \\\"expected\\\": true, \\\"actual\\\": false}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": -1}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 500, \\\"attempts_made\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 0, \\\"retry_limit\\\": 0}, \\\"expected\\\": false, \\\"actual\\\": true}, {\\\"arguments\\\": {\\\"status_code\\\": 503, \\\"attempts_made\\\": 2, \\\"retry_limit\\\": 3}, \\\"expected\\\": true, \\\"actual\\\": false}]}\",\n    \"stderr\": \"\"\n  },\n  \"reference_retry.py\": {\n    \"exit_code\": 0,\n    \"stdout\": \"{\\\"tests\\\": 12, \\\"passed\\\": 12, \\\"failures\\\": []}\",\n    \"stderr\": \"\"\n  }\n}"
+      }
+    ],
+    "conditional_spans": [],
+    "useful_spans": [],
+    "development_only": true
+  }
+}
