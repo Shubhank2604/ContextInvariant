@@ -50,7 +50,39 @@ def canonical(value: Any) -> str:
 
 
 def git(root: Path, *args: str) -> bytes:
-    return subprocess.run(["git", *args], cwd=root, check=True, capture_output=True).stdout
+    result = subprocess.run(["git", *args], cwd=root, check=False, capture_output=True)
+    if result.returncode:
+        raise ValueError("unable to verify frozen Git revision or source")
+    return result.stdout
+
+
+def git_files(root: Path, revision: str, names: list[str]) -> dict[str, bytes]:
+    """Read immutable Git blobs in one process, including exact binary boundaries."""
+    requests = "".join(f"{revision}:{name}\n" for name in names).encode()
+    result = subprocess.run(
+        ["git", "cat-file", "--batch"],
+        input=requests,
+        cwd=root,
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode:
+        raise ValueError("unable to read frozen source blobs")
+    position = 0
+    blobs: dict[str, bytes] = {}
+    for name in names:
+        end = result.stdout.find(b"\n", position)
+        header = result.stdout[position:end].split()
+        if end < 0 or len(header) != 3 or header[1] != b"blob":
+            raise ValueError(f"missing frozen source blob: {name}")
+        size = int(header[2])
+        position = end + 1
+        blobs[name] = result.stdout[position : position + size]
+        position += size
+        if len(blobs[name]) != size or result.stdout[position : position + 1] != b"\n":
+            raise ValueError("invalid frozen Git blob response")
+        position += 1
+    return blobs
 
 
 def source_bytes(raw: bytes) -> bytes:
@@ -105,15 +137,13 @@ def verify_original_sources(root: Path, lock: dict[str, Any]) -> None:
         "src/context_invariant/benchmarks/week1/evaluator.py",
         "src/context_invariant/benchmarks/week1/audit.py",
     }
-    for name in names:
-        if not name.endswith(".py"):
-            continue
-        expected_revision = (
-            lock["evaluator_and_auditor_source_commit"] if name in patched else revision
-        )
-        expected = git(root, "show", f"{expected_revision}:{name}")
-        if source_bytes((root / name).read_bytes()) != source_bytes(expected):
-            raise ValueError(f"frozen method/evaluator source mismatch: {name}")
+    for expected_revision, selected in (
+        (revision, [name for name in names if name.endswith(".py") and name not in patched]),
+        (lock["evaluator_and_auditor_source_commit"], sorted(patched)),
+    ):
+        for name, expected in git_files(root, expected_revision, selected).items():
+            if source_bytes((root / name).read_bytes()) != source_bytes(expected):
+                raise ValueError(f"frozen method/evaluator source mismatch: {name}")
 
 
 def file_manifest(root: Path) -> dict[str, str]:
@@ -142,8 +172,9 @@ def make_freeze(root: Path = ROOT) -> ExecutionFreeze:
     verify_original_sources(root, lock)
     files = file_manifest(root)
     revision = git(root, "rev-parse", "HEAD").decode().strip()
+    committed = git_files(root, revision, list(files))
     for name, digest in files.items():
-        if sha(source_bytes(git(root, "show", f"{revision}:{name}"))) != digest:
+        if sha(source_bytes(committed[name])) != digest:
             raise ValueError(f"commit source/configuration before freezing: {name}")
     return ExecutionFreeze(
         source_commit=revision,
@@ -169,8 +200,9 @@ def verify_freeze(raw: bytes, root: Path = ROOT) -> tuple[ExecutionFreeze, dict[
         raise ValueError("execution freeze configuration mismatch")
     if freeze.files != file_manifest(root):
         raise ValueError("executing source/configuration differs from execution freeze")
+    committed = git_files(root, freeze.source_commit, list(freeze.files))
     for name, digest in freeze.files.items():
-        if sha(source_bytes(git(root, "show", f"{freeze.source_commit}:{name}"))) != digest:
+        if sha(source_bytes(committed[name])) != digest:
             raise ValueError(f"execution freeze does not match its source commit: {name}")
     if freeze.dependencies != dependency_manifest():
         raise ValueError("installed dependencies differ from execution freeze")

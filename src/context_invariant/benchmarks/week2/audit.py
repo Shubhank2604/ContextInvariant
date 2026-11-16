@@ -86,7 +86,7 @@ def audit_evaluation(
             raise ValueError("invalid required-budget certificate")
         if row["outcome"] == "no_context":
             if any(
-                row.get(field) is not None
+                field not in row or row[field] is not None
                 for field in (
                     "selected_items",
                     "context_tokens",
