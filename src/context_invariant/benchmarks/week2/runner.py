@@ -12,15 +12,11 @@ from context_invariant.benchmarks.week1.models import BUDGET_PERCENTAGES, StudyC
 from context_invariant.benchmarks.week1.runner import METHODS, disagreements, run_pair, summarize
 from context_invariant.benchmarks.week2.models import FAMILIES, Mode
 from context_invariant.benchmarks.week2.preflight import canonical, preflight
+from context_invariant.benchmarks.week2.prompts import (
+    render_context_prompt as render_context_prompt,
+)
 from context_invariant.embeddings import DeterministicEmbeddingProvider
 from context_invariant.tokenization import TiktokenTokenizer
-
-
-def render_context_prompt(task: str, selected: list[dict[str, Any]]) -> str:
-    visible = "\n\n".join(
-        f"[record {item['id']}; type={item['type']}]\n{item['content']}" for item in selected
-    )
-    return f"Use the supplied records for the task.\n\nCONTEXT\n{visible}\n\nTASK\n{task}"
 
 
 def classify(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

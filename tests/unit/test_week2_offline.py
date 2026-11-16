@@ -425,3 +425,41 @@ def test_last_case_tokenization_failure_is_private_and_precedes_all_selection(
         assert case["inputs"]["items"][-1]["id"] in message
     assert restricted not in message and marker not in message
     assert not output.exists()
+
+
+def test_last_case_record_header_rejected_before_selection(
+    development: tuple[Path, Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inputs, keys, freeze, _ = copy_fixture(development, tmp_path)
+    cases, labels = json.loads(inputs.read_bytes()), json.loads(keys.read_bytes())
+    case = cases[-1]
+    old_id = labels[case["id"]]["required_ids"][0]
+    bad_id = "PRIVATE_RECORD_ID_712<|endoftext|>"
+    # Update both shared references and the separate key, preserving label consistency.
+    cases[-1] = json.loads(json.dumps(case).replace(json.dumps(old_id), json.dumps(bad_id)))
+    labels[case["id"]] = json.loads(
+        json.dumps(labels[case["id"]]).replace(json.dumps(old_id), json.dumps(bad_id))
+    )
+    inputs.write_bytes(json_bytes(cases))
+    keys.write_bytes(json_bytes(labels))
+    record_index = next(
+        index for index, item in enumerate(cases[-1]["inputs"]["items"]) if item["id"] == bad_id
+    )
+    monkeypatch.setattr(
+        week1, "execute_method", lambda *args, **kwargs: pytest.fail("selection preceded preflight")
+    )
+    output = tmp_path / "must-not-be-created"
+    for operation in (
+        lambda: preflight(inputs, keys, freeze, mode="synthetic_development"),
+        lambda: run_evaluation(inputs, keys, freeze, output, mode="synthetic_development"),
+    ):
+        with pytest.raises(ValueError, match="cannot be tokenized") as error:
+            operation()
+        message = str(error.value)
+        assert case["id"] in message
+        assert "field=header" in message and f"record_index={record_index}" in message
+        assert "PRIVATE_RECORD_ID_712" not in message and "<|endoftext|>" not in message
+        assert error.value.__suppress_context__
+    assert not output.exists()

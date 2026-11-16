@@ -26,6 +26,7 @@ from context_invariant.benchmarks.week2.models import (
     Seal,
     Week2Case,
 )
+from context_invariant.benchmarks.week2.prompts import render_record_header
 from context_invariant.errors import TokenizerError
 from context_invariant.tokenization import TiktokenTokenizer
 
@@ -266,10 +267,14 @@ def validate_tokenization(cases: Sequence[Week2Case]) -> None:
     tokenizer = TiktokenTokenizer()
     for case in cases:
         fields = [("field=task", case.inputs.task)]
-        fields.extend(
-            (f"record_id={json.dumps(item.id)} field=content", item.content)
-            for item in case.inputs.items
-        )
+        for index, item in enumerate(case.inputs.items):
+            fields.append(
+                (
+                    f"record_index={index} field=header",
+                    render_record_header(item.id, item.type.value),
+                )
+            )
+            fields.append((f"record_id={json.dumps(item.id)} field=content", item.content))
         for field, content in fields:
             try:
                 tokenizer.count_tokens(content)
