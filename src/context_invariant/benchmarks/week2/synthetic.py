@@ -10,7 +10,9 @@ from context_invariant.benchmarks.week2.models import FAMILIES, Week2Case
 from context_invariant.benchmarks.week2.preflight import ROOT, json_bytes
 
 
-def write_synthetic(output_directory: Path, root: Path = ROOT) -> None:
+def write_synthetic(
+    output_directory: Path, root: Path = ROOT, *, developer_curated: bool = False
+) -> None:
     source = json.loads((root / "research/week1/inputs/pilot.json").read_bytes())
     keys = json.loads((root / "research/week1/inputs/checklists.json").read_bytes())
     cases: list[dict[str, Any]] = []
@@ -24,7 +26,9 @@ def write_synthetic(output_directory: Path, root: Path = ROOT) -> None:
                 id=case_id,
                 inputs=inputs,
                 family=family,
-                data_kind="synthetic_development",
+                data_kind="developer_curated_development"
+                if developer_curated
+                else "synthetic_development",
                 origin="synthetic",
             )
             cases.append(case.model_dump(mode="json"))

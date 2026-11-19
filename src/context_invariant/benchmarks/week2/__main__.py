@@ -18,6 +18,7 @@ def main() -> None:
     commands = parser.add_subparsers(dest="command", required=True)
     synthetic = commands.add_parser("synthetic", help="create only labelled development fixtures")
     synthetic.add_argument("--output-directory", type=Path, required=True)
+    synthetic.add_argument("--developer-curated", action="store_true")
     freeze = commands.add_parser(
         "freeze", help="freeze committed source/configuration and environment"
     )
@@ -27,6 +28,8 @@ def main() -> None:
         command.add_argument("--inputs", type=Path, required=True)
         command.add_argument("--keys", type=Path, required=True)
         command.add_argument("--freeze", type=Path, required=True)
+        command.add_argument("--developer-curated", action="store_true")
+        command.add_argument("--curation-record", type=Path)
         command.add_argument(
             "--synthetic",
             action="store_true",
@@ -43,7 +46,7 @@ def main() -> None:
     args = parser.parse_args()
     try:
         if args.command == "synthetic":
-            write_synthetic(args.output_directory)
+            write_synthetic(args.output_directory, developer_curated=args.developer_curated)
             print(args.output_directory)
             return
         if args.command == "freeze":
@@ -54,11 +57,14 @@ def main() -> None:
             print(args.output)
             return
         mode: Mode = "synthetic_development" if args.synthetic else "sealed_final"
+        if args.developer_curated:
+            mode = "developer_curated_development" if args.synthetic else "developer_curated"
         evidence = dict(
             seal_path=args.seal,
             signature_path=args.signature,
             public_key_path=args.public_key,
             trusted_key_sha256=args.trusted_key_sha256,
+            curation_path=args.curation_record,
         )
         if args.command == "preflight":
             cases, _, result = preflight(args.inputs, args.keys, args.freeze, mode=mode, **evidence)
@@ -70,6 +76,15 @@ def main() -> None:
                         "mode": mode,
                         "seal_verified": result["seal_verified"],
                         "selectors_run": False,
+                        **{
+                            key: result[key]
+                            for key in (
+                                "review_arrangement",
+                                "independent_human_review",
+                                "developer_approval_recorded",
+                            )
+                            if key in result
+                        },
                     },
                     indent=2,
                 )

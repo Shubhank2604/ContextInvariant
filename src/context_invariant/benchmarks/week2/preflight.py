@@ -18,7 +18,14 @@ from packaging.requirements import Requirement
 from context_invariant.benchmarks.week1.evaluator import validate_labels
 from context_invariant.benchmarks.week1.models import Checklist, content_hash, study_policy
 from context_invariant.benchmarks.week1.runner import METHODS
+from context_invariant.benchmarks.week2.curation import (
+    AMENDMENT_PATH,
+    REVIEW_ARRANGEMENT,
+    CurationRecord,
+)
 from context_invariant.benchmarks.week2.models import (
+    CURATED_MODES,
+    DEVELOPMENT_MODES,
     FAMILIES,
     LOCK_SHA,
     ExecutionFreeze,
@@ -33,6 +40,7 @@ from context_invariant.tokenization import TiktokenTokenizer
 ROOT = Path(__file__).resolve().parents[4]
 LOCK_PATH = "research/week2/study-lock.json"
 EXTRA_FILES = (
+    AMENDMENT_PATH,
     LOCK_PATH,
     "research/week2/analysis-plan.md",
     "research/week1/environment-requirements.txt",
@@ -244,12 +252,12 @@ def load_data(
         raise ValueError("expected ten cases per locked family")
     for case in cases:
         if case.data_kind != mode or labels[case.id].development_only != (
-            mode == "synthetic_development"
+            mode in DEVELOPMENT_MODES
         ):
             raise ValueError("synthetic and sealed data/keys must not be mixed")
-        if mode == "synthetic_development" and case.origin != "synthetic":
+        if mode in DEVELOPMENT_MODES and case.origin != "synthetic":
             raise ValueError("dry-run cases must explicitly have synthetic origin")
-        if mode == "sealed_final" and (
+        if mode not in DEVELOPMENT_MODES and (
             case.origin == "synthetic"
             or "REPLACE_" in case.model_dump_json()
             or "__TEMPLATE_ONLY__" in case.id
@@ -294,6 +302,7 @@ def preflight(
     signature_path: Path | None = None,
     public_key_path: Path | None = None,
     trusted_key_sha256: str | None = None,
+    curation_path: Path | None = None,
     root: Path = ROOT,
 ) -> tuple[list[Week2Case], dict[str, Checklist], dict[str, Any]]:
     """Finish every evidence check before selection. Synthetic mode cannot assert a seal."""
@@ -303,6 +312,10 @@ def preflight(
     seal_raw = b""
     evidence_paths = (seal_path, signature_path, public_key_path, trusted_key_sha256)
     seal: Seal | None = None
+    curation: CurationRecord | None = None
+    curation_raw = b""
+    if mode not in CURATED_MODES and curation_path is not None:
+        raise ValueError("curation records require the explicit developer-curated mode")
     if mode == "sealed_final":
         if any(value is None for value in evidence_paths):
             raise ValueError(
@@ -331,6 +344,41 @@ def preflight(
             raise ValueError(
                 "seal timestamps must follow the actual source freeze and precede execution"
             )
+    elif mode in CURATED_MODES:
+        if any(value is not None for value in evidence_paths):
+            raise ValueError("developer-curated mode does not accept independent seal arguments")
+        if curation_path is None:
+            raise ValueError("developer-curated mode requires a completed curation record")
+        curation_raw = curation_path.read_bytes()
+        curation = CurationRecord.model_validate_json(curation_raw)
+        checks = {
+            "input_file_sha256": sha(inputs_raw),
+            "key_file_sha256": sha(keys_raw),
+            "canonical_input_json_sha256": canonical(json.loads(inputs_raw)),
+            "canonical_key_json_sha256": canonical(json.loads(keys_raw)),
+            "study_lock_sha256": LOCK_SHA,
+            "execution_freeze_sha256": sha(freeze_raw),
+            "analysis_plan_sha256": freeze.analysis_plan_sha256,
+            "configuration_sha256": freeze.configuration_sha256,
+            "amendment_sha256": freeze.files[AMENDMENT_PATH],
+        }
+        for name, expected in checks.items():
+            if getattr(curation, name) != expected:
+                raise ValueError(f"curation record {name} mismatch")
+        if curation.mode != mode:
+            raise ValueError("curation record mode mismatch")
+        if curation.approval_status != (
+            "synthetic_test_only" if mode in DEVELOPMENT_MODES else "approved"
+        ) or (mode == "developer_curated" and curation.approved_by != "Shubhank Chandak"):
+            raise ValueError("final curation requires Shubhank Chandak's recorded dataset approval")
+        if curation.method_freeze_timestamp_utc != freeze.created_at_utc or not (
+            freeze.created_at_utc <= curation.approved_at_utc <= datetime.now(UTC)
+        ):
+            raise ValueError(
+                "curation approval must follow the actual freeze and precede execution"
+            )
+        if any(event.at_utc > curation.approved_at_utc for event in curation.access_history):
+            raise ValueError("curation access history cannot postdate approval")
     elif any(value is not None for value in evidence_paths):
         raise ValueError("synthetic dry runs cannot supply or claim a signed seal")
     cases, labels = load_data(inputs_raw, keys_raw, mode)
@@ -350,6 +398,16 @@ def preflight(
             or len(set(seal.realistic_trace_case_ids)) != len(seal.realistic_trace_case_ids)
         ):
             raise ValueError("seal must identify at least fifteen actual realistic trace cases")
+    if curation is not None:
+        real_ids = {case.id for case in cases if case.origin == "real_trace"}
+        if curation.case_counts_by_family != lock["case_families"]:
+            raise ValueError("curation family counts differ from the locked comparison")
+        if (
+            set(curation.realistic_trace_case_ids) != real_ids
+            or len(set(curation.realistic_trace_case_ids)) != len(curation.realistic_trace_case_ids)
+            or (mode == "developer_curated" and len(real_ids) < 15)
+        ):
+            raise ValueError("curation real-trace identities or minimum count mismatch")
     evidence = {
         "mode": mode,
         "seal_verified": seal is not None,
@@ -364,4 +422,13 @@ def preflight(
         "execution_freeze": freeze.model_dump(mode="json"),
         "configuration": locked_configuration(lock),
     }
+    if curation is not None:
+        evidence.update(
+            review_arrangement=REVIEW_ARRANGEMENT,
+            independent_human_review=False,
+            developer_approval_recorded=mode == "developer_curated",
+            curation_record_sha256=sha(curation_raw),
+            curation_record=curation.model_dump(mode="json"),
+            authentication="unsigned approval record; no independently authenticated signature",
+        )
     return cases, labels, evidence

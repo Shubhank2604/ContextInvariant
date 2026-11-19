@@ -10,7 +10,17 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from context_invariant.benchmarks.week1.models import StudyCase
 
 Family = Literal["coding_agent", "operations", "evidence_backed_analysis"]
-Mode = Literal["synthetic_development", "sealed_final"]
+Mode = Literal[
+    "synthetic_development",
+    "sealed_final",
+    "developer_curated",
+    "developer_curated_development",
+]
+DEVELOPMENT_MODES: tuple[Mode, ...] = (
+    "synthetic_development",
+    "developer_curated_development",
+)
+CURATED_MODES: tuple[Mode, ...] = ("developer_curated", "developer_curated_development")
 SHA256 = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 FAMILIES: tuple[Family, ...] = ("coding_agent", "operations", "evidence_backed_analysis")
 START = "8253d0db550b071f05ce23d51f71a9fcb74a32dd"

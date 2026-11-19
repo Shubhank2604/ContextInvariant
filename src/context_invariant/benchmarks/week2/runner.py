@@ -10,7 +10,13 @@ from typing import Any
 from context_invariant.benchmarks.bundles import capture_environment, write_benchmark_bundle
 from context_invariant.benchmarks.week1.models import BUDGET_PERCENTAGES, StudyCase
 from context_invariant.benchmarks.week1.runner import METHODS, disagreements, run_pair, summarize
-from context_invariant.benchmarks.week2.models import FAMILIES, Mode
+from context_invariant.benchmarks.week2.curation import REVIEW_ARRANGEMENT
+from context_invariant.benchmarks.week2.models import (
+    CURATED_MODES,
+    DEVELOPMENT_MODES,
+    FAMILIES,
+    Mode,
+)
 from context_invariant.benchmarks.week2.preflight import canonical, preflight
 from context_invariant.benchmarks.week2.prompts import (
     render_context_prompt as render_context_prompt,
@@ -79,6 +85,12 @@ def report(metrics: dict[str, Any], mode: Mode) -> str:
         if mode == "synthetic_development"
         else "Sealed offline Week 2 evaluation"
     )
+    if mode in CURATED_MODES:
+        title = (
+            "SYNTHETIC DEVELOPMENT DRY RUN — NOT FINAL EVIDENCE; "
+            if mode in DEVELOPMENT_MODES
+            else "Offline Week 2 evaluation; "
+        ) + REVIEW_ARRANGEMENT
     lines = [
         f"# {title}",
         "",
@@ -144,8 +156,12 @@ def run_evaluation(
     return write_benchmark_bundle(
         output_directory=output_directory,
         recorded_at_utc=recorded,
-        strategy="week2-synthetic-dry-run" if mode == "synthetic_development" else "week2-sealed",
-        profile="development" if mode == "synthetic_development" else "final",
+        strategy="week2-developer-curated"
+        if mode in CURATED_MODES
+        else "week2-synthetic-dry-run"
+        if mode == "synthetic_development"
+        else "week2-sealed",
+        profile="development" if mode in DEVELOPMENT_MODES else "final",
         config={
             "protocol": "week2-offline-v1",
             "mode": mode,

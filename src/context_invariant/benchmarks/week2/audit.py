@@ -16,7 +16,7 @@ from context_invariant.benchmarks.week1.models import (
     study_policy,
 )
 from context_invariant.benchmarks.week1.runner import METHODS, disagreements
-from context_invariant.benchmarks.week2.models import Mode
+from context_invariant.benchmarks.week2.models import CURATED_MODES, Mode
 from context_invariant.benchmarks.week2.preflight import preflight
 from context_invariant.benchmarks.week2.runner import (
     aggregate,
@@ -178,4 +178,13 @@ def audit_evaluation(
         "status": "passed",
         "selectors_rerun": False,
         "outcome_counts": dict(Counter(row["outcome_class"] for row in rows)),
+        **{
+            key: evidence[key]
+            for key in (
+                "review_arrangement",
+                "independent_human_review",
+                "developer_approval_recorded",
+            )
+            if mode in CURATED_MODES
+        },
     }
