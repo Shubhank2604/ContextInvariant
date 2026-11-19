@@ -1,0 +1,50 @@
+{
+  "cells": [
+    {
+      "budget_percentage": 80,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 309,
+      "mean_valid_context_tokens": 309,
+      "mean_valid_useful_recall": null,
+      "method": "context_invariant_full",
+      "no_context": 1,
+      "no_context_reasons": {
+        "budget_infeasible": 1
+      },
+      "total": 4,
+      "valid_context": 3,
+      "valid_context_token_total": 927
+    },
+    {
+      "budget_percentage": 80,
+      "invalid_context": 0,
+      "mean_returned_context_tokens": 309,
+      "mean_valid_context_tokens": 309,
+      "mean_valid_useful_recall": null,
+      "method": "metadata_matched",
+      "no_context": 1,
+      "no_context_reasons": {
+        "budget_infeasible": 1
+      },
+      "total": 4,
+      "valid_context": 3,
+      "valid_context_token_total": 927
+    }
+  ],
+  "evaluation_count": 8,
+  "matched_valid": [
+    {
+      "budget_percentage": 80,
+      "context_token_totals": {
+        "context_invariant_full": 927,
+        "metadata_matched": 927
+      },
+      "matched_valid_annotated_case_count": 0,
+      "matched_valid_case_count": 3,
+      "mean_useful_recall": {
+        "context_invariant_full": null,
+        "metadata_matched": null
+      }
+    }
+  ]
+}

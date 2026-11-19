@@ -1,0 +1,23 @@
+{
+  "schema_version": "week2-seal-v1",
+  "status": "UNSIGNED_TEMPLATE_NOT_A_SEAL",
+  "author": null,
+  "reviewers": [],
+  "data_steward": null,
+  "authorship_description": null,
+  "provenance_and_permissions_review": null,
+  "review_disagreements_and_resolutions": null,
+  "case_counts_by_family": null,
+  "input_file_sha256": null,
+  "key_file_sha256": null,
+  "canonical_input_json_sha256": null,
+  "canonical_key_json_sha256": null,
+  "signed_study_lock_sha256": null,
+  "frozen_dependency_identity": null,
+  "method_freeze_timestamp_utc": null,
+  "sealed_at_utc": null,
+  "implementation_team_first_final_access_utc": null,
+  "steward_signature": null,
+  "access_log_reference": null,
+  "final_case_text_or_answers": "MUST_NOT_BE_INCLUDED_IN_PUBLIC_MANIFEST"
+}

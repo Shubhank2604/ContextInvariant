@@ -308,6 +308,10 @@ to the notices in [THIRD_PARTY_DATA.md](benchmarks/results/THIRD_PARTY_DATA.md).
 
 Detailed commands and artifact rules are in [Benchmarking](benchmarks/README.md).
 
+The separate [metadata-matched development pilot](research/week1/README.md) compares
+the full runtime with a relevance selector given the same declared requirements and
+budgets. It retains ties, baseline wins, explicit failures, and an offline coding replay.
+
 ## Limitations
 
 - The controlled constraint set co-evolved with the runtime; held-out validation is still
