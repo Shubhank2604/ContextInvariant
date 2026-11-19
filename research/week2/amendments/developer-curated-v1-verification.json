@@ -1,0 +1,65 @@
+{
+  "amendment": "developer-curated-v1",
+  "execution_source_commit": "adbdc5802cacdc073167d77c63a904b8b66648e6",
+  "verification_data": "public synthetic development fixtures only",
+  "private_cases_or_keys_opened": false,
+  "final_comparison_run": false,
+  "live_model_calls": false,
+  "actual_dataset_approval_created": false,
+  "original_protocol_lock_analysis_evidence_and_selectors_modified": false,
+  "synthetic_bundle": "out/week2-curation-check/results/20261119T012742.540866Z-week2-developer-curated-development",
+  "synthetic_freeze": "out/week2-curation-check/execution-freeze.json",
+  "synthetic_record": "out/week2-curation-check/SYNTHETIC-TEST-ONLY.json",
+  "audit": {
+    "status": "passed",
+    "mode": "developer_curated_development",
+    "checked_evaluations": 180,
+    "selectors_rerun": false,
+    "seal_verified": false,
+    "independent_human_review": false,
+    "developer_approval_recorded": false,
+    "outcomes": {
+      "valid_context": 162,
+      "invalid_context": 0,
+      "certified_infeasibility": 12,
+      "avoidable_selection_failure": 6
+    }
+  },
+  "scientific_comparison": {
+    "metrics_match_retained_synthetic_run": true,
+    "predictions_match_except_mode_and_trace_timings_in_recorded_environment": true,
+    "cross_platform_test": "Only diagnostic scores in trace/method metadata are rounded to 12 decimals for comparison; selected text, prompts, tokens, outcomes and metrics remain exact. Runtime calculations and saved traces are not rounded.",
+    "synthetic_limitation": "Three family-labelled copies of ten public scenarios; the six avoidable refusals are one scenario at three family labels and two budgets, not six independent observations."
+  },
+  "tests": {
+    "full_suite": "496 passed",
+    "coverage_percent": 89.77,
+    "focused_week1_week2": "99 passed",
+    "new_amendment_tests": "30 passed",
+    "lint": "passed",
+    "format": "passed",
+    "strict_mypy": "passed",
+    "original_pilot_audit": "60 passed",
+    "original_replay_audit": "8 passed"
+  },
+  "coverage": [
+    "complete 180-row developer-curated synthetic grid and CLI preflight/audit",
+    "unchanged shared selector inputs, scoring and scientific results",
+    "changed input/key bytes, canonical hashes, source/configuration/amendment bindings",
+    "missing or invalid approval, authorship, AI assistance, access or review evidence",
+    "synthetic/final mode separation and independent seal argument rejection",
+    "missing/duplicate rows, prompt tampering, read-only audit",
+    "original independent seal mode still requires its evidence"
+  ],
+  "commands": [
+    "python -m pytest --basetemp=.pytest-tmp-week2-curation-full -q --cov-report=term:skip-covered",
+    "python -m pytest -o addopts= --no-cov tests/unit/test_week2_curation.py tests/unit/test_week2_offline.py tests/unit/test_week2_preflight.py tests/unit/test_week1_study.py --basetemp=.pytest-tmp-week2-curation-focused -q --tb=short",
+    "python -m ruff check .",
+    "python -m ruff format --check .",
+    "python -m mypy",
+    "python -m context_invariant.benchmarks.week2 preflight --developer-curated --synthetic --inputs out/week2-curation-check/data/cases.json --keys out/week2-curation-check/data/keys.json --freeze out/week2-curation-check/execution-freeze.json --curation-record out/week2-curation-check/SYNTHETIC-TEST-ONLY.json",
+    "python -m context_invariant.benchmarks.week2 run --developer-curated --synthetic --inputs out/week2-curation-check/data/cases.json --keys out/week2-curation-check/data/keys.json --freeze out/week2-curation-check/execution-freeze.json --curation-record out/week2-curation-check/SYNTHETIC-TEST-ONLY.json --output-directory out/week2-curation-check/results",
+    "python -m context_invariant.benchmarks.week2 audit --developer-curated --synthetic --inputs out/week2-curation-check/data/cases.json --keys out/week2-curation-check/data/keys.json --freeze out/week2-curation-check/execution-freeze.json --curation-record out/week2-curation-check/SYNTHETIC-TEST-ONLY.json --bundle out/week2-curation-check/results/20261119T012742.540866Z-week2-developer-curated-development"
+  ],
+  "environment_note": "Local commands used .venv-week2-runner/Scripts/python.exe with PYTHONPATH=src. The later Data-chat commands require the documented editable research install and a fresh freeze, actual approval and final data. Synthetic test records do not grant approval."
+}

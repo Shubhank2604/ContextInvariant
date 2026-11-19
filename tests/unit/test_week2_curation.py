@@ -22,6 +22,17 @@ from context_invariant.benchmarks.week2.runner import run_evaluation
 from context_invariant.benchmarks.week2.synthetic import write_synthetic
 
 
+def stable_trace_values(value: Any) -> Any:
+    """Normalize diagnostic score rounding across Python/NumPy versions."""
+    if isinstance(value, float):
+        return round(value, 12)
+    if isinstance(value, dict):
+        return {key: stable_trace_values(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [stable_trace_values(item) for item in value]
+    return value
+
+
 def synthetic_record(inputs: Path, keys: Path, freeze: Path) -> dict[str, Any]:
     frozen = json.loads(freeze.read_bytes())
     return {
@@ -97,6 +108,9 @@ def test_curated_synthetic_grid_has_same_scientific_results_and_read_only_audit(
             if row["trace"] is not None:
                 row["trace"] = dict(row["trace"])
                 row["trace"].pop("stage_timings_ms")
+            # Keep exact assertions for selected text, prompts, tokens and metrics.
+            for field in ("trace", "method_metadata"):
+                row[field] = stable_trace_values(row.get(field))
         assert current == previous
     assert REVIEW_ARRANGEMENT in observed.report
     assert "NOT FINAL EVIDENCE" in observed.report
